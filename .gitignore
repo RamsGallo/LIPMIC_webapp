@@ -5,3 +5,4 @@
 /examples
 /Include
 __pycache__
+*.cfg
