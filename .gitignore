@@ -1,0 +1,7 @@
+*.keras
+*.dat
+/Scripts
+/Lib
+/examples
+/Include
+__pycache__

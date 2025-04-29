@@ -1,0 +1,180 @@
+{% extends 'base-console.html' %}
+
+{% block title %}
+    Assessment
+{% endblock title %}
+
+<!---Render header-->
+{% block header %}
+{% endblock header %}
+
+<!---Render content of page-->
+{% block content %}
+<div class="home-scroll">
+    <div class="assess container-md pt-2">
+        <h5 class="lead">
+            <mark>Important!</mark> 
+            <small class="text-muted">The duration of an assessment digital testing varies according to age, history of previous assessments, the severity of the speech/language deficit, as well as the collaboration and attention of the person.</small>
+        </h5>
+    <div class="accordion accordion-flush" id="accordion-steps">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+              Parent/Client Interview
+            </button>
+          </h2>
+          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-steps">
+            <div class="accordion-body">During the initial parent or client interview, client/parent, physician, and teacher concerns will be discussed. Additionally, will examine medical history, developmental milestones, language acquisition (bilingual clients), educational history and family history.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+              Informal Assessment
+            </button>
+          </h2>
+          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-steps">
+            <div class="accordion-body">During the informal assessment portion, use a variety of toys, books or videos to elicit a spontaneous speech and language sample. Then transcribe and analyze the spontaneous sample to determine if there are any speech and/or language anomalies. For instance, analyze a child’s language sample to determine if their language consists of all the age-appropriate morphemes. Also take a narrative language sample to informally analyze higher level language skills (e.g. sequencing, reasoning, perspective taking) according to age.</div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+              Digital Assessment
+            </button>
+          </h2>
+          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordion-steps">
+            <div class="accordion-body">A digital assessment can be conducted for speech, language, voice, fluency and swallowing using digital tools.</div>
+          </div>
+        </div>
+    </div>
+    </div>
+
+    <hr>
+
+    <div class="assessments container-md mb-5">
+      <h1 class="display-6 text-left mt-3">Digital Tools</h1>
+      <div class="row row-cols-1 g-4 mb-5">
+        
+        <!-- Horizontal Card -->
+        <div class="col">
+          <div class="card h-100 horizontal-card">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ url_for('static', filename='img/rams.jpeg') }}" class="img-fluid rounded-start h-100 object-cover" alt="Tool Image">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h4>Goldman Fristoe Articulation Test – 3rd edition (GFTA-3)</h4>
+                  <hr>
+                  <dl class="row">
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">The Goldman-Fristoe Test of Articulation 3 (GFTA-3) is a standardized assessment tool used to evaluate articulation skills. This test analyzes articulation only in the English language.</dd>
+                  
+                    <dt class="col-sm-3">Target Area</dt>
+                    <dd class="col-sm-9">
+                      <p>Articulation</p>
+                    </dd>
+                  
+                    <dt class="col-sm-3">Duration</dt>
+                    <dd class="col-sm-9">Approx. 15-20 minutes</dd>
+                  
+                    <dt class="col-sm-3 text-truncate">Administered Age</dt>
+                    <dd class="col-sm-9"> Two to Twenty-one (2-21) years old</dd>
+                  
+                    
+                  </dl>
+                  <hr>
+                  <div class="input-group flex-nowrap mb-3 mt-1">
+                    <span class="input-group-text" id="addon-wrapping">Hello!</span>
+                    <input type="text" id="name" class="form-control" placeholder="name" aria-label="Username" aria-describedby="addon-wrapping">
+                  </div>
+                  <div class="row align-items-center g-3">
+                    <div class="col-auto">
+                      <div id="durationValue" class="form-text mt-1">
+                        <!-- placeholder for duration -->
+                      </div>
+                    </div>
+                    <div class="col">
+                      <input
+                        type="range"
+                        class="form-range"
+                        min="5"
+                        max="60"
+                        step="5"
+                        id="durationrange0"
+                        list="tickmarks"
+                        value="0"
+                      >
+                      <datalist id="tickmarks">
+                        {% for i in range(5, 65, 5) %}
+                          <option value="{{ i }}"></option>
+                        {% endfor %}
+                      </datalist>
+                      <div class="d-flex justify-content-between small text-muted">
+                        {% for i in range(5, 65, 5) %}
+                          <span>{{ i }}</span>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <button id="durationBtn" class="btn btn-primary d-none">Start Assessment</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+
+<script>
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      cards.forEach(c => {
+        if (c !== card) c.classList.add('card-shrink');
+      });
+    });
+
+    card.addEventListener('mouseleave', () => {
+      cards.forEach(c => c.classList.remove('card-shrink'));
+    });
+  });
+</script>
+
+<script>
+  const slider = document.getElementById('durationrange0');
+  const nameInput = document.getElementById('name');
+  const valueDisplay = document.getElementById('durationValue');
+  const durationBtn = document.getElementById('durationBtn');
+
+  function updateUI() {
+    const duration = parseInt(slider.value);
+    const name = nameInput.value.trim();
+
+    // Update duration display
+    if (duration >= 5) {
+      valueDisplay.textContent = `Duration: ${duration} minutes`;
+    } else {
+      valueDisplay.textContent = "Not set";
+    }
+
+    // Show button only if name is not empty and duration >= 5
+    if (name !== "" && duration >= 5) {
+      durationBtn.classList.remove("d-none");
+    } else {
+      durationBtn.classList.add("d-none");
+    }
+  }
+
+  slider.addEventListener("input", updateUI);
+  nameInput.addEventListener("input", updateUI);
+</script>
+
+
+{% endblock content %}

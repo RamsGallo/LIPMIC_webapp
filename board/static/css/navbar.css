@@ -1,0 +1,14 @@
+.navbar-brand {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.navbar {
+    height: 50.2158px;
+    box-shadow: 0 .3rem .6rem rgba(0,0,0,.09)!important
+}
+
+.nav-console-button {
+    padding-left: 20px;
+    padding-right: 10px;
+}
