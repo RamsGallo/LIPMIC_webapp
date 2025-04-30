@@ -1,7 +1,9 @@
 from flask import Blueprint, Flask, Response, render_template, jsonify
-from board import app #comment this line to remove the ML model service
+# from board import app #comment this line to remove the ML model service
 
 bp = Blueprint("pages", __name__)
+
+#hello world
 
 @bp.route("/project-lipmic")
 def prediction_page():
