@@ -5,10 +5,10 @@ A. IMPORTANT! GUMAWA ng virtual environment. Steps:
    2. activate venv -> Desktop\LIPMIC_webapp\Scripts\activate
    3. change directory -> cd Desktop\LIPMIC_webapp
 
-B. Install python packages:
-        -> pip install -r requirements.txt
+B. Clone repo
 
-C. Clone Repo
+C. Install python packages:
+        -> pip install -r requirements.txt
 
 To run the server
         -> Go to command prompt
