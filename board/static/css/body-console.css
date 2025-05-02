@@ -128,4 +128,27 @@ mark {
     border-radius: 1rem;
   }
 
+
+.diamond-layout {
+  display: grid;
+  grid-template-areas:
+    ".    up    ."
+    "left  .  right"
+    ".   down   .";
+  grid-gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.quiz-img {
+  width: 100px;
+  height: 100px;
+}
+
+#up-img { grid-area: up; }
+#down-img { grid-area: down; }
+#left-img { grid-area: left; }
+#right-img { grid-area: right; }
+
   

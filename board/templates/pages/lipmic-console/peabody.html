@@ -1,0 +1,31 @@
+{% extends 'base-console.html' %}
+{% block title %}Peabody Test{% endblock %}
+
+{% block content %}
+<div style="display: flex; gap: 20px;">
+    <!-- Camera View -->
+    <div>
+        <h3>Live Camera</h3>
+        <img id="video-feed" src="{{ url_for('pages.video_feed') }}" width="320" height="240">
+    </div>
+
+    <a href="{{ url_for('pages.get_quiz') }}?reset=1" class="btn btn-warning">
+        Reset Session
+    </a>
+
+    <!-- Quiz Interface -->
+    <div style="flex: 1;">
+        <h2 id="quiz-prompt">Loading...</h2>
+        <div class="diamond-layout">
+            <img id="up-img" class="quiz-img" />
+            <img id="left-img" class="quiz-img" />
+            <img id="right-img" class="quiz-img" />
+            <img id="down-img" class="quiz-img" />
+        </div>
+        <div id="timer">20:00</div>
+        <div id="score">Score: 0</div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/peabody.js') }}"></script>
+{% endblock %}

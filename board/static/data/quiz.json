@@ -1,0 +1,17 @@
+{
+    "easy": [
+      {
+        "prompt": "Which one is a cat?",
+        "images": {
+          "up": "/static/images/cat.jpg",
+          "down": "/static/images/dog.jpg",
+          "left": "/static/images/ball.jpg",
+          "right": "/static/images/tree.jpg"
+        },
+        "correct": "up"
+      }
+    ],
+    "medium": [],
+    "hard": []
+  }
+  

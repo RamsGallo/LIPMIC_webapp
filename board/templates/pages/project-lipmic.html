@@ -37,7 +37,11 @@
                     <div class="d-flex">
                     <select id="word-dropdown" class="form-control">
                         <option value="" selected disabled>Select a word</option>
-                        <option>Can</option>
+                        <option>Down</option>
+                        <option>Left</option>
+                        <option>Right</option>
+                        <option>Up</option>
+                        <!-- <option>Can</option>
                         <option>Hear</option>
                         <option>Hello</option>
                         <option>Help</option>
@@ -49,7 +53,7 @@
                         <option>Speak</option>
                         <option>Watch</option>
                         <option>We</option>
-                        <option>You</option>
+                        <option>You</option> -->
                     </select>
                     <button id="reset-dropdown-btn" class="btn btn-secondary">Clear</button>
                     </div>
@@ -70,7 +74,9 @@
     let selectedWord = "";    // The word selected from the dropdown
 
     function fetchPrediction() {
-        $.getJSON("{{ url_for('pages.get_prediction') }}", function(data) {
+        $.getJSON("{{ url_for('pages.get_prediction') }}", 
+        
+        function(data) {
             let prediction = data.prediction || "None";
             let sentence = formatSentence(prediction);
 
