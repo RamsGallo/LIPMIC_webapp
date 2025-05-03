@@ -4,59 +4,63 @@
     About Us
 {% endblock title %}
 
-<!---Render header-->
 {% block header %}
-<!-- Navigation Bar -->
-
+<!-- Navigation bar is inherited from base.html -->
 {% endblock header %}
 
-<!---Render content of page-->
 {% block content %}
-<section class="container text-center my-5">
-        <h2 class="mb-4">Who We Are</h2>
-        <p class="text-muted">At LIPMIC, our mission is to innovate and transform speech recognition technology, making a powerful tool.</p>
+<div class="about-page-background">
+    <section class="container text-center py-5">
+        <h2 class="mb-4 lipmic-color">Who We Are</h2>
+        <p class="lipmic-description">
+            At <strong>LIPMIC</strong>, our mission is to innovate and transform speech recognition technology into a powerful and accessible tool for everyone—especially those with speech impairments.
+        </p>
     </section>
 
-    <!-- Team Section -->
-    <section class="container">
-        <h2 class="text-center mb-4">Meet Our Team</h2>
-        <div class="row">
-            <div class="col-md-3 col-sm-6">
-                <div class="card team-card">
-                    <img src="{{ url_for('static', filename='img/rams.jpeg') }}" class="card-img-top" alt="John Doe">
+    <section class="container pb-5">
+        <h2 class="text-center mb-4 lipmic-color">Meet Our Team</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card team-card h-100 shadow rounded-4 border-0">
+                    <img src="{{ url_for('static', filename='img/rams.jpeg') }}" class="card-img-top" alt="Rams Gallo">
                     <div class="card-body text-center">
                         <h5 class="card-title">Rams Gallo</h5>
-                        <p class="card-text">Lead Developer</p>
+                        <p class="card-text text-muted">Lead Developer</p>
+                        <p class="team-description">Rams leads the backend development and ensures system stability and scalability.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card team-card">
-                    <img src="{{ url_for('static', filename='img/menroe.jpeg') }}" class="card-img-top" alt="Jane Smith">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card team-card h-100 shadow rounded-4 border-0">
+                    <img src="{{ url_for('static', filename='img/menroe.jpeg') }}" class="card-img-top" alt="Menroe Dolorpo">
                     <div class="card-body text-center">
                         <h5 class="card-title">Menroe Dolorpo</h5>
-                        <p class="card-text">UI/UX Designer</p>
+                        <p class="card-text text-muted">UI/UX Designer</p>
+                        <p class="team-description">Menroe focuses on crafting intuitive and engaging user interfaces and experiences.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card team-card">
-                    <img src="{{ url_for('static', filename='img/haks.jpeg') }}" class="card-img-top" alt="Michael Brown">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card team-card h-100 shadow rounded-4 border-0">
+                    <img src="{{ url_for('static', filename='img/haks.jpeg') }}" class="card-img-top" alt="Huldrych Gaiser">
                     <div class="card-body text-center">
                         <h5 class="card-title">Huldrych Gaiser</h5>
-                        <p class="card-text">UI/UX Designer</p>
+                        <p class="card-text text-muted">UI/UX Designer</p>
+                        <p class="team-description">Huldrych works on visual consistency and responsive design across platforms.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card team-card">
-                    <img src="{{ url_for('static', filename='img/zergs.jpg') }}" class="card-img-top" alt="Emily White">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card team-card h-100 shadow rounded-4 border-0">
+                    <img src="{{ url_for('static', filename='img/zergs.jpg') }}" class="card-img-top" alt="Zergs Galgao">
                     <div class="card-body text-center">
                         <h5 class="card-title">Zergs Galgao</h5>
-                        <p class="card-text">Project Researcher</p>
+                        <p class="card-text text-muted">Project Researcher</p>
+                        <p class="team-description">Zergs conducts in-depth research and helps align the product with user needs.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+</div>
 {% endblock content %}

@@ -1,14 +1,63 @@
-.navbar-brand {
-    margin-left: 12px;
-    margin-right: 12px;
+#navbar {
+    background-color: #d1f3ff !important;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 12px 12px;
+    padding: 0.5rem 1rem;
 }
 
-.navbar {
-    height: 50.2158px;
-    box-shadow: 0 .3rem .6rem rgba(0,0,0,.09)!important
+#navbar.transparent {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: none;
 }
 
-.nav-console-button {
-    padding-left: 20px;
-    padding-right: 10px;
+#navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: #000 !important;
+}
+
+#navbar .navbar-brand img {
+    margin-right: 8px;
+}
+
+#navbar .nav-link {
+    color: #333 !important;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    transition: color 0.3s, background-color 0.3s;
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+}
+
+#navbar .nav-link:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: #0056b3 !important;
+}
+
+#navbar .dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#navbar .dropdown-item:hover {
+    background-color: #e3f2fd;
+}
+
+.nav-console-button .btn {
+    margin-left: 1rem;
+    border-radius: 8px;
+}
+
+@media (max-width: 991.98px) {
+    #navbar .nav-link {
+        margin: 0.25rem 0;
+    }
+
+    .nav-console-button .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
 }

@@ -2,10 +2,26 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-/* Hero Section */
-.hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/hero-bg.jpg') center/cover no-repeat;
-    height: 100vh;
+/* Background color for About Us page */
+.about-page-background {
+    background-color: #cff0fe;
+    min-height: 100vh;
+    padding-top: 60px; /* Space for fixed navbar */
+}
+
+/* Section Headings */
+.lipmic-color {
+    color: #034f84;
+    font-weight: bold;
+}
+
+/* Paragraph description */
+.lipmic-description {
+    color: #364550;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 800px;
 }
 
 /* Team Card Styles */
@@ -13,11 +29,15 @@ body {
     border: none;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    border-radius: 16px;
 }
 
 .team-card img {
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
+    height: 280px;
+    object-fit: cover;
 }
 
 .team-card:hover {
@@ -29,7 +49,23 @@ body {
     transform: scale(1.05);
 }
 
-/* Footer Centered Properly */
+.card-title {
+    color: #034f84;
+    font-weight: 600;
+}
+
+.card-text {
+    color: #364550;
+}
+
+/* Individual team description */
+.team-description {
+    font-size: 0.9rem;
+    color: #364550;
+    margin-top: 8px;
+}
+
+/* Footer */
 .footer {
     display: flex;
     justify-content: center;

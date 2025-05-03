@@ -4,68 +4,61 @@
     Design Roadmap
 {% endblock title %}
 
-<!---Render header-->
 {% block header %}
-<!-- Navigation Bar -->
-
+<!-- Optional custom header if needed -->
 {% endblock header %}
 
-<!---Render content of page-->
 {% block content %}
+<section class="roadmap-section">
+    <div class="container">
+        <h2 class="section-title">Development Phases</h2>
+        <div class="timeline">
 
-<section class="container roadmap my-5">
-    <h2 class="text-center mb-5">Development Phases</h2>
-    <div class="timeline">
-        <div class="timeline-item">
-            <div class="timeline-icon bg-primary">
-                <i class="bi bi-lightbulb-fill"></i>
+            <!-- Phase 1 -->
+            <div class="timeline-item">
+                <div class="timeline-icon bg-primary">
+                    <i class="bi bi-lightbulb-fill"></i>
+                </div>
+                <div class="timeline-content phase-1-text phase-1-background">
+                    <h4>Phase 1: Ideation</h4>
+                    <p>In April 2024, the team envisioned a tool for subvocal interaction. This concept focuses on utilizing lip movements as an alternative method of human-computer interaction, especially to assist individuals with speech impairments.</p>
+                </div>
             </div>
-            <div class="timeline-content">
-                <h4>Phase 1: Ideation</h4>
-                <p>In April 2024, the researchers developed the idea for a project focused on subvocal interaction—a tool which utilizes the lip features of the user. It serves as an alternative to human-computer interaction and a potential multimodal approach to tackling speech impairment.</p>
-            </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="timeline-icon bg-success">
-                <i class="bi bi-brush"></i>
+            <!-- Phase 2 -->
+            <div class="timeline-item">
+                <div class="timeline-icon bg-success">
+                    <i class="bi bi-brush"></i>
+                </div>
+                <div class="timeline-content phase-2-text phase-2-background">
+                    <h4>Phase 2: Take Off</h4>
+                    <p>By August 2024, the researchers started the design phase. They planned the structure of the project and decided to use the Rapid Application Development (RAD) methodology to guide the development of the app. The phase involved figuring out the project's goals and how it would work.</p>
+                </div>
             </div>
-            <div class="timeline-content">
-                <h4>Phase 2: Take Off</h4>
-                <p>By August 2024, the researchers started the design phase. They planned the structure of the project and decided to use the Rapid Application Development (RAD) methodology to guide the development of the app. The phase involved figuring out the project's goals and how it would work.</p>
-            </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="timeline-icon bg-warning">
-                <i class="bi bi-code-slash"></i>
+            <!-- Phase 3 -->
+            <div class="timeline-item">
+                <div class="timeline-icon bg-warning">
+                    <i class="bi bi-code-slash"></i>
+                </div>
+                <div class="timeline-content phase-3-text phase-3-background">
+                    <h4>Phase 3: Development</h4>
+                    <p>November 2024, the researchers started coding the very complex part of lip reading interface, THE lip reading part! Rams Gallo, lead developer, tackled plenty of development paths. Creating the SSI model architecture > train the model > but to what dataset? Thus, researchers had to make an external tool for data collection. The development continues...</p>
+                </div>
             </div>
-            <div class="timeline-content">
-                <h4>Phase 3: Development</h4>
-                <p>November 2024, the researchers started coding the very complex part of lip reading interface, THE lip reading part! Rams Gallo, lead developer, tackled plenty of development paths. Creating the SSI model architecture > train the model > but to what dataset? Thus, researchers had to make a external tool for data collection. The development continues...</p>
-            </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="timeline-icon bg-danger">
-                <i class="bi bi-gear-fill"></i>
+            <!-- Phase 4 -->
+            <div class="timeline-item">
+                <div class="timeline-icon bg-danger">
+                    <i class="bi bi-gear-fill"></i>
+                </div>
+                <div class="timeline-content phase-4-text phase-4-background">
+                    <h4>Phase 4: Testing & Review</h4>
+                    <p>In December 2024, the researchers conducted an interview and a timebox review to gather feedback, with a registered speech pathologist at Kidvincible Tutorial and Learning Center in Bacoor, Cavite. The aim was to provide necessary insight on the current state of speech impairment in the Philippines and the potential benefits of lip-reading SSI technology for people with speech impairments.</p>
+                </div>
             </div>
-            <div class="timeline-content">
-                <h4>Phase 4: Testing & Review</h4>
-                <p>December 2024, the researchers conducted an interview and a timebox review, to gather feedback, with a registered speech pathologist at Kidvincible Tutorial and Learning Center in Bacoor, Cavite to provide necessary insight on the current state of speech impairment in the Philippines and the potential benefits of lip-reading SSI technology for the people with speech impairment.</p>
-            </div>
-        </div>
 
-        <div class="timeline-item">
-            <div class="timeline-icon bg-dark">
-                <i class="bi bi-rocket-takeoff-fill"></i>
-            </div>
-            <div class="timeline-content">
-                <h4>Phase 5: Launch</h4>
-                <p>The tool should have the complete features to be able to launch. To be reviewed.</p>
-            </div>
         </div>
     </div>
 </section>
-
 {% endblock content %}
