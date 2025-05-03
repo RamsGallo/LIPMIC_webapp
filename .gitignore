@@ -6,3 +6,5 @@
 /Include
 __pycache__
 *.cfg
+/Ref
+/share
