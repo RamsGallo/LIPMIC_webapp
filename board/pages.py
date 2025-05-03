@@ -83,18 +83,22 @@ from flask import request
 
 @bp.route("/submit_answer", methods=["POST"])
 def submit_answer():
-    
     data = request.get_json()
-    spoken_direction = data.get("direction")
+    spoken_direction = data.get("word")
 
     level = session['level']
     index = session['index']
     correct = quiz_sets[level][index]['correct']
+    quiz = quiz_sets.get(level, [])
+
+    if index >= len(quiz):
+        return jsonify({'correct': False})  # or redirect/end quiz
 
     if spoken_direction == correct:
         session['score'] += 1
 
-    print("at submit: ", lip_reader.prediction_consumed)
+    print(f"Predicted: {spoken_direction}, Correct: {correct}, Score: {session['score']}")
+
     
     session['index'] += 1
 

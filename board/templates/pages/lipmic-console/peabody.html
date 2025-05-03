@@ -7,11 +7,12 @@
     <div>
         <h3>Live Camera</h3>
         <img id="video-feed" src="{{ url_for('pages.video_feed') }}" width="320" height="240">
+
+        <a href="{{ url_for('pages.get_quiz') }}?reset=1" class="btn btn-warning">
+            Reset Session
+        </a>    
     </div>
 
-    <a href="{{ url_for('pages.get_quiz') }}?reset=1" class="btn btn-warning">
-        Reset Session
-    </a>
 
     <!-- Quiz Interface -->
     <div style="flex: 1;">
@@ -27,5 +28,11 @@
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/peabody.js') }}"></script>
 {% endblock %}
+
+{% block scripts %}
+
+<script src="{{ url_for('static', filename='js/peabody.js') }}"></script>
+
+{% endblock %}
+
