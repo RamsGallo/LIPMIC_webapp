@@ -4,92 +4,94 @@
     Corrective Tool
 {% endblock title %}
 
-<!-- Render header -->
-{% block header %}
-<!-- Navigation Bar -->
-
-{% endblock header %}
-
-<!-- Render content of page -->
 {% block content %}
-<div class="container-fluid">
-    <!-- Video Feed and Prediction Row -->
-    <div class="row justify-content-center my-4">
-        <!-- Video Feed Column -->
-        <div class="col-md-6 text-center">
-            <div class="border rounded shadow-sm p-2 bg-light">
-                <img src="{{ url_for('pages.video_feed') }}" class="img-fluid rounded" alt="Camera Feed">
-            </div>
-        </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        <!-- Prediction Output Column -->
-        <div class="col-md-6">
-            <div class="card text-center mb-4 shadow-sm">
-                <div class="card-body">
-                    <h2 class="card-title">Current Prediction:</h2>
-                    <p id="current-prediction" class="lead text-success">None</p>
-                    <hr>
-
-                    <h4 class="card-title">Evaluation Test</h4> 
-        
-                    <p><strong>Select a word to practice:</strong></p>
-
-                    <div class="d-flex">
-                    <select id="word-dropdown" class="form-control">
-                        <option value="" selected disabled>Select a word</option>
-                        <option>Down</option>
-                        <option>Left</option>
-                        <option>Right</option>
-                        <option>Up</option>
-                        <!-- <option>Can</option>
-                        <option>Hear</option>
-                        <option>Hello</option>
-                        <option>Help</option>
-                        <option>I</option>
-                        <option>Love</option>
-                        <option>Need</option>
-                        <option>Please</option>
-                        <option>See</option>
-                        <option>Speak</option>
-                        <option>Watch</option>
-                        <option>We</option>
-                        <option>You</option> -->
-                    </select>
-                    <button id="reset-dropdown-btn" class="btn btn-secondary">Clear</button>
-                    </div>
-
-                    <audio id="ting-sound" src="https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3"></audio>
-                    
+<!-- Tool Section -->
+<section class="py-5" style="background: linear-gradient(180deg, #70C0DC 0%, #B6DFF4 100%); min-height: 100vh;">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5" style="color: #1e4d5c;">Corrective Tool</h2>
+        <div class="row justify-content-center">
+            <!-- Video Feed Column -->
+            <div class="col-md-6 mb-4">
+                <div class="border rounded-4 shadow-sm p-3 bg-white">
+                    <img src="{{ url_for('pages.video_feed') }}" class="img-fluid rounded-3" alt="Camera Feed">
                 </div>
             </div>
-            <button id="toggle-tts-btn" class="btn btn-primary">🔇 Speech Off</button>
+
+            <!-- Prediction & Controls Column -->
+            <div class="col-md-6">
+                <div class="card border-0 shadow rounded-4 bg-white text-center mb-4">
+                    <div class="card-body">
+                        <h4 class="fw-bold mb-3" style="color: #1E4D5C;">Current Prediction</h4>
+                        <p id="current-prediction" class="lead text-success">None</p>
+                        <hr>
+
+                        <h5 class="fw-semibold mt-4 mb-2" style="color: #1E4D5C;">Evaluation Test</h5>
+                        <p><strong>Select a word to practice:</strong></p>
+
+                        <div class="d-flex gap-2 mb-3">
+                            <select id="word-dropdown" class="form-control">
+                                <option value="" selected disabled>Select a word</option>
+                                <option>Down</option>
+                                <option>Left</option>
+                                <option>Right</option>
+                                <option>Up</option>
+                                <!-- <option>Can</option>
+                                <option>Hear</option>
+                                <option>Hello</option>
+                                <option>Help</option>
+                                <option>I</option>
+                                <option>Love</option>
+                                <option>Need</option>
+                                <option>Please</option>
+                                <option>See</option>
+                                <option>Speak</option>
+                                <option>Watch</option>
+                                <option>We</option>
+                                <option>You</option> -->
+                            </select>
+                            <button id="reset-dropdown-btn" class="btn btn-outline-secondary">Clear</button>
+                        </div>
+
+                        <button id="toggle-tts-btn" class="btn text-white">🔇 Speech Off</button>
+                        <audio id="ting-sound" src="https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3"></audio>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Add Clear Text Functionality -->
+<!-- Custom CSS -->
+<style>
+    #toggle-tts-btn {
+        background-color: gray;
+        transition: background-color 0.3s ease;
+    }
+    .btn-speech-on {
+        background-color: #3c7486 !important;
+    }
+    .btn-speech-off {
+        background-color: gray !important;
+    }
+</style>
+
+<!-- JavaScript Section -->
 <script>
-    let lastSpokenText = "";  // Store the last spoken prediction
-    let ttsEnabled = false;    // TTS toggle state (default: ON)
-    let selectedWord = "";    // The word selected from the dropdown
+    let lastSpokenText = "";
+    let ttsEnabled = false;
+    let selectedWord = "";
 
     function fetchPrediction() {
-        $.getJSON("{{ url_for('pages.get_prediction') }}", 
-        
-        function(data) {
+        $.getJSON("{{ url_for('pages.get_prediction') }}", function(data) {
             let prediction = data.prediction || "None";
             let sentence = formatSentence(prediction);
 
-            if (sentence !== lastSpokenText) { 
+            if (sentence !== lastSpokenText) {
                 $("#current-prediction").text(sentence);
-
-                if (ttsEnabled) {
-                    speakText(sentence);
-                }
-
-                if (selectedWord) {
-                    checkPrediction(sentence);
-                }
+                if (ttsEnabled) speakText(sentence);
+                if (selectedWord) checkPrediction(sentence);
                 lastSpokenText = sentence;
             }
         });
@@ -97,9 +99,8 @@
 
     function formatSentence(text) {
         if (!text || text.trim() === "None") return "No prediction available.";
-        text = text.trim(); 
-        text = text.charAt(0).toUpperCase() + text.slice(1);
-        return text;
+        text = text.trim();
+        return text.charAt(0).toUpperCase() + text.slice(1);
     }
 
     function speakText(text) {
@@ -113,12 +114,9 @@
 
     function checkPrediction(prediction) {
         let cleanPrediction = prediction.replace(/[.!?]/g, '');
-
         if (cleanPrediction === selectedWord) {
             document.getElementById("ting-sound").play();
             speakText("Fantastic speaking! Good job!");
-
-            // Reset dropdown after a correct match
             setTimeout(() => {
                 $("#word-dropdown").val("");
                 selectedWord = "";
@@ -129,21 +127,24 @@
     }
 
     function resetDropdown() {
-        $("#word-dropdown").val(""); 
-        selectedWord = ""; 
+        $("#word-dropdown").val("");
+        selectedWord = "";
         speakText("Selection cleared.");
     }
 
-    // Toggle TTS on/off
     $("#toggle-tts-btn").click(function() {
         ttsEnabled = !ttsEnabled;
-        $("#toggle-tts-btn").text(ttsEnabled ? "🔊 Speech On" : "🔇 Speech Off");
-        if (!ttsEnabled){
+
+        $(this).removeClass("btn-speech-on btn-speech-off");
+
+        if (ttsEnabled) {
+            $(this).addClass("btn-speech-on").text("🔊 Speech On");
+        } else {
+            $(this).addClass("btn-speech-off").text("🔇 Speech Off");
             window.speechSynthesis.cancel();
-        } 
+        }
     });
 
-    // Handle word selection
     $("#word-dropdown").change(function() {
         selectedWord = $(this).val();
         speakText("Try to say the word " + selectedWord);
@@ -153,9 +154,10 @@
         resetDropdown();
     });
 
-    setInterval(fetchPrediction, 1000);
+    $(document).ready(function() {
+        $("#toggle-tts-btn").addClass("btn-speech-off");
+        setInterval(fetchPrediction, 1000);
+    });
 </script>
 
 {% endblock content %}
-
-

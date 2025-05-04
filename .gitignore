@@ -4,7 +4,8 @@
 /Lib
 /examples
 /Include
-__pycache__
+__pycache__/
 *.cfg
 /Ref
 /share
+.env
