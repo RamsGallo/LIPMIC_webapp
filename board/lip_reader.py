@@ -16,7 +16,8 @@ TOTAL_FRAMES = 22
 PAST_BUFFER_SIZE = 4
 
 # Load the pre-trained model
-model = tf.keras.models.load_model('C:\\Users\\zergs\\Desktop\\LIPMIC_webapp\\Ref\\directions_1.keras')
+MODEL_PATH = os.environ.get("MODEL_PATH", "Ref/directions_1.keras")
+model = tf.keras.models.load_model(MODEL_PATH)
 
 # Dlib setup
 detector = dlib.get_frontal_face_detector()
@@ -181,4 +182,3 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
     cap.release()
- 

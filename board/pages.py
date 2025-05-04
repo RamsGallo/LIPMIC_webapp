@@ -1,9 +1,7 @@
-from flask import Blueprint, Flask, Response, render_template, jsonify, session
+from flask import Blueprint, Response, render_template, jsonify, session
 from board.quiz_data import quiz_sets
 # from board import app #comment this line to remove the ML model service
-from board import lip_reader
-# from board.lip_reader import LipReader
-# lip_reader = LipReader()
+from board.lip_reader import generate_frames, predicted_word_label, prediction_consumed
 
 bp = Blueprint("pages", __name__)
 
@@ -13,7 +11,7 @@ def prediction_page():
 
 @bp.route("/video_feed")
 def video_feed():
-    return Response(lip_reader.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # @bp.route("/prediction")
 # def get_prediction():
@@ -102,14 +100,14 @@ def submit_answer():
     
     session['index'] += 1
 
-    lip_reader.predicted_word_label = ""
-    lip_reader.prediction_consumed = False
+    predicted_word_label = ""
+    prediction_consumed = False
 
     return jsonify({'correct': spoken_direction == correct})
 
 @bp.route("/get_prediction")
 def get_prediction():
-    if lip_reader.predicted_word_label and not lip_reader.prediction_consumed:
-        lip_reader.prediction_consumed = True
-        return jsonify({'word': lip_reader.predicted_word_label})
+    if predicted_word_label and not prediction_consumed:
+        prediction_consumed = True
+        return jsonify({'word': predicted_word_label})
     return jsonify({'word': ""})

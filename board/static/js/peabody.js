@@ -82,4 +82,3 @@ document.addEventListener("DOMContentLoaded", () => {
     loadQuestion();
     timerInterval = setInterval(updateTimer, 1000);
 });
-
