@@ -1,4 +1,4 @@
-HOW TO START!
+GETTING STARTED!
 
 A. IMPORTANT! GUMAWA ng virtual environment. Steps:
    1. create venv -> python -m venv LIPMIC_webapp
