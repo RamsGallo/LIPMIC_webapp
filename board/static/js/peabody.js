@@ -1,5 +1,5 @@
 let currentAnswer = "";
-let timer = 20 * 60; // 20 minutes
+let timer = 20 * 60;
 let timerInterval;
 let isListening = false;
 

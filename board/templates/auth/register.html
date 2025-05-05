@@ -1,0 +1,7 @@
+<form method="POST">
+    <h2>SLP Registration</h2>
+    <input name="username" placeholder="Username" required>
+    <input name="password" type="password" placeholder="Password" required>
+    <button type="submit">Register</button>
+    <p>Already have an account? <a href="{{ url_for('pages.login') }}">Login</a></p>
+</form>

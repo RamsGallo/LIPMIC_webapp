@@ -83,40 +83,21 @@
                     <dd class="col-sm-9">The children is presented with 4 pictures. The task is to measure their understanding of vocabulary. With Lipmic, the childen can point out the pictures using their articulation of labels.</dd>
                   </dl>
                   <hr>
-                  <div class="input-group flex-nowrap mb-3 mt-1">
-                    <span class="input-group-text" id="addon-wrapping">Hello!</span>
-                    <input type="text" id="name" class="form-control" placeholder="name" aria-label="Username" aria-describedby="addon-wrapping">
+                  <div class="mb-3">
+                    <label for="patientSelect" class="form-label">Select Patient</label>
+                    <select id="patientSelect" class="form-select">
+                      <option value="" disabled selected>Select a patient</option>
+                      {% for patient in patients %}
+                        <option value="{{ patient.id }}">{{ patient.name }}</option>
+                      {% endfor %}
+                    </select>
                   </div>
-                  <div class="row align-items-center g-3">
+
+                  <div class="row">
                     <div class="col-auto">
-                      <div id="durationValue" class="form-text mt-1">
-                      </div>
+                      <button id="startAssessmentBtn" class="btn btn-primary d-none">Start Assessment</button>
                     </div>
-                    <div class="col">
-                      <input
-                        type="range"
-                        class="form-range"
-                        min="5"
-                        max="60"
-                        step="5"
-                        id="durationrange0"
-                        list="tickmarks"
-                        value="0"
-                      >
-                      <datalist id="tickmarks">
-                        {% for i in range(5, 65, 5) %}
-                          <option value="{{ i }}"></option>
-                        {% endfor %}
-                      </datalist>
-                      <div class="d-flex justify-content-between small text-muted">
-                        {% for i in range(5, 65, 5) %}
-                          <span>{{ i }}</span>
-                        {% endfor %}
-                      </div>
-                    </div>
-                    <div class="col-auto">
-                      <button id="durationBtn" class="btn btn-primary d-none"><a href="/console/assessments/peabody">Start Assessment</a></button>
-                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -125,9 +106,9 @@
         </div>
       </div>
     </div>
-    
+{% endblock content %}
 
-
+{% block scripts %}
 <script>
   const cards = document.querySelectorAll('.card');
 
@@ -145,33 +126,33 @@
 </script>
 
 <script>
-  const slider = document.getElementById('durationrange0');
-  const nameInput = document.getElementById('name');
-  const valueDisplay = document.getElementById('durationValue');
-  const durationBtn = document.getElementById('durationBtn');
+  document.getElementById("patientSelect").addEventListener("change", (e) => {
+    const selectedPatientId = e.target.value;
+    const startButton = document.getElementById("startAssessmentBtn");
 
-  function updateUI() {
-    const duration = parseInt(slider.value);
-    const name = nameInput.value.trim();
-
-    // Update duration display
-    if (duration >= 5) {
-      valueDisplay.textContent = `Duration: ${duration} minutes`;
+    if (selectedPatientId) {
+      startButton.classList.remove("d-none");
     } else {
-      valueDisplay.textContent = "Not set";
+      startButton.classList.add("d-none");
     }
+  });
 
-    // Show button only if name is not empty and duration >= 5
-    if (name !== "" && duration >= 5) {
-      durationBtn.classList.remove("d-none");
+  document.getElementById("startAssessmentBtn").addEventListener("click", async () => {
+    const patientId = document.getElementById("patientSelect").value;
+
+    const response = await fetch("/set_patient_by_id", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ patient_id: patientId })
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      window.location.href = "/console/assessments/peabody";
     } else {
-      durationBtn.classList.add("d-none");
+      alert("Error selecting patient. Please try again.");
     }
-  }
-
-  slider.addEventListener("input", updateUI);
-  nameInput.addEventListener("input", updateUI);
+  });
 </script>
 
-
-{% endblock content %}
+{% endblock scripts %} 

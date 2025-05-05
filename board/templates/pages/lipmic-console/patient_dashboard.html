@@ -1,0 +1,30 @@
+{% extends 'base-console.html' %}
+
+{% block title %}
+    Assessment
+{% endblock title %}
+
+<!---Render header-->
+{% block header %}
+{% endblock header %}
+
+<!---Render content of page-->
+{% block content %}
+<h3 class="mb-3">{{ patient.name }}'s Assessment History</h3>
+<h2>Peabody Test Results</h2>
+{% if peabody_results %}
+  <ul class="list-group">
+    {% for result in peabody_results %}
+      <li class="list-group-item">
+        <strong>Date:</strong> {{ result.date_taken.strftime('%Y-%m-%d %H:%M') }} <br>
+        <strong>Score:</strong> {{ result.score }} <br>
+        <strong>Duration:</strong> {{ result.duration or 'N/A' }} seconds
+        <!-- Optional: Show answer summary or link to detail page -->
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No Peabody results available for this patient.</p>
+{% endif %}
+
+{% endblock content %}
