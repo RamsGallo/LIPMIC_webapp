@@ -83,7 +83,7 @@
                     <dd class="col-sm-9">The children is presented with 4 pictures. The task is to measure their understanding of vocabulary. With Lipmic, the childen can point out the pictures using their articulation of labels.</dd>
                   </dl>
                   <hr>
-                  <div class="mb-3">
+                  <div class="mb-4">
                     <label for="patientSelect" class="form-label">Select Patient</label>
                     <select id="patientSelect" class="form-select">
                       <option value="" disabled selected>Select a patient</option>
@@ -95,7 +95,7 @@
 
                   <div class="row">
                     <div class="col-auto">
-                      <button id="startAssessmentBtn" class="btn btn-primary d-none">Start Assessment</button>
+                      <button class="btn btn-primary start-assessment-btn d-none" data-assessment="peabody">Start Assessment</button>
                     </div>
                   </div>
                   </div>
@@ -109,50 +109,8 @@
 {% endblock content %}
 
 {% block scripts %}
-<script>
-  const cards = document.querySelectorAll('.card');
 
-  cards.forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      cards.forEach(c => {
-        if (c !== card) c.classList.add('card-shrink');
-      });
-    });
 
-    card.addEventListener('mouseleave', () => {
-      cards.forEach(c => c.classList.remove('card-shrink'));
-    });
-  });
-</script>
 
-<script>
-  document.getElementById("patientSelect").addEventListener("change", (e) => {
-    const selectedPatientId = e.target.value;
-    const startButton = document.getElementById("startAssessmentBtn");
-
-    if (selectedPatientId) {
-      startButton.classList.remove("d-none");
-    } else {
-      startButton.classList.add("d-none");
-    }
-  });
-
-  document.getElementById("startAssessmentBtn").addEventListener("click", async () => {
-    const patientId = document.getElementById("patientSelect").value;
-
-    const response = await fetch("/set_patient_by_id", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ patient_id: patientId })
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      window.location.href = "/console/assessments/peabody";
-    } else {
-      alert("Error selecting patient. Please try again.");
-    }
-  });
-</script>
 
 {% endblock scripts %} 

@@ -2,7 +2,7 @@
 {% block title %}Assessment{% endblock %}
 
 {% block content %}
-<h3 class="mb-3">{{ patient.name }}'s Assessment History</h3>
+<h3 class="mb-3">{{ patient_id }}'s Assessment History</h3>
   {% for result in results %}
     <h4>{{ result.assessment_type | capitalize }} Test</h4>
     <ul class="list-group mb-4">

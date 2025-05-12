@@ -63,8 +63,6 @@
           <div class="collapse show" id="home-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="#overview-1" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
-              <li><a href="#updates" class="link-dark rounded">Updates</a></li>
-              <li><a href="#reports" class="link-dark rounded">Reports</a></li>
             </ul>
           </div>
         </li>
@@ -77,9 +75,6 @@
           <div class="collapse show" id="dashboard-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
               <li><a href="#i" class="link-dark rounded">Overview</a></li>
-              <li><a href="#" class="link-dark rounded">Weekly</a></li>
-              <li><a href="#" class="link-dark rounded">Monthly</a></li>
-              <li><a href="#" class="link-dark rounded">Annually</a></li>
             </ul>
           </div>
         </li>
@@ -90,10 +85,10 @@
           </button>
           <div class="collapse show" id="account-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#" class="link-dark rounded">New...</a></li>
+              <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded">Add new patient</a></li>
               <li><a href="#" class="link-dark rounded">Profile</a></li>
               <li><a href="#" class="link-dark rounded">Settings</a></li>
-              <li><a href="#" class="link-dark rounded">Sign out</a></li>
+              <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded">Sign out</a></li>
             </ul>
           </div>
         </li>
@@ -123,8 +118,6 @@
               <div class="collapse show" id="home-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><a href="#overview-1" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
-                  <li><a href="#updates" class="link-dark rounded">Updates</a></li>
-                  <li><a href="#reports" class="link-dark rounded">Reports</a></li>
                 </ul>
               </div>
             </li>
@@ -137,9 +130,6 @@
               <div class="collapse show" id="dashboard-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><a href="#" class="link-dark rounded">Overview</a></li>
-                  <li><a href="#" class="link-dark rounded">Weekly</a></li>
-                  <li><a href="#" class="link-dark rounded">Monthly</a></li>
-                  <li><a href="#" class="link-dark rounded">Annually</a></li>
                 </ul>
               </div>
             </li>
@@ -150,10 +140,10 @@
               </button>
               <div class="collapse show" id="account-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><a href="#" class="link-dark rounded">New...</a></li>
+                  <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded">Add new patient</a></li>
                   <li><a href="#" class="link-dark rounded">Profile</a></li>
                   <li><a href="#" class="link-dark rounded">Settings</a></li>
-                  <li><a href="#" class="link-dark rounded">Sign out</a></li>
+                  <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded">Sign out</a></li>
                 </ul>
               </div>
             </li>
@@ -199,6 +189,45 @@
     sidebar.classList.toggle('collapsed');
   });
 </script>
+
+<script>
+  const patientSelect = document.getElementById("patientSelect");
+  const startButtons = document.querySelectorAll(".start-assessment-btn");
+
+  patientSelect.addEventListener("change", () => {
+    const patientId = patientSelect.value;
+
+    startButtons.forEach(btn => {
+      if (patientId) {
+        btn.classList.remove("d-none");
+      } else {
+        btn.classList.add("d-none");
+      }
+    });
+  });
+
+  startButtons.forEach(button => {
+    button.addEventListener("click", async () => {
+      const patientId = patientSelect.value;
+      const assessmentType = button.dataset.assessment;
+
+      const response = await fetch("/set_patient_by_id", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patient_id: patientId })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        window.location.href = `/console/assessments/${assessmentType}`;
+      } else {
+        alert("Error selecting patient. Please try again.");
+      }
+    });
+  });
+</script>
+
+<script>const patientId = "{{ patient_id }}";</script>
 
 {% block scripts %}
 

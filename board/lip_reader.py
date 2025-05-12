@@ -148,7 +148,7 @@ def extract_and_preprocess_lip(frame, landmarks):
 
 print("before predict: ", prediction_consumed)
 def predict_word():
-    global curr_word_frames, predicted_word_label, concat_words, draw_prediction, spoken_already
+    global curr_word_frames, predicted_word_label, concat_words, draw_prediction, spoken_already, prediction_consumed
     curr_word_frames = list(past_word_frames) + curr_word_frames
     curr_data = np.array([curr_word_frames[:input_shape[0]]])
     prediction = model.predict(curr_data)
@@ -165,9 +165,9 @@ def predict_word():
     print(spoken_already)
     concat_words += f" {predicted_word_label}"
     curr_word_frames = []
-    draw_prediction = True
     prediction_consumed = False
-    print("after predict: ", prediction_consumed)
+    draw_prediction = True
+    
 
 
 def generate_frames():

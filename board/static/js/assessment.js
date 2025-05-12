@@ -1,66 +1,91 @@
-// assessment.js
+let timer = 5 * 60;
+let timerInterval;
+let answered = false;
+let currentAnswer = "";
 
-document.addEventListener("DOMContentLoaded", function () {
-    const patientSelect = document.getElementById("patientSelect");
-    const startAssessmentBtn = document.getElementById("startAssessmentBtn");
+function updateTimer() {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    document.getElementById("timer").innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    if (timer <= 0) {
+        clearInterval(timerInterval);
+        alert("Time's up!");
+        // window.location.href = `/console/end/${patient_id}`;
+        setInterval(openPage, 1000);
+    }
+    timer--;
+}
 
-    // Function to send the result to the server
-    async function saveResult() {
-        const patientId = patientSelect.value;
-        const answers = getTestAnswers();  // Function to gather answers from the user
-        const score = calculateScore(answers);  // Calculate score based on answers
-        const duration = calculateDuration();  // Duration of the test in seconds
-
-        if (!patientId || !answers || score === null) {
-            alert("Please complete the assessment first.");
-            return;
-        }
-
-        // Send the result to the server
-        const response = await fetch("/save_peabody_result", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                patient_id: patientId,
-                answers: answers,
-                score: score,
-                duration: duration
-            })
+function loadQuestion() {
+    fetch(`/quiz/${assessmentType}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.finished) {
+                alert(`${assessmentType}Test Finished! Score: ${data.score}, Patient: ${patient_id}`);
+                fetch(`/console/end/${patient_id}`).then(setInterval(openPage, 500))
+            }
+            currentAnswer = "";
+            document.getElementById("quiz-prompt").innerText = data.prompt;
+            document.getElementById("up-img").src = data.images.up;
+            document.getElementById("down-img").src = data.images.down;
+            document.getElementById("left-img").src = data.images.left;
+            document.getElementById("right-img").src = data.images.right;
+            speak(data.prompt);
         });
 
-        const data = await response.json();
-        
-        if (data.success) {
-            alert("Assessment result saved successfully!");
-        } else {
-            alert("Failed to save assessment results. Please try again.");
-        }
-    }
+    console.log("Loading question...");
 
-    // Dummy functions for demonstration purposes, replace with actual implementation
-    function getTestAnswers() {
-        return [
-            { question: 1, answer: "A" },
-            { question: 2, answer: "C" }
-        ];
-    }
+}
 
-    function calculateScore(answers) {
-        return answers.length;
-    }
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US';
+    window.speechSynthesis.speak(msg);
+}
 
-    function calculateDuration() {
-        return 120;
-    }
+function openPage() {
+    window.location.href = `/console/patient/${patient_id}`;
+    return;
+}
 
-    // Show the 'Start Assessment' button once a patient is selected
-    patientSelect.addEventListener("change", function() {
-        if (patientSelect.value) {
-            startAssessmentBtn.classList.remove("d-none");
-        } else {
-            startAssessmentBtn.classList.add("d-none");
-        }
+function pollPrediction() {
+    if (answered) return;
+
+    fetch("/get_prediction")
+        .then(response => response.json())
+        .then(data => {
+            const word = data.word;
+            if (word && !answered) {
+                answered = true;
+                submitAnswer(word);
+            }
+        });
+}
+
+setInterval(pollPrediction, 1000);
+
+function submitAnswer(word) {
+    fetch(`/submit_answer/${assessmentType}`, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({word})
+    })
+    .then(res => res.json())
+    .then(data => {
+        const scoreElem = document.getElementById("score");
+        scoreElem.innerText = `Score: ${data.score}`;
+        answered = false;
+        loadQuestion();
+    })
+    .catch(error => {
+        console.error("Error submitting answer:", error);
+        answered = false;  // Important to unlock prediction again
     });
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadQuestion();
+    timerInterval = setInterval(updateTimer, 1000);
 });
+

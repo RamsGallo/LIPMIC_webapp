@@ -10,15 +10,7 @@ class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     slp_id = db.Column(db.Integer, db.ForeignKey('slp.id'), nullable=False)
-    sessions = db.relationship('AssessmentSession', backref='patient', lazy=True)
-
-class AssessmentSession(db.Model):
-    __tablename__ = 'assessment_session'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=False)
-    score = db.Column(db.Integer)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-
+    sessions = db.relationship('AssessmentResult', backref='patient', lazy=True)
 
 class SLP(UserMixin, db.Model):
     __tablename__ = 'slp'
@@ -39,18 +31,18 @@ class SLP(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class PeabodyResult(db.Model):
-    __tablename__ = 'peabody_results'
-
+class AssessmentResult(db.Model):
+    __tablename__ = 'assessment_results'
     id = db.Column(db.Integer, primary_key=True)
+    assessment_type = db.Column(db.String(50), nullable=False)  # e.g., 'peabody', 'naming'
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
-    patient = db.relationship('Patient', backref='peabody_results')
     date_taken = db.Column(db.DateTime, default=datetime.utcnow)
-    answers = db.Column(db.JSON, nullable=False)  # This stores answers and additional data
-    score = db.Column(db.Integer, nullable=False)  # Store the score of the assessment
-    duration = db.Column(db.Integer, nullable=True)  # Duration of the test in seconds (optional)
+    answers = db.Column(db.JSON, nullable=False)  # { "prompt": ..., "predicted": ..., "correct": ... }
+    score = db.Column(db.Integer, nullable=False)
+    duration = db.Column(db.Integer, nullable=True)
 
-    def __init__(self, patient_id, answers, score, duration=None):
+    def __init__(self, assessment_type, patient_id, answers, score, duration=None):
+        self.assessment_type = assessment_type
         self.patient_id = patient_id
         self.answers = answers
         self.score = score

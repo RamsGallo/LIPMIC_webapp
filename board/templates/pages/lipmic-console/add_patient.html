@@ -1,6 +1,15 @@
+{% extends 'base-console.html' %}
+{% block title %}Add Patients{% endblock %}
+
+{% block content %}
 <form method="POST" action="{{ url_for('pages.add_patient') }}">
     <label for="name">Patient Name:</label>
     <input type="text" name="name" required>
     <button type="submit">Add Patient</button>
 </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
   

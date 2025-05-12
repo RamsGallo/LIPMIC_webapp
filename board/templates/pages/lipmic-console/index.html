@@ -12,7 +12,6 @@
 {% block content %}
 <div class="home-scroll">
   <h2>Welcome, {{ current_user.username }}</h2>
-<a href="{{ url_for('pages.add_patient') }}">Add New Patient</a>
 <ul>
   {% for patient in patients %}
     <li>

@@ -3,18 +3,12 @@
 
 {% block content %}
 <div style="display: flex; gap: 20px;">
-    <!-- Camera View -->
     <div>
+        <p>"{{ patient_id }}"</p>
+        <p>"{{ assessment_type }}"</p>
         <h3>Live Camera</h3>
         <img id="video-feed" src="{{ url_for('pages.video_feed') }}" width="320" height="240">
-
-        <a href="{{ url_for('pages.get_quiz') }}?reset=1" class="btn btn-warning">
-            Reset Session
-        </a>    
     </div>
-
-
-    <!-- Quiz Interface -->
     <div style="flex: 1;">
         <h2 id="quiz-prompt">Loading...</h2>
         <div class="diamond-layout">
@@ -27,13 +21,14 @@
         <div id="score">Score: 0</div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
+<script>window.patient_id = "{{ patient_id }}";</script>
 
-<script src="{{ url_for('static', filename='js/peabody.js') }}"></script>
+<script>
+    // window.patientId = "{{ patient_id }}";
+    window.assessmentType = "{{ assessment_type }}";
+</script>
 <script src="{{ url_for('static', filename='js/assessment.js') }}"></script>
-
 {% endblock %}
-
