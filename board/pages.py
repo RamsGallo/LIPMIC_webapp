@@ -198,6 +198,11 @@ def submit_answer(assessment_type):
     level = data["level"]
     index = data["question_index"]
     questions = quiz_sets[assessment_type][level]
+
+    # Avoid index error
+    if index >= len(questions):
+        return jsonify({"error": "No more questions at this level"}), 400
+
     question = questions[index]
 
     correct = question["correct"] == word
@@ -209,14 +214,9 @@ def submit_answer(assessment_type):
         "predicted": word,
         "correct": question["correct"]
     })
-    
+
     data["question_index"] += 1
     session['assessment'] = data
-    data = session.get("assessment", {})
-    print(data.get("answers", []))
-    # print("Current level:", level)
-    # print("Question index:", index)
-    # print("Question prompt:", question["prompt"])
 
     return jsonify({"correct": correct, "score": data["score"]})
 
@@ -303,10 +303,9 @@ def end_assessment(patient_id):
     
     duration = None
     if start_time:
-        # Make sure start_time is converted from string if needed
-        if isinstance(start_time, str):
-            start_time = datetime.fromisoformat(start_time)
-        duration = int(start_time)
+        if isinstance(start_time, (int, float)):
+            start_time = datetime.fromtimestamp(start_time)
+        duration = int((datetime.utcnow() - start_time).total_seconds())
 
     result = AssessmentResult(
         assessment_type=assessment_type,

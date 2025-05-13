@@ -31,6 +31,24 @@
       <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
       <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
     </symbol>
+
+    <symbol id="add_patient" viewBox="0 0 16 16">
+      <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+      <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+    </symbol>
+
+    <symbol id="sign_out" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+      <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+    </symbol>
+
+    <symbol id="assessment_logo" viewBox="0 0 16 16">
+      <path d="M3.5 2a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5H12a.5.5 0 0 1 0-1h.5A1.5 1.5 0 0 1 14 2.5v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-12A1.5 1.5 0 0 1 3.5 1H4a.5.5 0 0 1 0 1z"/>
+      <path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5"/>
+    </symbol>
+    
+  
+</svg>
   
 </svg>
 
@@ -59,10 +77,10 @@
           <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
             Home
           </button>
-          <a href="/console/" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a>
+          <!-- <a href="/console/" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a> -->
           <div class="collapse show" id="home-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#overview-1" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
+              <li><a href="{{ url_for('pages.console_page') }}" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
             </ul>
           </div>
         </li>
@@ -71,10 +89,10 @@
           <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="true">
             Assessment
           </button>
-          <a href="/console/assessments" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a>
+          <!-- <a href="/console/assessments" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a> -->
           <div class="collapse show" id="dashboard-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="#i" class="link-dark rounded">Overview</a></li>
+              <li><a href="{{ url_for('pages.assessments_page') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#assessment_logo"/></svg>Tests</a></li>
             </ul>
           </div>
         </li>
@@ -85,10 +103,9 @@
           </button>
           <div class="collapse show" id="account-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-              <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded">Add new patient</a></li>
-              <li><a href="#" class="link-dark rounded">Profile</a></li>
+              <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#add_patient"/></svg>Add Patient</a></li>
               <li><a href="#" class="link-dark rounded">Settings</a></li>
-              <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded">Sign out</a></li>
+              <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#sign_out"/></svg>Sign out</a></li>
             </ul>
           </div>
         </li>
@@ -114,10 +131,10 @@
               <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
                 Home
               </button>
-              <a href="/console/" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a>
+              <!-- <a href="/console/" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a> -->
               <div class="collapse show" id="home-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><a href="#overview-1" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
+                  <li><a href="{{ url_for('pages.console_page') }}" class="link-dark rounded"><svg class="bi me-1" width="24" height="24"><use xlink:href="#overview"/></svg>Overview</a></li>
                 </ul>
               </div>
             </li>
@@ -126,10 +143,10 @@
               <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="true">
                 Assessment
               </button>
-              <a href="/console/assessments" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a>
+              <!-- <a href="{{ url_for('pages.assessments_page') }}" class="link-dark rounded"><svg class="bi me-1" width="18" height="18"><use xlink:href="#open-page"></svg></a> -->
               <div class="collapse show" id="dashboard-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><a href="#" class="link-dark rounded">Overview</a></li>
+                  <li><a href="{{ url_for('pages.assessments_page') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#assessment_logo"/></svg>Tests</a></li>
                 </ul>
               </div>
             </li>
@@ -140,10 +157,9 @@
               </button>
               <div class="collapse show" id="account-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded">Add new patient</a></li>
-                  <li><a href="#" class="link-dark rounded">Profile</a></li>
+                  <li><a href="{{ url_for('pages.add_patient') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#add_patient"/></svg>Add new patient</a></li>
                   <li><a href="#" class="link-dark rounded">Settings</a></li>
-                  <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded">Sign out</a></li>
+                  <li><a href="{{ url_for('pages.logout') }}" class="link-dark rounded"><svg class="bi me-1" width="22" height="22"><use xlink:href="#sign_out"/></svg>Sign out</a></li>
                 </ul>
               </div>
             </li>

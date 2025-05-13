@@ -31,7 +31,7 @@ quiz_sets = {
                     "left": "/static/images/train.jpg",
                     "right": "/static/images/car.jpg"
                 },
-                "correct": "down"
+                "correct": "left"
             },
             {
                 "prompt": "Where is the train?",
@@ -41,7 +41,7 @@ quiz_sets = {
                     "left": "/static/images/bicycle.jpg",
                     "right": "/static/images/cat.jpg"
                 },
-                "correct": "up"
+                "correct": "right"
             }
         ],
         "hard": [
@@ -63,8 +63,38 @@ quiz_sets = {
                     "left": "/static/images/tree.jpg",
                     "right": "/static/images/cat.jpg"
                 },
-                "correct": "down"
-            }
+                "correct": "right"
+            },
+            {
+                "prompt": "Which picture shows a microscope?",
+                "images": {
+                    "up": "/static/images/rocket.jpg",
+                    "down": "/static/images/microscope.jpg",
+                    "left": "/static/images/globe.jpg",
+                    "right": "/static/images/laptop.jpg"
+                },
+                "correct": "up"
+            },
+            {
+                "prompt": "Which picture shows a microscope?",
+                "images": {
+                    "up": "/static/images/rocket.jpg",
+                    "down": "/static/images/microscope.jpg",
+                    "left": "/static/images/globe.jpg",
+                    "right": "/static/images/laptop.jpg"
+                },
+                "correct": "left"
+            },
+            {
+                "prompt": "Which picture shows a microscope?",
+                "images": {
+                    "up": "/static/images/rocket.jpg",
+                    "down": "/static/images/microscope.jpg",
+                    "left": "/static/images/globe.jpg",
+                    "right": "/static/images/laptop.jpg"
+                },
+                "correct": "right"
+            },
         ]
     }, # end of peabody
     

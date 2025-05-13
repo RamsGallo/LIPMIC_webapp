@@ -21,9 +21,16 @@ function loadQuestion() {
         .then(res => res.json())
         .then(data => {
             if (data.finished) {
-                alert(`${assessmentType}Test Finished! Score: ${data.score}, Patient: ${patient_id}`);
-                fetch(`/console/end/${patient_id}`).then(setInterval(openPage, 500))
+                alert(`${assessmentType} Test Finished! Score: ${data.score}, Patient: ${patient_id}`);
+                
+                // Wait a short time then redirect once
+                setTimeout(() => {
+                    window.location.href = `/console/end/${patient_id}`;
+                }, 1000);
+                return;
             }
+
+            // Load next question
             currentAnswer = "";
             document.getElementById("quiz-prompt").innerText = data.prompt;
             document.getElementById("up-img").src = data.images.up;
@@ -31,11 +38,14 @@ function loadQuestion() {
             document.getElementById("left-img").src = data.images.left;
             document.getElementById("right-img").src = data.images.right;
             speak(data.prompt);
+        })
+        .catch(error => {
+            console.error("Error loading question:", error);
         });
 
     console.log("Loading question...");
-
 }
+
 
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
