@@ -4,8 +4,6 @@
 {% block content %}
 <div style="display: flex; gap: 20px;">
     <div>
-        <p>"{{ patient_id }}"</p>
-        <p>"{{ assessment_type }}"</p>
         <h3>Live Camera</h3>
         <img id="video-feed" src="{{ url_for('pages.video_feed') }}" width="320" height="240">
     </div>
@@ -17,7 +15,7 @@
             <img id="right-img" class="quiz-img" />
             <img id="down-img" class="quiz-img" />
         </div>
-        <div id="timer">20:00</div>
+        <div id="timer">10:00</div>
         <div id="score">Score: 0</div>
     </div>
 </div>

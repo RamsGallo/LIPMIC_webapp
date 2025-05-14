@@ -39,7 +39,7 @@
                                 <a class="nav-link fw-bold nav-project active text-color" aria-current="page"
                                     href="/project-lipmic"><span class="lipmic-color">Project LIPMIC</span></a>
                             </li>
-                            <li class="nav-item dropdown">
+                            <!-- <li class="nav-item dropdown">
                                 <a class="nav-link fw-bold dropdown-toggle text-color" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="lipmic-color">Standardized Tests</span>
                                 </a>
@@ -49,7 +49,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">About Tests</a>
                                 </div>
-                            </li>
+                            </li> -->
                             <li class="nav-item dropdown">
                                 <a class="nav-link fw-bold dropdown-toggle text-color" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="lipmic-color">More</span>
@@ -91,6 +91,39 @@
             }
         });
     </script>
+
+<!-- Page Load Spinner (Centered) -->
+<div id="page-spinner" class="position-fixed top-0 start-0 w-100 h-100 d-none bg-white d-flex justify-content-center align-items-center" style="z-index: 2000;">
+  <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+
+<script>
+  // Show spinner when navigating
+  document.addEventListener('DOMContentLoaded', () => {
+    const spinner = document.getElementById('page-spinner');
+
+    // Show on form submit
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', () => {
+        spinner.classList.remove('d-none');
+      });
+    });
+
+    // Optional: Show on link click (non-anchor links)
+    document.querySelectorAll('a[href]:not([target="_blank"])').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('#') && !link.classList.contains('no-spinner')) {
+          spinner.classList.remove('d-none');
+        }
+      });
+    });
+  });
+</script>
+
 </body>
 
 </html>

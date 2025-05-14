@@ -1,4 +1,4 @@
-let timer = 5 * 60;
+let timer = 10 * 60;
 let timerInterval;
 let answered = false;
 let currentAnswer = "";

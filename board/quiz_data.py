@@ -4,97 +4,67 @@ quiz_sets = {
             {
                 "prompt": "Which one is a cat?",
                 "images": {
-                    "up": "/static/img/haks.jpeg",
-                    "down": "/static/images/dog.jpg",
-                    "left": "/static/images/ball.jpg",
-                    "right": "/static/images/tree.jpg"
+                    "up": "/static/img/cat.jpg",
+                    "down": "/static/img/bird.jpg",
+                    "left": "/static/img/chicken.jpg",
+                    "right": "/static/img/pig.jpg"
                 },
                 "correct": "up"
             },
             {
                 "prompt": "Where is the dog?",
                 "images": {
-                    "up": "/static/img/rams.jpeg",
-                    "down": "/static/images/dog.jpg",
-                    "left": "/static/images/tree.jpg",
-                    "right": "/static/images/cat.jpg"
+                    "up": "/static/img/rat.jpg",
+                    "down": "/static/img/dog.jpg",
+                    "left": "/static/img/bird.jpg",
+                    "right": "/static/img/chicken.jpg"
                 },
                 "correct": "down"
             }
         ],
         "medium": [
             {
-                "prompt": "Which one is a bicycle?",
+                "prompt": "Which one is running?",
                 "images": {
-                    "up": "/static/img/zergs.jpg",
-                    "down": "/static/images/bicycle.jpg",
-                    "left": "/static/images/train.jpg",
-                    "right": "/static/images/car.jpg"
+                    "up": "/static/img/sit.jpg",
+                    "down": "/static/img/walk.jpg",
+                    "left": "/static/img/run.jpg",
+                    "right": "/static/img/swim.jpg"
                 },
                 "correct": "left"
             },
             {
-                "prompt": "Where is the train?",
+                "prompt": "Which one is swimming?",
                 "images": {
-                    "up": "/static/img/menroe.jpg",
-                    "down": "/static/images/tree.jpg",
-                    "left": "/static/images/bicycle.jpg",
-                    "right": "/static/images/cat.jpg"
+                    "up": "/static/img/jump.jpg",
+                    "down": "/static/img/run.jpg",
+                    "left": "/static/img/sit.jpg",
+                    "right": "/static/img/swim.jpg"
                 },
                 "correct": "right"
             }
         ],
         "hard": [
             {
-                "prompt": "Which picture shows a microscope?",
+                "prompt": "Which one is climbing",
                 "images": {
-                    "up": "/static/images/rocket.jpg",
-                    "down": "/static/images/microscope.jpg",
-                    "left": "/static/images/globe.jpg",
-                    "right": "/static/images/laptop.jpg"
+                    "up": "/static/img/roll.jpg",
+                    "down": "/static/img/climb.jpg",
+                    "left": "/static/img/bike.jpg",
+                    "right": "/static/img/jumprope.jpg"
                 },
                 "correct": "down"
             },
             {
-                "prompt": "Where is the stethoscope?",
+                "prompt": "Who's holding an apple?",
                 "images": {
-                    "up": "/static/images/ball.jpg",
-                    "down": "/static/images/stethoscope.jpg",
-                    "left": "/static/images/tree.jpg",
-                    "right": "/static/images/cat.jpg"
+                    "up": "/static/img/hold_carrot.jpg",
+                    "down": "/static/img/hold_flower.jpg",
+                    "left": "/static/img/hold_trash.jpg",
+                    "right": "/static/img/hold_apple.jpg"
                 },
                 "correct": "right"
-            },
-            {
-                "prompt": "Which picture shows a microscope?",
-                "images": {
-                    "up": "/static/images/rocket.jpg",
-                    "down": "/static/images/microscope.jpg",
-                    "left": "/static/images/globe.jpg",
-                    "right": "/static/images/laptop.jpg"
-                },
-                "correct": "up"
-            },
-            {
-                "prompt": "Which picture shows a microscope?",
-                "images": {
-                    "up": "/static/images/rocket.jpg",
-                    "down": "/static/images/microscope.jpg",
-                    "left": "/static/images/globe.jpg",
-                    "right": "/static/images/laptop.jpg"
-                },
-                "correct": "left"
-            },
-            {
-                "prompt": "Which picture shows a microscope?",
-                "images": {
-                    "up": "/static/images/rocket.jpg",
-                    "down": "/static/images/microscope.jpg",
-                    "left": "/static/images/globe.jpg",
-                    "right": "/static/images/laptop.jpg"
-                },
-                "correct": "right"
-            },
+            }
         ]
     }, # end of peabody
     
