@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from board.models import db, SLP, Patient, AssessmentResult
 from datetime import datetime
 from board.quiz_data import quiz_sets
-from board import lip_reader
+from board import lip_reader #<-- comment when testing
 
 
 bp = Blueprint("pages", __name__)
@@ -74,7 +74,8 @@ def assessment_page(assessment_type):
         "finished": False
     }
     session["assessment_type"] = assessment_type
-    return render_template(f"pages/lipmic-console/{assessment_type}.html", patient_id=patient_id, assessment_type=assessment_type)
+    title = str(assessment_type).capitalize()
+    return render_template(f"pages/lipmic-console/{assessment_type}.html", patient_id=patient_id, assessment_type=assessment_type, assessment_title=title)
 
 # @bp.route('/quiz')
 # @login_required
@@ -223,10 +224,6 @@ def submit_answer(assessment_type):
 
 @bp.route("/get_prediction")
 def get_prediction():
-    # print("=== get_prediction ===")
-    # print("predicted_word_label:", lip_reader.predicted_word_label)
-    # print("prediction_consumed:", lip_reader.prediction_consumed)
-
     if lip_reader.predicted_word_label and not lip_reader.prediction_consumed:
         lip_reader.prediction_consumed = True
         print("hello rams")

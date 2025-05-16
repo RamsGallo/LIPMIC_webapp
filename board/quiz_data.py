@@ -67,5 +67,29 @@ quiz_sets = {
             }
         ]
     }, # end of peabody
+    "test": {
+        "easy": [
+            {
+                "prompt": "Which one is a cat?",
+                "images": {
+                    "up": "/static/img/cat.jpg",
+                    "down": "/static/img/bird.jpg",
+                    "left": "/static/img/chicken.jpg",
+                    "right": "/static/img/pig.jpg"
+                },
+                "correct": "up"
+            },
+            {
+                "prompt": "Where is the dog?",
+                "images": {
+                    "up": "/static/img/rat.jpg",
+                    "down": "/static/img/dog.jpg",
+                    "left": "/static/img/bird.jpg",
+                    "right": "/static/img/chicken.jpg"
+                },
+                "correct": "down"
+            }
+        ],
+    },
     
 }

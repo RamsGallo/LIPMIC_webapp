@@ -1,5 +1,5 @@
 {% extends 'base-console.html' %}
-{% block title %}Assessment{% endblock %}
+{% block title %}Patient Dashboard{% endblock %}
 
 {% block content %}
 <h3 class="mb-3">{{ patient.name }}'s Assessment History</h3>
@@ -9,7 +9,12 @@
       <li class="list-group-item">
         <strong>Date:</strong> {{ result.date_taken.strftime('%Y-%m-%d %H:%M') }}<br>
         <strong>Score:</strong> {{ result.score }} / {{ result.answers | length }}<br>
-        <strong>Duration:</strong> {{ result.duration or 'N/A' }} seconds
+        <strong>Duration:</strong> 
+          {% if result.duration %}
+            {{ (result.duration // 60) }}m {{ (result.duration % 60) }}s
+          {% else %}
+            N/A
+          {% endif %}
       </li>
     </ul>
   {% else %}

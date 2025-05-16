@@ -5,7 +5,6 @@ import math
 import numpy as np
 import tensorflow as tf
 from collections import deque
-from flask import Flask, Response, render_template, jsonify
 
 # Constants
 VALID_WORD_THRESHOLD = 1
@@ -146,7 +145,6 @@ def extract_and_preprocess_lip(frame, landmarks):
 
     return lip_frame
 
-print("before predict: ", prediction_consumed)
 def predict_word():
     global curr_word_frames, predicted_word_label, concat_words, draw_prediction, spoken_already, prediction_consumed
     curr_word_frames = list(past_word_frames) + curr_word_frames
@@ -168,8 +166,6 @@ def predict_word():
     prediction_consumed = False
     draw_prediction = True
     
-
-
 def generate_frames():
     cap = cv2.VideoCapture(0)
     while True:

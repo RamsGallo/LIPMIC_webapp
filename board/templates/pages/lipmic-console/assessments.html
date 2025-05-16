@@ -83,7 +83,8 @@
                     <dd class="col-sm-9">The children is presented with 4 pictures. The task is to measure their understanding of vocabulary. With Lipmic, the childen can point out the pictures using their articulation of labels.</dd>
                   </dl>
                   <hr>
-                  <div class="mb-4">
+                  <div class="row">
+                    <div class="col-sm-9">
                     <label for="patientSelect" class="form-label">Select Patient</label>
                     <select id="patientSelect" class="form-select">
                       <option value="" disabled selected>Select a patient</option>
@@ -92,11 +93,9 @@
                       {% endfor %}
                     </select>
                   </div>
-
-                  <div class="row">
-                    <div class="col-auto">
+                    <div class="col-sm-3 pt-2">
                       <button class="btn btn-primary start-assessment-btn d-none" data-assessment="peabody">Start Assessment</button>
-                    </div>
+                    </div> 
                   </div>
                   </div>
                 </div>
@@ -109,8 +108,5 @@
 {% endblock content %}
 
 {% block scripts %}
-
-
-
 
 {% endblock scripts %} 
