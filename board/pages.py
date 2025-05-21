@@ -225,8 +225,102 @@ def login():
 @login_required
 def add_patient():
     if request.method == 'POST':
+        # CLIENT data 
         name = request.form['name']
-        new_patient = Patient(name=name, slp_id=current_user.id)
+        age = request.form['age']
+        sex = request.form['sex']
+        address = request.form['address']
+        dob = request.form['dob']
+        religion = request.form['religion']
+        diagnosis = request.form['diagnosis']
+        doe = request.form['doe']
+        precautions = request.form['precautions']
+        current_medication = request.form['current_medication']
+        emergency_person = request.form['emergency_person']
+        contact_no = request.form['contact_no']
+        alt_contact_no = request.form['alt_contact_no']
+        grade_level = request.form['grade_level']
+
+        # FAMILY data
+        father_name = request.form['father_name']
+        father_contact_no = request.form['father_contact_no']
+        father_med_history = request.form['father_med_history']
+        mother_name = request.form['mother_name']
+        mother_contact_no = request.form['mother_contact_no']
+        mother_med_history = request.form['mother_med_history']
+        sibling = request.form['sibling']
+        sibling_med_history = request.form['sibling_med_history']
+
+        # MEDICAL data
+        complication_preg = request.form['complication_preg']
+        med_taken = request.form['med_taken']
+        duration_med_taken = request.form['duration_med_taken']
+        typeOfDelivery = request.form['typeOfDelivery']
+        complication_deli = request.form['complication_deli']
+        birth_weight = request.form['birth_weight']
+        birth_problem = request.form['birth_problem']
+        medication = request.form['medication']
+        immunization = request.form['immunization']
+        effects = request.form['effects']
+        
+        # DEV'T data
+        # GMS data
+        gms_0 = request.form['gms_0']
+        gms_1 = request.form['gms_1']
+        gms_2 = request.form['gms_2']
+        gms_3 = request.form['gms_3']
+        gms_4 = request.form['gms_4']
+        gms_5 = request.form['gms_5']
+        gms_6 = request.form['gms_6']
+        gms_7 = request.form['gms_7']
+        gms_8 = request.form['gms_8']
+        gms_9 = request.form['gms_9']
+        gms_10 = request.form['gms_10']
+
+        # FMS data
+        fms_0 = request.form['fms_0']
+        fms_1 = request.form['fms_1']
+        fms_2 = request.form['fms_2']
+        fms_3 = request.form['fms_3']
+        fms_4 = request.form['fms_4']
+        fms_5 = request.form['fms_5']
+        fms_6 = request.form['fms_6']
+        fms_7 = request.form['fms_7']
+        fms_8 = request.form['fms_8']
+        fms_9 = request.form['fms_9']
+
+        # ADL data
+        adl_0 = request.form['adl_0']
+        adl_1 = request.form['adl_1']
+        adl_2 = request.form['adl_2']
+        adl_3 = request.form['adl_3']
+        adl_4 = request.form['adl_4']
+        adl_5 = request.form['adl_5']
+        adl_6 = request.form['adl_6']
+
+        # COGNITIVE data
+        cog_0 = request.form['cog_0']
+        cog_1 = request.form['cog_1']
+        cog_2 = request.form['cog_2']
+        cog_3 = request.form['cog_3']
+        cog_4 = request.form['cog_4']
+        cog_5 = request.form['cog_5']
+        cog_6 = request.form['cog_6']
+
+        # ORAL data
+        omd_0 = request.form['omd_0']
+        omd_1 = request.form['omd_1']
+        omd_2 = request.form['omd_2']
+        omd_3 = request.form['omd_3']
+        omd_4 = request.form['omd_4']
+        omd_5 = request.form['omd_5']
+        omd_6 = request.form['omd_6']
+        omd_7 = request.form['omd_7']
+        omd_8 = request.form['omd_8']
+        omd_9 = request.form['omd_9']
+
+        new_patient = Patient(name=name, age=age, sex=sex, 
+                              address=address, dob=dob, religion=religion, diagnosis=diagnosis, doe=doe, precautions=precautions, current_medication=current_medication, emergency_person=emergency_person, contact_no=contact_no, alt_contact_no=alt_contact_no, grade_level=grade_level, father_name=father_name, father_contact_no=father_contact_no, father_med_history=father_med_history, mother_name=mother_name, mother_contact_no=mother_contact_no, mother_med_history=mother_med_history, sibling=sibling, sibling_med_history=sibling_med_history, complication_preg=complication_preg, med_taken=med_taken, duration_med_taken=duration_med_taken, typeOfDelivery=typeOfDelivery, complication_deli=complication_deli, birth_weight=birth_weight, birth_problem=birth_problem, medication=medication, immunization=immunization, effects=effects, gms_0=gms_0,gms_1=gms_1,gms_2=gms_2,gms_3=gms_3,gms_4=gms_4,gms_5=gms_5,gms_6=gms_6,gms_7=gms_7,gms_8=gms_8,gms_9=gms_9,gms_10=gms_10, fms_0=fms_0,fms_1=fms_1,fms_2=fms_2,fms_3=fms_3,fms_4=fms_4,fms_5=fms_5,fms_6=fms_6,fms_7=fms_7,fms_8=fms_8,fms_9=fms_9, adl_0=adl_0,adl_1=adl_1,adl_2=adl_2,adl_3=adl_3,adl_4=adl_4,adl_5=adl_5,adl_6=adl_6, cog_0=cog_0,cog_1=cog_1,cog_2=cog_2,cog_3=cog_3,cog_4=cog_4,cog_5=cog_5,cog_6=cog_6, omd_0=omd_0,omd_1=omd_1,omd_2=omd_2,omd_3=omd_3,omd_4=omd_4,omd_5=omd_5,omd_6=omd_6,omd_7=omd_7,omd_8=omd_8,omd_9=omd_9, slp_id=current_user.id)
         db.session.add(new_patient)
         db.session.commit()
         flash('Patient added successfully.')
