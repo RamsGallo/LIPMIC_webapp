@@ -3,8 +3,16 @@ from flask_login import login_user, logout_user, login_required, current_user
 from board.models import db, SLP, Patient, AssessmentResult
 from datetime import datetime
 from board.quiz_data import quiz_sets
-from board import lip_reader #<-- comment when testing
+# from board import lip_reader #<-- comment when testing
+from ml.peabody_handler import PeabodyHandler
 
+model_handlers = {
+    "peabody": PeabodyHandler(),
+    # "emotion": EmotionHandler(),
+}
+
+def get_handler(assessment_type):
+    return model_handlers.get(assessment_type)
 
 bp = Blueprint("pages", __name__)
 
@@ -14,7 +22,29 @@ def prediction_page():
 
 @bp.route("/video_feed")
 def video_feed():
-    return Response(lip_reader.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    assessment_type = session.get("assessment_type")
+    handler = get_handler(assessment_type)
+
+    if handler and hasattr(handler, "generate_frames"):
+        return Response(handler.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+    return abort(404, description="Video feed not available for this assessment.")
+
+@bp.route("/get_prediction")
+def get_prediction():
+    assessment_type = session.get("assessment_type")
+    handler = get_handler(assessment_type)
+
+    if handler and not handler.prediction_consumed:
+        word = handler.predicted_word_label
+        handler.prediction_consumed = True
+        return jsonify({'word': word})
+
+    return jsonify({'word': ""})
+
+# @bp.route("/video_feed")
+# def video_feed():
+#     return Response(lip_reader.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # @bp.route("/prediction")
 # def get_prediction():
@@ -77,74 +107,6 @@ def assessment_page(assessment_type):
     title = str(assessment_type).capitalize()
     return render_template(f"pages/lipmic-console/{assessment_type}.html", patient_id=patient_id, assessment_type=assessment_type, assessment_title=title)
 
-# @bp.route('/quiz')
-# @login_required
-# def get_quiz():
-#     if request.args.get("reset") == "1":
-#         session.pop('level', None)
-#         session.pop('index', None)
-#         session.pop('score', None)
-#         session.pop('answers', None)
-#         return render_template("pages/lipmic-console/peabody.html")
-
-#     if 'level' not in session:
-#         session['level'] = 'easy'
-#         session['index'] = 0
-#         session['score'] = 0
-#         session['answers'] = []
-
-#     level = session['level']
-#     index = session['index']
-#     current_quiz_set = quiz_sets[level]
-
-#     if index >= len(current_quiz_set):
-#         # Advance level or finish
-#         if level == 'easy':
-#             session['level'] = 'medium'
-#         elif level == 'medium':
-#             session['level'] = 'hard'
-#         else:
-#             # All levels complete – save to DB
-#             patient_id = session.get("patient_id")
-#             if not patient_id:
-#                 return jsonify({'finished': True, 'error': 'No patient selected'})
-
-#             result = PeabodyResult(
-#                 patient_id=patient_id,
-#                 answers=session.get("answers", []),
-#                 score=session.get("score", 0),
-#                 duration=20 * 60
-#             )
-#             db.session.add(result)
-#             db.session.commit()
-
-#             # Optionally clear quiz session state
-#             session.pop('level', None)
-#             session.pop('index', None)
-#             session.pop('score', None)
-#             session.pop('answers', None)
-
-#             return jsonify({
-#                 'finished': True,
-#                 'score': result.score,
-#                 'answers': result.answers,
-#                 'duration': result.duration,
-#                 'saved': True
-#             })
-
-#         # Reset index for new level
-#         session['index'] = 0
-#         index = 0
-#         current_quiz_set = quiz_sets[session['level']]
-
-#     question = current_quiz_set[index]
-
-#     return jsonify({
-#         'prompt': question['prompt'],
-#         'images': question['images'],
-#         'level': session['level'],
-#         'finished': False
-#     })
 
 @bp.route('/quiz/<assessment_type>')
 def get_question(assessment_type):
@@ -152,35 +114,40 @@ def get_question(assessment_type):
     if not data or data['type'] != assessment_type:
         return jsonify({"error": "Invalid session"}), 400
 
+    handler = get_handler(assessment_type)
+    if not handler:
+        return jsonify({"error": "Unknown assessment type"}), 400
+
     level = data["level"]
     index = data["question_index"]
-    questions = quiz_sets[assessment_type][level]
 
-    if index >= len(questions):
-        # Escalate level or finish
+    try:
+        question, should_advance = handler.get_question(level, index)
+    except IndexError:
+        return jsonify({"error": "No more questions"}), 400
+
+    if should_advance:
         if level == "easy":
-            level = "medium"
+            data["level"] = "medium"
         elif level == "medium":
-            level = "hard"
+            data["level"] = "hard"
         else:
             data["finished"] = True
             session["assessment"] = data
             return jsonify({"finished": True, "score": data["score"]})
 
-        # Reset index and fetch new level
-        index = 0
-        data["level"] = level
-        data["question_index"] = index
-        session["assessment"] = data
-        
-        questions = quiz_sets[assessment_type][level]
+        # ✅ Reset index and call get_question for next level
+        data["question_index"] = 0
+        level = data["level"]
+        index = data["question_index"]
+        try:
+            question, _ = handler.get_question(level, index)
+        except IndexError:
+            return jsonify({"error": "No more questions"}), 400
 
-    question = questions[index]
-
-    # print("Current level:", level)
-    # print("Question index:", index) 
-    # print("Question prompt:", question["prompt"])
-
+    # ✅ Increment question index AFTER getting the current one
+    data["question_index"] += 1
+    session["assessment"] = data
 
     return jsonify({
         "prompt": question["prompt"],
@@ -189,46 +156,35 @@ def get_question(assessment_type):
         "score": data["score"]
     })
 
-
-
 @bp.route('/submit_answer/<assessment_type>', methods=["POST"])
 def submit_answer(assessment_type):
-    data = session['assessment']
+    data = session.get('assessment', {})
+    if not data or data['type'] != assessment_type:
+        return jsonify({"error": "Invalid session"}), 400
+
     word = request.json.get("word")
+    handler = get_handler(assessment_type)
+    if not handler: 
+        return jsonify({"error": "Unknown assessment type"}), 400
 
     level = data["level"]
-    index = data["question_index"]
-    questions = quiz_sets[assessment_type][level]
+    index = data["question_index"] - 1
 
-    # Avoid index error
-    if index >= len(questions):
-        return jsonify({"error": "No more questions at this level"}), 400
-
-    question = questions[index]
-
-    correct = question["correct"] == word
+    correct = handler.check_answer(level, index, word)
     if correct:
         data["score"] += 1
 
+    question = handler.get_question_data(level, index)  # returns static info like correct label
     data["answers"].append({
         "prompt": question["prompt"],
         "predicted": word,
         "correct": question["correct"]
     })
 
-    data["question_index"] += 1
-    session['assessment'] = data
+    session["assessment"] = data
 
     return jsonify({"correct": correct, "score": data["score"]})
 
-
-@bp.route("/get_prediction")
-def get_prediction():
-    if lip_reader.predicted_word_label and not lip_reader.prediction_consumed:
-        lip_reader.prediction_consumed = True
-        print("hello rams")
-        return jsonify({'word': lip_reader.predicted_word_label})
-    return jsonify({'word': ""})
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
