@@ -3,8 +3,249 @@
 
 {% block content %}
 <form method="POST" action="{{ url_for('pages.add_patient') }}">
+    <!-- CLIENT data -->
     <label for="name">Patient Name:</label>
     <input type="text" name="name" required>
+
+    <label for="age">Age: </label>
+    <input type="text" name="age" required>
+
+    <label for="sex">Sex: </label>
+    <input type="text" name="sex" required>
+
+    <label for="address">Address: </label>
+    <input type="text" name="address" required>
+
+    <label for="dob">Date of Birth: </label>
+    <input type="text" name="dob" required>
+
+    <label for="religion">Religion: </label>
+    <input type="text" name="religion" required>
+
+    <label for="diagnosis">Diagnosis: </label>
+    <input type="text" name="diagnosis" required>
+
+    <label for="doe">Date of Evaluation: </label>
+    <input type="text" name="doe" required>
+
+    <label for="precautions">Precautions: </label>
+    <input type="text" name="precautions" required>
+
+    <label for="current_medication">Current Medication: </label>
+    <input type="text" name="current_medication" required>
+
+    <label for="emergency_person">Emergency Contact Person: </label>
+    <input type="text" name="emergency_person" required>
+
+    <label for="contact_no">Contact Number: </label>
+    <input type="text" name="contact_no" required>
+
+    <label for="alt_contact_no">Alternative Contact Number: </label>
+    <input type="text" name="alt_contact_no" required>
+
+    <label for="grade_level">Grade Level: </label>
+    <input type="text" name="grade_level" required>
+
+
+    <!-- FAMILY data -->
+    <label for="father_name">Father's Name: </label>
+    <input type="text" name="father_name" required>
+
+    <label for="father_contact_no">Contact Number: </label>
+    <input type="text" name="father_contact_no" required>
+
+    <label for="father_med_history">Father's Medical History: </label>
+    <input type="text" name="father_med_history" required>
+    
+    <label for="mother_name">Mother's Name: </label>
+    <input type="text" name="mother_name" required>
+
+    <label for="mother_contact_no">Contact Number: </label>
+    <input type="text" name="mother_contact_no" required>
+
+    <label for="mother_med_history">Mother's Medical History: </label>
+    <input type="text" name="mother_med_history" required>
+
+    <label for="sibling">Sibling/s: </label>
+    <input type="text" name="sibling" required>
+
+    <label for="sibling_med_history">Sibling/s Medical History: </label>
+    <input type="text" name="sibling_med_history" required>
+
+
+    <!-- MEDICAL data -->
+    <label for="complication_preg">Complication during pregnancy: </label>
+    <input type="text" name="complication_preg" required>
+
+    <label for="med_taken">Medication taken: </label>
+    <input type="text" name="med_taken" required>
+
+    <label for="duration_med_taken">Duration taken: </label>
+    <input type="text" name="duration_med_taken" required>
+
+    <label for="typeOfDelivery">Type of delivery: </label>
+    <input type="text" name="typeOfDelivery" required>
+
+    <label for="complication_deli">Complication during delivery: </label>
+    <input type="text" name="complication_deli" required>
+
+    <label for="birth_weight">Birth weight: </label>
+    <input type="text" name="birth_weight" required>
+
+    <label for="birth_problem">Birth problem: </label>
+    <input type="text" name="birth_problem" required>
+
+    <label for="medication">Medication/s: </label>
+    <input type="text" name="medication" required>
+
+    <label for="immunization">Immunization/s: </label>
+    <input type="text" name="immunization" required>
+
+    <label for="effects">Adverse effects: </label>
+    <input type="text" name="effects" required>
+
+    <!-- DEV'T data -->
+    <!-- GMS data -->
+    <label for="gms_0">f: </label>
+    <input type="text" name="gms_0" required>
+
+    <label for="gms_1">f: </label>
+    <input type="text" name="gms_1" required>
+
+    <label for="gms_2">f: </label>
+    <input type="text" name="gms_2" required>
+
+    <label for="gms_3">f: </label>
+    <input type="text" name="gms_3" required>
+    
+    <label for="gms_4">f: </label>
+    <input type="text" name="gms_4" required>
+
+    <label for="gms_5">f: </label>
+    <input type="text" name="gms_5" required>
+
+    <label for="gms_6">f: </label>
+    <input type="text" name="gms_6" required>
+
+    <label for="gms_7">f: </label>
+    <input type="text" name="gms_7" required>
+
+    <label for="gms_8">f: </label>
+    <input type="text" name="gms_8" required>
+
+    <label for="gms_9">f: </label>
+    <input type="text" name="gms_9" required>
+
+    <label for="gms_10">f: </label>
+    <input type="text" name="gms_10" required>
+
+    <!-- FMS data -->
+    <label for="fms_0">f: </label>
+    <input type="text" name="fms_0" required>
+
+    <label for="fms_1">f: </label>
+    <input type="text" name="fms_1" required>
+
+    <label for="fms_2">f: </label>
+    <input type="text" name="fms_2" required>
+
+    <label for="fms_3">f: </label>
+    <input type="text" name="fms_3" required>
+
+    <label for="fms_4">f: </label>
+    <input type="text" name="fms_4" required>
+
+    <label for="fms_5">f: </label>
+    <input type="text" name="fms_5" required>
+
+    <label for="fms_6">f: </label>
+    <input type="text" name="fms_6" required>
+
+    <label for="fms_7">f: </label>
+    <input type="text" name="fms_7" required>
+
+    <label for="fms_8">f: </label>
+    <input type="text" name="fms_8" required>
+
+    <label for="fms_9">f: </label>
+    <input type="text" name="fms_9" required>
+
+    <!-- ADL data -->
+    <label for="adl_0">f: </label>
+    <input type="text" name="adl_0" required>
+
+    <label for="adl_1">f: </label>
+    <input type="text" name="adl_1" required>
+
+    <label for="adl_2">f: </label>
+    <input type="text" name="adl_2" required>
+
+    <label for="adl_3">f: </label>
+    <input type="text" name="adl_3" required>
+
+    <label for="adl_4">f: </label>
+    <input type="text" name="adl_4" required>
+
+    <label for="adl_5">f: </label>
+    <input type="text" name="adl_5" required>
+
+    <label for="adl_6">f: </label>
+    <input type="text" name="adl_6" required>
+
+    <!-- COGNITIVE data -->
+    <label for="cog_0">f: </label>
+    <input type="text" name="cog_0" required>
+
+    <label for="cog_1">f: </label>
+    <input type="text" name="cog_1" required>
+
+    <label for="cog_2">f: </label>
+    <input type="text" name="cog_2" required>
+
+    <label for="cog_3">f: </label>
+    <input type="text" name="cog_3" required>
+
+    <label for="cog_4">f: </label>
+    <input type="text" name="cog_4" required>
+
+    <label for="cog_5">f: </label>
+    <input type="text" name="cog_5" required>
+
+    <label for="cog_6">f: </label>
+    <input type="text" name="cog_6" required>
+
+    <!-- ORAL data -->
+    <label for="omd_0">f: </label>
+    <input type="text" name="omd_0" required>
+
+    <label for="omd_1">f: </label>
+    <input type="text" name="omd_1" required>
+
+    <label for="omd_2">f: </label>
+    <input type="text" name="omd_2" required>
+
+    <label for="omd_3">f: </label>
+    <input type="text" name="omd_3" required>
+
+    <label for="omd_4">f: </label>
+    <input type="text" name="omd_4" required>
+
+    <label for="omd_5">f: </label>
+    <input type="text" name="omd_5" required>
+
+    <label for="omd_6">f: </label>
+    <input type="text" name="omd_6" required>
+
+    <label for="omd_7">f: </label>
+    <input type="text" name="omd_7" required>
+
+    <label for="omd_8">f: </label>
+    <input type="text" name="omd_8" required>
+
+    <label for="omd_9">f: </label>
+    <input type="text" name="omd_9" required>
+
+    <!-- submit data -->
     <button type="submit">Add Patient</button>
 </form>
 
