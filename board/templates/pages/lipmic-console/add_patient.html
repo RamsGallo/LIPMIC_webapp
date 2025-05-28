@@ -1,151 +1,257 @@
 {% extends 'base-console.html' %}
+
 {% block title %}Add Patients{% endblock %}
 
+{% block header_p %}
+    {{ current_date }}
+{% endblock header_p %}
+
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_patient.css') }}">
 
 <form method="POST" action="{{ url_for('pages.add_patient') }}">
-    <!-- CLIENT data -->
-    <h4>Client Information</h4>
-    <div class="mb-3">
-        <label for="name" class="form-label">Patient Name:</label>
-        <input type="text" name="name" class="form-control" required>
+
+<div class="accordion" id="formAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingClient">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseClient" aria-expanded="true" aria-controls="collapseClient">
+        Client Information
+      </button>
+    </h2>
+    <div id="collapseClient" class="accordion-collapse collapse show" aria-labelledby="headingClient" data-bs-parent="#formAccordion">
+      <div class="accordion-body">
+        <h4>Client Information</h4>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Patient Name:</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="age" class="form-label">Age:</label>
+            <input type="text" name="age" class="form-control">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="sex" class="form-label">Sex:</label>
+            <input type="text" name="sex" class="form-control">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="age" class="form-label">Age:</label>
-        <input type="text" name="age" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="sex" class="form-label">Sex:</label>
-        <input type="text" name="sex" class="form-control" required>
-    </div>
+
     <div class="mb-3">
         <label for="address" class="form-label">Address:</label>
-        <input type="text" name="address" class="form-control" required>
+        <input type="text" name="address" class="form-control">
     </div>
-    <div class="mb-3">
-        <label for="dob" class="form-label">Date of Birth:</label>
-        <input type="text" name="dob" class="form-control" required>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="dob" class="form-label">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" class="form-control" max="{{ current_date }}">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="doe" class="form-label">Date of Evaluation:</label>
+            <input type="date" id="doe" name="doe" class="form-control" max="{{ current_date }}">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="religion" class="form-label">Religion:</label>
-        <input type="text" name="religion" class="form-control" required>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="religion" class="form-label">Religion:</label>
+            <input type="text" name="religion" class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="diagnosis" class="form-label">Diagnosis:</label>
+            <input type="text" name="diagnosis" class="form-control">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="diagnosis" class="form-label">Diagnosis:</label>
-        <input type="text" name="diagnosis" class="form-control" required>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="precautions" class="form-label">Precautions:</label>
+            <input type="text" name="precautions" class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="current_medication" class="form-label">Current Medication:</label>
+            <input type="text" name="current_medication" class="form-control">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="doe" class="form-label">Date of Evaluation:</label>
-        <input type="text" name="doe" class="form-control" required>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="emergency_person" class="form-label">Emergency Contact Person:</label>
+            <input type="text" name="emergency_person" class="form-control">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="contact_no" class="form-label">Contact Number:</label>
+            <input type="text" name="contact_no" class="form-control">
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="alt_contact_no" class="form-label">Alternative Contact Number:</label>
+            <input type="text" name="alt_contact_no" class="form-control">
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="precautions" class="form-label">Precautions:</label>
-        <input type="text" name="precautions" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="current_medication" class="form-label">Current Medication:</label>
-        <input type="text" name="current_medication" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="emergency_person" class="form-label">Emergency Contact Person:</label>
-        <input type="text" name="emergency_person" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="contact_no" class="form-label">Contact Number:</label>
-        <input type="text" name="contact_no" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="alt_contact_no" class="form-label">Alternative Contact Number:</label>
-        <input type="text" name="alt_contact_no" class="form-control" required>
-    </div>
+
     <div class="mb-3">
         <label for="grade_level" class="form-label">Grade Level:</label>
-        <input type="text" name="grade_level" class="form-control" required>
+        <input type="text" name="grade_level" class="form-control">
     </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- FAMILY data -->
-    <h4>Family Information</h4>
-    <div class="mb-3">
-        <label for="father_name" class="form-label">Father's Name:</label>
-        <input type="text" name="father_name" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="father_contact_no" class="form-label">Contact Number:</label>
-        <input type="text" name="father_contact_no" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="father_med_history" class="form-label">Father's Medical History:</label>
-        <input type="text" name="father_med_history" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="mother_name" class="form-label">Mother's Name:</label>
-        <input type="text" name="mother_name" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="mother_contact_no" class="form-label">Contact Number:</label>
-        <input type="text" name="mother_contact_no" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="mother_med_history" class="form-label">Mother's Medical History:</label>
-        <input type="text" name="mother_med_history" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="sibling" class="form-label">Sibling/s:</label>
-        <input type="text" name="sibling" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="sibling_med_history" class="form-label">Sibling/s Medical History:</label>
-        <input type="text" name="sibling_med_history" class="form-control" required>
-    </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFamily">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFamily" aria-expanded="true" aria-controls="collapseClient">
+        Family Information
+      </button>
+    </h2>
+    <div id="collapseFamily" class="accordion-collapse collapse show" aria-labelledby="headingFamily" data-bs-parent="#formAccordion">
+      <div class="accordion-body">
+       <h4 class="mt-4">Family Information</h4>
+            <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="father_name" class="form-label">Father's Name:</label>
+                <input type="text" name="father_name" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="mother_name" class="form-label">Mother's Name:</label>
+                <input type="text" name="mother_name" class="form-control">
+            </div>
+            </div>
 
-    <!-- MEDICAL data -->
-    <h4>Medical Information</h4>
-    <div class="mb-3">
-        <label for="complication_preg" class="form-label">Complication during pregnancy:</label>
-        <input type="text" name="complication_preg" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="med_taken" class="form-label">Medication taken:</label>
-        <input type="text" name="med_taken" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="duration_med_taken" class="form-label">Duration taken:</label>
-        <input type="text" name="duration_med_taken" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="typeOfDelivery" class="form-label">Type of delivery:</label>
-        <input type="text" name="typeOfDelivery" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="complication_deli" class="form-label">Complication during delivery:</label>
-        <input type="text" name="complication_deli" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="birth_weight" class="form-label">Birth weight:</label>
-        <input type="text" name="birth_weight" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="birth_problem" class="form-label">Birth problem:</label>
-        <input type="text" name="birth_problem" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="medication" class="form-label">Medication/s:</label>
-        <input type="text" name="medication" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="immunization" class="form-label">Immunization/s:</label>
-        <input type="text" name="immunization" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="effects" class="form-label">Adverse effects:</label>
-        <input type="text" name="effects" class="form-control" required>
-    </div>
+            <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="father_contact_no" class="form-label">Father's Contact Number:</label>
+                <input type="text" name="father_contact_no" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="mother_contact_no" class="form-label">Mother's Contact Number:</label>
+                <input type="text" name="mother_contact_no" class="form-control">
+            </div>
+            </div>
 
-    <!-- DEV'T data table-->
-    <h4 class="text-center">Developmental Data</h4>
-        <section class="gms-section">
-            <h5>Gross Motor Skills (GMS)</h5>
-            <table class="table table-bordered">
+            <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="father_med_history" class="form-label">Father's Medical History:</label>
+                <input type="text" name="father_med_history" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="mother_med_history" class="form-label">Mother's Medical History:</label>
+                <input type="text" name="mother_med_history" class="form-control">
+            </div>
+            </div>
+
+            <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="sibling" class="form-label">Sibling/s:</label>
+                <input type="text" name="sibling" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label for="sibling_med_history" class="form-label">Sibling/s Medical History:</label>
+                <input type="text" name="sibling_med_history" class="form-control">
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingMedical">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedical" aria-expanded="true" aria-controls="collapseMedical">
+        Medical Information
+      </button>
+    </h2>
+    <div id="collapseMedical" class="accordion-collapse collapse show" aria-labelledby="headingMedical" data-bs-parent="#formAccordion">
+    <div class="accordion-body">  
+    <div class="p-3">
+            
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <label for="complication_preg" class="form-label">Complication during pregnancy:</label>
+            <input type="text" name="complication_preg" class="form-control">
+            </div>
+            <div class="col-md-6">
+            <label for="med_taken" class="form-label">Medication taken:</label>
+            <input type="text" name="med_taken" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <label for="duration_med_taken" class="form-label">Duration taken:</label>
+            <input type="text" name="duration_med_taken" class="form-control">
+            </div>
+            <div class="col-md-6">
+            <label for="typeOfDelivery" class="form-label">Type of delivery:</label>
+            <input type="text" name="typeOfDelivery" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <label for="complication_deli" class="form-label">Complication during delivery:</label>
+            <input type="text" name="complication_deli" class="form-control">
+            </div>
+            <div class="col-md-6">
+            <label for="birth_weight" class="form-label">Birth weight:</label>
+            <input type="text" name="birth_weight" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <label for="birth_problem" class="form-label">Birth problem:</label>
+            <input type="text" name="birth_problem" class="form-control">
+            </div>
+            <div class="col-md-6">
+            <label for="medication" class="form-label">Medication/s:</label>
+            <input type="text" name="medication" class="form-control">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <label for="immunization" class="form-label">Immunization/s:</label>
+            <input type="text" name="immunization" class="form-control">
+            </div>
+            <div class="col-md-6">
+            <label for="effects" class="form-label">Adverse effects:</label>
+            <input type="text" name="effects" class="form-control">
+            </div>
+        </div>
+
+        </div>
+        </div> 
+        </div> 
+    </div>
+  </div>
+
+<!-- DEV'T data table-->
+<h4 class="pt-4">Developmental History</h4>
+
+<!-- Nav Tabs -->
+<ul class="nav nav-tabs" id="devTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="gms-tab" data-bs-toggle="tab" data-bs-target="#gms" type="button" role="tab">Gross Motor Skills (GMS)</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="fms-tab" data-bs-toggle="tab" data-bs-target="#fms" type="button" role="tab">Fine Motor Skills (FMS)</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="adl-tab" data-bs-toggle="tab" data-bs-target="#adl" type="button" role="tab">Activities of Daily Living (ADL)</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="cog-tab" data-bs-toggle="tab" data-bs-target="#cog" type="button" role="tab">Cognitive</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="omd-tab" data-bs-toggle="tab" data-bs-target="#omd" type="button" role="tab">Oral Motor Development</button>
+  </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content mt-3" id="devTabContent">
+  <!-- GMS -->
+  <div class="tab-pane fade show active" id="gms" role="tabpanel" aria-labelledby="gms-tab">
+    <h5>Gross Motor Skills (GMS)</h5>
+    <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Skill</th>
@@ -157,66 +263,67 @@
                 <!-- GMS data -->
                 <tr>
                     <td>Maintains sitting</td>
-                    <td><input type="text" name="gms_0" class="form-control" required></td>
+                    <td><input type="text" name="gms_0" class="form-control"></td>
                     <td>8 months</td>
                 </tr>
                 <tr>
                     <td>Bangs objects/toys</td>
-                    <td><input type="text" name="gms_1" class="form-control" required></td>
+                    <td><input type="text" name="gms_1" class="form-control"></td>
                     <td>8-12 months</td>
                 </tr>
                 <tr>
                     <td>Creeping</td>
-                    <td><input type="text" name="gms_2" class="form-control" required></td>
+                    <td><input type="text" name="gms_2" class="form-control"></td>
                     <td>10 months</td>
                 </tr>
                 <tr>
                     <td>Cruises</td>
-                    <td><input type="text" name="gms_3" class="form-control" required></td>
+                    <td><input type="text" name="gms_3" class="form-control"></td>
                     <td>11 months</td>
                 </tr>
                 <tr>
                     <td>Seats self to chair</td>
-                    <td><input type="text" name="gms_4" class="form-control" required></td>
+                    <td><input type="text" name="gms_4" class="form-control"></td>
                     <td>10-11 months</td>
                 </tr>
                 <tr>
                     <td>Walks alone</td>
-                    <td><input type="text" name="gms_5" class="form-control" required></td>
+                    <td><input type="text" name="gms_5" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Walks up and down the stairs</td>
-                    <td><input type="text" name="gms_6" class="form-control" required></td>
+                    <td><input type="text" name="gms_6" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Jumps with both feet</td>
-                    <td><input type="text" name="gms_7" class="form-control" required></td>
+                    <td><input type="text" name="gms_7" class="form-control"></td>
                     <td>2 years</td>
                 </tr>
                 <tr>
                     <td>Pedals tricycle</td>
-                    <td><input type="text" name="gms_8" class="form-control" required></td>
+                    <td><input type="text" name="gms_8" class="form-control"></td>
                     <td>3 years</td>
                 </tr>
                 <tr>
                     <td>Running</td>
-                    <td><input type="text" name="gms_9" class="form-control" required></td>
+                    <td><input type="text" name="gms_9" class="form-control"></td>
                     <td>1 year</td>
                 </tr>
                 <tr>
                     <td>Hops on one foot</td>
-                    <td><input type="text" name="gms_10" class="form-control" required></td>
+                    <td><input type="text" name="gms_10" class="form-control"></td>
                     <td>4 years</td>
                 </tr>
-                </tbody>
-                </table>
-        </section>
+            </tbody>
+        </table>
+  </div>
 
-        <section class="fms-section">
-            <h5>Fine Motor Skills (FMS)</h5>
-            <table class="table table-bordered">
+  <!-- FMS -->
+  <div class="tab-pane fade" id="fms" role="tabpanel" aria-labelledby="fms-tab">
+    <h5>Fine Motor Skills (FMS)</h5>
+    <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Skill</th>
@@ -228,61 +335,62 @@
                 <!-- FMS data -->
                 <tr>
                     <td>Midline hand play</td>
-                    <td><input type="text" name="fms_0" class="form-control" required></td>
+                    <td><input type="text" name="fms_0" class="form-control"></td>
                     <td>4 months</td>
                 </tr>
                 <tr>
                     <td>Transfer toy from hand to hand</td>
-                    <td><input type="text" name="fms_1" class="form-control" required></td>
+                    <td><input type="text" name="fms_1" class="form-control"></td>
                     <td>6 months</td>
                 </tr>
                 <tr>
                     <td>Plays peek-a-boo</td>
-                    <td><input type="text" name="fms_2" class="form-control" required></td>
+                    <td><input type="text" name="fms_2" class="form-control"></td>
                     <td>10 months</td>
                 </tr>
                 <tr>
                     <td>Waves good bye</td>
-                    <td><input type="text" name="fms_3" class="form-control" required></td>
+                    <td><input type="text" name="fms_3" class="form-control"></td>
                     <td>10 months</td>
                 </tr>
                 <tr>
                     <td>Draws line</td>
-                    <td><input type="text" name="fms_4" class="form-control" required></td>
+                    <td><input type="text" name="fms_4" class="form-control"></td>
                     <td>3 years</td>
                 </tr>
                 <tr>
                     <td>Holds crayon and scribbles</td>
-                    <td><input type="text" name="fms_5" class="form-control" required></td>
+                    <td><input type="text" name="fms_5" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Draws simple figures</td>
-                    <td><input type="text" name="fms_6" class="form-control" required></td>
+                    <td><input type="text" name="fms_6" class="form-control"></td>
                     <td>1.5-2 years</td>
                 </tr>
                 <tr>
                     <td>Snips with scissors</td>
-                    <td><input type="text" name="fms_7" class="form-control" required></td>
+                    <td><input type="text" name="fms_7" class="form-control"></td>
                     <td>2-3 years</td>
                 </tr>
                 <tr>
                     <td>Colors in large forms</td>
-                    <td><input type="text" name="fms_8" class="form-control" required></td>
+                    <td><input type="text" name="fms_8" class="form-control"></td>
                     <td>2-3 years</td>
                 </tr>
                 <tr>
                     <td>Copy letters</td>
-                    <td><input type="text" name="fms_9" class="form-control" required></td>
+                    <td><input type="text" name="fms_9" class="form-control"></td>
                     <td>3-4 years</td>
                 </tr>
             </tbody>
-            </table>
-        </section>
+        </table>
+  </div>
 
-        <section class="adl-section">
-            <h5>Activities of Daily Living (ADL)</h5>
-            <table class="table table-bordered">
+  <!-- ADL -->
+  <div class="tab-pane fade" id="adl" role="tabpanel" aria-labelledby="adl-tab">
+    <h5>Activities of Daily Living (ADL)</h5>
+    <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Skill</th>
@@ -294,46 +402,47 @@
                 <!-- ADL data -->
                 <tr>
                     <td>Holds feeding bottle</td>
-                    <td><input type="text" name="adl_0" class="form-control" required></td>
+                    <td><input type="text" name="adl_0" class="form-control"></td>
                     <td>4 and a half months</td>
                 </tr>
                 <tr>
                     <td>Finger-feeds</td>
-                    <td><input type="text" name="adl_1" class="form-control" required></td>
+                    <td><input type="text" name="adl_1" class="form-control"></td>
                     <td>6-8 months</td>
                 </tr>
                 <tr>
                     <td>Uses spoon with spillage</td>
-                    <td><input type="text" name="adl_2" class="form-control" required></td>
+                    <td><input type="text" name="adl_2" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Removes on garment</td>
-                    <td><input type="text" name="adl_3" class="form-control" required></td>
+                    <td><input type="text" name="adl_3" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Drinks from a cup neatly</td>
-                    <td><input type="text" name="adl_4" class="form-control" required></td>
+                    <td><input type="text" name="adl_4" class="form-control"></td>
                     <td>1 year and 6 months</td>
                 </tr>
                 <tr>
                     <td>Toilet trained</td>
-                    <td><input type="text" name="adl_5" class="form-control" required></td>
+                    <td><input type="text" name="adl_5" class="form-control"></td>
                     <td>3 years</td>
                 </tr>
                 <tr>
                     <td>Finds front of clothing</td>
-                    <td><input type="text" name="adl_6" class="form-control" required></td>
+                    <td><input type="text" name="adl_6" class="form-control"></td>
                     <td>3 years and 6 months</td>
                 </tr>
             </tbody>
-            </table>
-        </section>
+        </table>
+  </div>
 
-        <section class="cog-section">
-            <h5>Cognitive</h5>
-            <table class="table table-bordered">
+  <!-- Cognitive -->
+  <div class="tab-pane fade" id="cog" role="tabpanel" aria-labelledby="cog-tab">
+    <h5>Cognitive</h5>
+    <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Skill</th>
@@ -344,46 +453,47 @@
             <tbody>
                 <tr>
                     <td>Turns to voices and sounds consistently</td>
-                    <td><input type="text" name="cog_0" class="form-control" required></td>
+                    <td><input type="text" name="cog_0" class="form-control"></td>
                     <td>6 months</td>
                 </tr>
                 <tr>
                     <td>Understands simple commands</td>
-                    <td><input type="text" name="cog_1" class="form-control" required></td>
+                    <td><input type="text" name="cog_1" class="form-control"></td>
                     <td>8 months</td>
                 </tr>
                 <tr>
                     <td>Follows simple direction</td>
-                    <td><input type="text" name="cog_2" class="form-control" required></td>
+                    <td><input type="text" name="cog_2" class="form-control"></td>
                     <td>9 months</td>
                 </tr>
                 <tr>
                     <td>Points to named body part</td>
-                    <td><input type="text" name="cog_3" class="form-control" required></td>
+                    <td><input type="text" name="cog_3" class="form-control"></td>
                     <td>1 year and 3 months</td>
                 </tr>
                 <tr>
                     <td>Refers to self by name</td>
-                    <td><input type="text" name="cog_4" class="form-control" required></td>
+                    <td><input type="text" name="cog_4" class="form-control"></td>
                     <td>2-2.5 years</td>
                 </tr>
                 <tr>
                     <td>Understands contrasts or opposites</td>
-                    <td><input type="text" name="cog_5" class="form-control" required></td>
+                    <td><input type="text" name="cog_5" class="form-control"></td>
                     <td>2-3 years</td>
                 </tr>
                 <tr>
                     <td>Understand who, what, and where questions</td>
-                    <td><input type="text" name="cog_6" class="form-control" required></td>
+                    <td><input type="text" name="cog_6" class="form-control"></td>
                     <td>3-4 years</td>
                 </tr>
             </tbody>
             </table>
-        </section>
+  </div>
 
-        <section class="omd-section">
-            <h5>Oral Motor Development</h5>
-            <table class="table table-bordered">
+  <!-- Oral Motor -->
+  <div class="tab-pane fade" id="omd" role="tabpanel" aria-labelledby="omd-tab">
+    <h5>Oral Motor Development</h5>
+    <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Skill</th>
@@ -395,58 +505,58 @@
                 <!-- ADL data -->
                 <tr>
                     <td>Opens and closes mouth in response to food stimulus</td>
-                    <td><input type="text" name="omd_0" class="form-control" required></td>
+                    <td><input type="text" name="omd_0" class="form-control"></td>
                     <td>0-1 month</td>
                 </tr>
                 <tr>
                     <td>Coordinates sucking, swallowing, and breathing</td>
-                    <td><input type="text" name="omd_1" class="form-control" required></td>
+                    <td><input type="text" name="omd_1" class="form-control"></td>
                     <td>1-5 months</td>
                 </tr>
                 <tr>
                     <td>Suck and swallow reflex inhibited, can make several successive sucks before swallowing</td>
-                    <td><input type="text" name="omd_2" class="form-control" required></td>
+                    <td><input type="text" name="omd_2" class="form-control"></td>
                     <td>2-5 months</td>
                 </tr>
                 <tr>
                     <td>Swallows strained or pureed foods, small amounts</td>
-                    <td><input type="text" name="omd_3" class="form-control" required></td>
+                    <td><input type="text" name="omd_3" class="form-control"></td>
                     <td>3-6 months</td>
                 </tr>
                 <tr>
                     <td>Uses tongue to move food in mouth, up-down tongue and jaw movement</td>
-                    <td><input type="text" name="omd_4" class="form-control" required></td>
+                    <td><input type="text" name="omd_4" class="form-control"></td>
                     <td>4-8.5 months</td>
                 </tr>
                 <tr>
                     <td>Mouths and munches solid food</td>
-                    <td><input type="text" name="omd_5" class="form-control" required></td>
+                    <td><input type="text" name="omd_5" class="form-control"></td>
                     <td>5-8 months</td>
                 </tr>
                 <tr>
                     <td>Bites food voluntarily, with soft or solid cookie</td>
-                    <td><input type="text" name="omd_6" class="form-control" required></td>
+                    <td><input type="text" name="omd_6" class="form-control"></td>
                     <td>8-10 months</td>
                 </tr>
                 <tr>
                     <td>Drools less except when teething or congested</td>
-                    <td><input type="text" name="omd_7" class="form-control" required></td>
+                    <td><input type="text" name="omd_7" class="form-control"></td>
                     <td>7 months to 1 year</td>
                 </tr>
                 <tr>
                     <td>Chews food with coordinated movements, of tongue, jaw, lips; tongue lateralization; upper lip active</td>
-                    <td><input type="text" name="omd_8" class="form-control" required></td>
+                    <td><input type="text" name="omd_8" class="form-control"></td>
                     <td>8 months to 2 years</td>
                 </tr>
                 <tr>
                     <td>Chews completely with rotary jaw movements</td>
-                    <td><input type="text" name="omd_9" class="form-control" required></td>
+                    <td><input type="text" name="omd_9" class="form-control"></td>
                     <td>8 months to 2 years</td>
                 </tr>
             </tbody>
-            </table>
-        </section>
-
+        </table>
+  </div>
+</div>
     <!-- submit data -->
     <button type="submit" class="btn btn-primary">Add Patient</button>
 </form>
@@ -455,4 +565,3 @@
 
 {% block scripts %}
 {% endblock %}
-  

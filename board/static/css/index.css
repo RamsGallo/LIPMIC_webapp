@@ -1,109 +1,111 @@
-.lipmic-color {
-    color: #1e4d5c;
-    font-weight: 700;
+/* Enhanced Blue Highlight View Button */
+.btn-view {
+  background-color: #ffffff;
+  color: #1E4D5C;
+  border: 2px solid #1E4D5C;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.3s ease-in-out;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(30, 77, 92, 0.08);
+  text-decoration: none;
 }
 
-#navbar {
-    background-color: #1e4d5c;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    padding: 0.9rem 1.2rem;
-    transition: all 0.3s ease;
+.btn-view:hover,
+.btn-view:focus {
+  background-color: #1E4D5C;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(30, 77, 92, 0.2);
+  transform: translateY(-1px);
 }
 
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.4rem;
+.btn-view:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 0 3px rgba(30, 77, 92, 0.2);
 }
 
-.navbar-nav .nav-link {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-left: 1rem;
-    transition: color 0.3s ease;
+/* Add Patient Button */
+.btn-add-patient {
+  background-color: #1E4D5C;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.3s ease-in-out;
+  border-radius: 999px;
+  box-shadow: 0 4px 6px rgba(30, 77, 92, 0.1);
+  text-decoration: none;
 }
 
-.navbar-nav .nav-link.fw-bold {
-    font-weight: 700;
+.btn-add-patient:hover,
+.btn-add-patient:focus {
+  background-color: #155b69;
+  transform: translateY(-1px);
 }
 
-.nav-project {
-    color: #1e4d5c;
+.btn-add-patient:active {
+  transform: scale(0.97);
 }
 
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link:focus,
-.navbar-nav .nav-link.active {
-    color: #a8d6e2;
+/* Corporate Card Styling */
+.corporate-card {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Dropdown menu styling */
-.dropdown-menu {
-    border-radius: 0.5rem;
-    padding: 0.5rem 0;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    background-color: #396e80;
+.corporate-card .card-body {
+  display: flex;
+  flex-direction: column;
 }
 
-.dropdown-item {
-    font-weight: 500;
-    padding: 0.5rem 1.5rem;
-    color: #ffffff;
+.card-body .mb-3 h5 {
+  font-size: 1.1rem;
+  color: #1E4D5C;
 }
 
-.dropdown-item:hover {
-    background-color: #f0f4f8;
+.card-body .mb-3 p {
+  font-size: 0.875rem;
+  color: #6c757d;
 }
 
-/* Button Styling */
-.btn-outline-primary {
-    font-weight: 600;
-    border-radius: 0.5rem;
-    padding: 0.4rem 1.2rem;
-    transition: all 0.3s ease;
-    border-color: #1e4d5c;
-    color: #1e4d5c;
-    background-color: transparent;
+.card-body .d-flex a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 30px;
+  padding: 0.5rem 1.25rem;
 }
 
-.btn-outline-primary:hover {
-    background-color: #1e4d5c;
-    color: #ffffff;
+.card-body .d-flex form button {
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 30px;
+  padding: 0.5rem 1.25rem;
 }
 
-/* Transparent navbar effect */
-#navbar.transparent {
-    background-color: rgba(30, 77, 92, 0.9);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.card-body .d-flex a:hover {
+  background-color: #1E4D5C;
+  color: #ffffff;
 }
 
-#navbar.transparent .nav-link {
-    color: #e5f9ff;
+.card-body .d-flex a:focus {
+  background-color: #155b69;
 }
 
-/* Mobile responsive navbar */
-@media (max-width: 991.98px) {
-    .navbar-nav .nav-link {
-        margin-left: 0;
-        padding: 0.5rem 1rem;
-    }
+/* Overview Section */
+.console-overview {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Call to Action Section */
-.cta-heading {
-    color: #1E4D5C; /* Dark teal color for heading */
+.console-overview h4 {
+  color: #1E4D5C;
 }
 
-.cta-description {
-    color: #364550; /* Muted text color */
-}
-
-.cta-button {
-    background-color: #55A7C1; /* Soft blue background for button */
-    border-radius: 30px;
-    transition: background-color 0.3s ease;
-}
-
-/* Button hover effect */
-.cta-button:hover {
-    background-color: #4091A0; /* Slightly darker shade on hover */
+.console-subtext {
+  color: #6c757d;
 }

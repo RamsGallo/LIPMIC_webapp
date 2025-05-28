@@ -1,0 +1,26 @@
+/* Custom styles can be added here if necessary */
+body {
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+/* Custom Flash Message Styles */
+.alert-dismissible .btn-close {
+  padding: 0.5rem 1rem;
+}
+
+/* Add more custom styles as needed */

@@ -1,35 +1,134 @@
 {% extends 'base-console.html' %}
 
-{% block title %}
-    Console
-{% endblock title %}
+{% block title %}Console{% endblock title %}
 
-<!---Render header-->
-{% block header %}
-{% endblock header %}
-
-<!---Render content of page-->
 {% block content %}
-<div class="home-scroll">
-<h2>Welcome, {{ current_user.username }}</h2>
-<div class="d-flex flex-row overflow-auto gap-3 py-3">
-  {% for patient in patients %}
-    <div class="card" style="min-width: 200px;">
-      <div class="card-body">
-        <h5 class="card-title">{{ patient.name }}</h5>
-        <a href="{{ url_for('pages.patient_dashboard', patient_id=patient.id) }}" class="btn btn-primary btn-sm">
-          View Dashboard
-        </a>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/console-index.css') }}">
+
+<div class="container-fluid home-scroll corporate-bg">
+
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+    <div>
+      <h2 class="fw-semibold console-title">Welcome, {{ current_user.username }}</h2>
+      <p class="console-subtext mb-0">Manage patient records and assessment histories efficiently.</p>
+    </div>
+    <a href="{{ url_for('pages.add_patient') }}" class="btn btn-add-patient shadow-sm mt-4 mt-md-0">
+      + Add Patient
+    </a>
+  </div>
+
+  <!-- Tab Navigation -->
+  <ul class="nav nav-tabs mb-4" id="consoleTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="patients-tab" data-bs-toggle="tab" data-bs-target="#patients" type="button" role="tab">
+        Patient Records
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+        Console Overview
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="consoleTabsContent">
+
+    <!-- Patient Records Tab -->
+    <div class="tab-pane fade show active" id="patients" role="tabpanel" aria-labelledby="patients-tab">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show p-0" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+      <div class="row g-4">
+        {% for patient in patients %}
+        <div class="col-lg-4 col-md-6">
+          <div class="card corporate-card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <div class="mb-3">
+                <h5 class="fw-semibold text-console mb-1">{{ patient.name }}</h5>
+                <p class="text-muted small">{{ patient.age }} years old</p>
+              </div>
+              <div class="d-flex justify-content-between mt-auto">
+                <a href="{{ url_for('pages.patient_dashboard', patient_id=patient.id) }}"
+                   class="btn btn-view rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2">
+                   View
+                </a>
+                <button type="button"
+                        class="btn btn-outline-danger btn-sm rounded-pill px-4 delete-trigger"
+                        onclick="toggleConfirm(this)">Delete</button>
+
+                <!-- Inline confirmation box -->
+                <div class="delete-confirmation d-none mt-2">
+                  <div class="d-flex gap-2 align-items-center">
+                    <form action="{{ url_for('pages.delete_patient', patient_id=patient.id) }}" method="POST" class="m-0">
+                      <button type="submit" class="btn btn-danger btn-sm">Yes</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="cancelConfirm(this)">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+          <div class="alert alert-light border text-muted text-center">
+            No patients yet. Click <strong>+ Add Patient</strong> to begin managing records.
+          </div>
+        </div>
+        {% endfor %}
       </div>
     </div>
-  {% else %}
-    <p class="text-muted">No patients yet.</p>
-  {% endfor %}
-</div>
 
-<div data-bs-spy="scroll" data-bs-target="#console-home" data-bs-offset="10" tabindex="0">
-  <h4 id="overview-1" class="mt-3">Overview</h4>
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam nisi, veniam dolore ad neque, voluptatem temporibus voluptates at necessitatibus nulla porro praesentium, odit iure dolor non iste vel quis sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum quam numquam voluptatibus maiores, natus nobis incidunt facilis! Expedita inventore fuga consequuntur non explicabo! Labore facilis, corporis quibusdam vel nisi cupiditate! Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur fuga omnis eligendi fugit numquam eaque perspiciatis, dignissimos quo quis placeat veritatis. Ex aperiam dignissimos eum suscipit enim quaerat tempora delectus? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic amet minus, recusandae delectus ipsam illo aspernatur architecto voluptate voluptatem qui. Aliquam quae veniam rem quasi beatae mollitia magni nam. Quibusdam? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas doloremque, quaerat facere eligendi ipsum tempore, natus nam unde a molestias accusantium, perspiciatis esse voluptatibus reiciendis dolorem voluptatem! Natus, fugit eligendi. Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus minima sit, aliquid esse ut quis ullam distinctio? Nesciunt ipsa, omnis libero molestiae nam id! Eum eligendi cum et fuga doloribus?Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam nisi, veniam dolore ad neque, voluptatem temporibus voluptates at necessitatibus nulla porro praesentium, odit iure dolor non iste vel quis sed. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Illum quam numquam voluptatibus maiores, natus nobis incidunt facilis! Expedita inventore fuga consequuntur non explicabo! Labore facilis, corporis quibusdam vel nisi cupiditate! Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur fuga omnis eligendi fugit numquam eaque perspiciatis, dignissimos quo quis placeat veritatis. Ex aperiam dignissimos eum suscipit enim quaerat tempora delectus? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Hic amet minus, recusandae delectus ipsam illo aspernatur architecto voluptate voluptatem qui. Aliquam quae veniam rem quasi beatae mollitia magni nam. Quibusdam? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quas doloremque, quaerat facere eligendi ipsum tempore, natus nam unde a molestias accusantium, perspiciatis esse voluptatibus reiciendis dolorem voluptatem! Natus, fugit eligendi. Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+    <!-- Console Overview Tab -->
+    <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+      <div class="mt-3 p-4 rounded-4 shadow-sm console-overview">
+        <h4 class="fw-semibold text-console mb-2">Console Overview</h4>
+        <p class="mb-0 text-muted">
+          Use this console to manage your client database, monitor assessment sessions, and track therapy progress.
+        </p>
+      </div>
+    </div>
+
+  </div>
 </div>
-</div>
-{% endblock content %}
+{% endblock %}
+{% block scripts %}
+<script>
+  function toggleConfirm(deleteBtn) {
+    // Hide all other confirmations
+    document.querySelectorAll('.delete-confirmation').forEach(el => el.classList.add('d-none'));
+    document.querySelectorAll('.delete-trigger').forEach(btn => btn.classList.remove('d-none'));
+
+    // Hide this delete button
+    deleteBtn.classList.add('d-none');
+
+    // Show the confirmation next to it
+    const confirmationBox = deleteBtn.nextElementSibling;
+    confirmationBox.classList.remove('d-none');
+
+    // Mark this button in case we need to restore it
+    confirmationBox.dataset.trigger = deleteBtn;
+  }
+
+  function cancelConfirm(cancelBtn) {
+    const confirmationBox = cancelBtn.closest('.delete-confirmation');
+    confirmationBox.classList.add('d-none');
+
+    // Re-show the original Delete button
+    const deleteBtn = confirmationBox.previousElementSibling;
+    deleteBtn.classList.remove('d-none');
+  }
+</script>
+
+
+{% endblock %}
+

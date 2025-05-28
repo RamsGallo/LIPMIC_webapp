@@ -9,3 +9,6 @@ __pycache__/
 /Ref
 /share
 .env
+/board/static/review_frames/
+/board/static/js/ckeditor
+*.db

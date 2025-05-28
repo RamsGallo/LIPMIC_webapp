@@ -1,23 +1,490 @@
 {% extends 'base-console.html' %}
-{% block title %}{{ patient.name }}'s Dashboard{% endblock %}
+
+{% block title %}
+    {{ patient.name }}'s Dashboard
+{% endblock %}
 
 {% block content %}
-<h3 class="mb-3">{{ patient.name }}'s Assessment History</h3>
-  {% for result in results %}
-    <h4>{{ result.assessment_type | capitalize }} Test</h4>
-    <ul class="list-group mb-4">
-      <li class="list-group-item">
-        <strong>Date:</strong> {{ result.date_taken.strftime('%Y-%m-%d %H:%M') }}<br>
-        <strong>Score:</strong> {{ result.score }} / {{ result.answers | length }}<br>
-        <strong>Duration:</strong> 
-          {% if result.duration %}
-            {{ (result.duration // 60) }}m {{ (result.duration % 60) }}s
-          {% else %}
-            N/A
-          {% endif %}
-      </li>
-    </ul>
-  {% else %}
-    <p>No results found.</p>
-  {% endfor %}
-{% endblock %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/patient_dashboard.css') }}">
+
+<div class="container">
+    <h2 class="mb-4 dashboard-title">
+        <i class="fas fa-user-circle me-2"></i>{{ patient.name }}'s Summary
+    </h2>
+    
+<ul class="nav nav-tabs mb-3" id="patientTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+      Personal Info
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="dev-tab" data-bs-toggle="tab" data-bs-target="#dev" type="button" role="tab">
+      Developmental History
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="assessment-tab" data-bs-toggle="tab" data-bs-target="#assessment" type="button" role="tab" aria-controls="assessment" aria-selected="true">
+      Assessment Results
+    </button>
+  </li>
+</ul>
+<div class="tab-content" id="patientTabContent">
+    <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+    {% macro render_section(title, fields) %}
+    <div class="card mb-3 shadow-sm border-0 rounded section-card">
+        <div class="card-header py-2 px-3 bg-light section-header">
+            <h6 class="mb-0 text-primary fw-bold">
+                <i class="fas fa-folder-open me-2"></i>{{ title }}
+            </h6>
+        </div>
+        <div class="card-body py-2 px-3">
+            <div class="row gx-3 gy-2">
+                {% for column in fields %}
+                    <div class="col-md-6">
+                        {% for label, value in column.items() %}
+                            <div class="d-flex align-items-center mb-1">
+                                <label class="form-label me-2 mb-0 text-muted small" style="min-width: 140px;">{{ label }}:</label>
+                                <div class="form-control-plaintext small text-dark">{{ value }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endmacro %}
+        {{ render_section('Personal Information', [
+            {
+                "Patient Name": patient.name,
+                "Age": patient.age,
+                "Sex": patient.sex,
+                "Date of Birth": patient.dob
+            },
+            {
+                "Address": patient.address,
+                "Religion": patient.religion,
+                "Diagnosis": patient.diagnosis,
+                "Date of Evaluation": patient.doe
+            }
+        ]) }}
+
+        {{ render_section('Emergency & Contact Information', [
+            {
+                "Emergency Contact Person": patient.emergency_person,
+                "Contact Number": patient.contact_no
+            },
+            {
+                "Alternative Contact Number": patient.alt_contact_no,
+                "Grade Level": patient.grade_level
+            }
+        ]) }}
+
+        {{ render_section('Family Information', [
+            {
+                "Father's Name": patient.father_name,
+                "Father's Contact Number": patient.father_contact_no,
+                "Father's Medical History": patient.father_med_history
+            },
+            {
+                "Mother's Name": patient.mother_name,
+                "Mother's Contact Number": patient.mother_contact_no,
+                "Mother's Medical History": patient.mother_med_history
+            }
+        ]) }}
+
+        {{ render_section('Medical Information', [
+            {
+                "Complication during pregnancy": patient.complication_preg,
+                "Medication taken": patient.med_taken,
+                "Duration taken": patient.duration_med_taken,
+                "Type of delivery": patient.typeOfDelivery
+            },
+            {
+                "Complication during delivery": patient.complication_deli,
+                "Birth weight": patient.birth_weight,
+                "Birth problem": patient.birth_problem,
+                "Medication/s": patient.medication
+            }
+        ]) }}
+    </div>
+
+    <div class="tab-pane fade" id="dev" role="tabpanel" aria-labelledby="dev-tab">
+    {% macro render_section(title, fields) %}
+    <div class="card mb-3 shadow-sm border-0 rounded section-card">
+        <div class="card-header py-2 px-3 bg-light section-header">
+            <h6 class="mb-0 text-primary fw-bold">
+                <i class="fas fa-folder-open me-2"></i>{{ title }}
+            </h6>
+        </div>
+        <div class="card-body py-2 px-3">
+            <div class="row gx-3 gy-2">
+                {% for column in fields %}
+                    <div class="col-md-6">
+                        {% for label, value in column.items() %}
+                            <div class="d-flex align-items-center mb-1">
+                                <label class="form-label me-2 mb-0 text-muted small" style="min-width: 140px;">{{ label }}:</label>
+                                <div class="form-control-plaintext small text-dark">{{ value }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endmacro %}
+        {{ render_section('Gross Motor Skills (GMS) Age Achieved', [
+            {
+                "Maintains sitting": patient.gms_0,
+                "Bangs objects/toys": patient.gms_1,
+                "Creeping": patient.gms_2,
+                "Cruises": patient.gms_3,
+                "Seats self to chair": patient.gms_4,
+                "Walks alone": patient.gms_5
+            },
+            {
+                "Walks up and down the stairs": patient.gms_6,
+                "Jumps with both feet": patient.gms_7,
+                "Pedals tricycle": patient.gms_8,
+                "Running": patient.gms_9,
+                "Hops on one foot": patient.gms_10
+            }
+        ]) }}
+
+        {{ render_section('Fine Motor Skills (FMS) Age Achieved', [
+            {
+                "Midline hand play": patient.fms_0,
+                "Transfer toy from hand to hand": patient.fms_1,
+                "Plays peek-a-boo": patient.fms_2,
+                "Waves good bye": patient.fms_3,
+                "Draws line": patient.fms_4,
+            },
+            {
+                "Holds crayon and scribbles": patient.fms_5,
+                "Draws simple figures": patient.fms_6,
+                "Snips with scissors": patient.fms_7,
+                "Colors in large forms": patient.fms_8,
+                "Copy letters": patient.fms_9
+            }
+        ]) }}
+
+        {{ render_section('Activities of Daily Living (ADL) Age Achieved', [
+            {
+                "Holds feeding bottle": patient.adl_0,
+                "Finger-feeds": patient.adl_1,
+                "Uses spoon with spillage": patient.adl_2,
+                "Removes on garment": patient.adl_3
+
+            },
+            {
+                "Drinks from a cup neatly": patient.adl_4,
+                "Toilet trained": patient.adl_5,
+                "Finds front of clothing": patient.adl_6
+            }
+        ]) }}
+
+        {{ render_section('Cognitive Age Achieved', [
+            {
+                "Turns to voices and sounds consistently": patient.cog_0,
+                "Understands simple commands": patient.cog_1,
+                "Follows simple direction": patient.cog_2,
+                "Points to named body part": patient.cog_3
+
+            },
+            {
+                "Refers to self by name": patient.cog_4,
+                "Understands contrasts or opposites": patient.cog_5,
+                "Understand who, what, and where questions": patient.cog_6
+            }
+        ]) }}
+
+        {{ render_section('Oral Motor Development Age Achieved', [
+            {
+                "Opens and closes mouth in response to food stimulus": patient.omd_0,
+                "Coordinates sucking, swallowing, and breathing": patient.omd_1,
+                "Suck and swallow reflex inhibited": patient.omd_2,
+                "Swallows strained or pureed foods, small amounts": patient.omd_3,
+                "Uses tongue to move food in mouth, up-down tongue and jaw movement": patient.omd_4
+
+            },
+            {
+                "Mouths and munches solid food": patient.omd_5,
+                "Bites food voluntarily": patient.omd_6,
+                "Drools less except when teething or congested": patient.omd_7,
+                "Chews food with coordinated movements, of tongue, jaw, lips; tongue lateralization; upper lip active": patient.omd_8,
+                "Chews completely with rotary jaw movements": patient.omd_9,
+            }
+        ]) }}
+    </div>
+
+    <div class="tab-pane fade show active" id="assessment" role="tabpanel" aria-labelledby="assessment-tab">
+
+        <div class="row">
+            <!-- Assessment Results Column -->
+            <div class="col-lg-7 mb-4">
+                <div class="card shadow-sm border-0 rounded-3 section-card">
+            <div class="card-header section-header">
+                <h4 class="mb-0 section-title">
+                    <i class="fas fa-chart-line me-2"></i>Assessment Results
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="accordionResults">
+                    {% for result in results %}
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header" id="heading{{ loop.index }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ loop.index }}" aria-expanded="false"
+                                    aria-controls="collapse{{ loop.index }}">
+                                <i class="fas fa-file-alt me-2"></i>{{ result.assessment_type | upper }} Test (ID: {{ result.id }}) |
+                                {{ result.date_taken.strftime('%Y-%m-%d') }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
+                            aria-labelledby="heading{{ loop.index }}" data-bs-parent="#accordionResults">
+                            <div class="accordion-body">
+                                <p class="mb-0 result-details">
+                                    <span class="badge bg-white text-dark border custom-border">
+                                        <strong>Date:</strong> {{ result.date_taken.strftime('%Y-%m-%d') }}
+                                    </span>
+                                    {% if result.assessment_type != "casl" %}
+                                    <span class="badge bg-success text-light" data-bs-toggle="tooltip"
+                                        title="Lip-reading model's score. The model can make mistakes.">
+                                        <strong>Model Score:</strong> {{ result.score }} / {{ result.answers | length }}
+                                    </span>
+                                    {% endif %}
+                                    <span class="badge bg-secondary text-light">
+                                        <strong>Duration:</strong>
+                                        {% if result.duration %}
+                                            {{ (result.duration // 60) }}m {{ (result.duration % 60) }}s
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </span>
+                                </p>
+                                <hr>
+
+                                {% if result.assessment_type != "casl" %}
+                                {% for answer in result.answers %}
+                                
+                                    
+                                    {% if answer.level is defined %}
+                                    <strong>Difficulty:</strong> {{ answer.level|capitalize }}<br>
+                                    {% endif %}
+                                    {% if answer.index is defined %}
+                                    <strong>Question #</strong>{{ answer.index + 1 }}. {{ answer.prompt }}<br>
+                                    {% endif %}
+                                    <strong>Model Prediction:</strong> {{ answer.predicted | capitalize}}<br>
+                                    <strong>Correct:</strong> {{ answer.correct | capitalize }}<br>
+                                    <div class="mt-1">
+                                        {% for img in answer.images %}
+                                        <img src="{{ img.src }}" alt="{{ img.direction }}" width="100" class="me-2 mb-1" />
+                                        {% endfor %}
+                                    </div>
+                                
+                                <hr>
+                                {% endfor %}
+                                {% endif %}
+
+                                {% if result.assessment_type == "casl" %}
+                                    {% for answer in result.answers %}
+                                        {% set q_index = answer.index %}
+                                        {% set level = answer.level %}
+                                        <div class="question-section">
+                                        <h6>Task {{ loop.index }} ({{ level }}) — {{ answer.prompt }}</h6>
+                                        <div class="d-flex flex-wrap lip-frames-grid">
+                                            {% for frame in result.lip_frames if frame.level == level and frame.question_index == q_index %}
+                                            <div class="frame">
+                                                <img src="{{ url_for('static', filename=frame.file_path) }}"
+                                                    alt="Frame {{ frame.frame_index }}"
+                                                    class="img-thumbnail m-1" width="80">
+                                                <span class="frame-number">Q{{ frame.question_index }} | {{ frame.level }}</span>     
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        </div><br>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No results found.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+            </div>
+
+            <!-- Saved Goals Column -->
+        <div class="col-lg-5 mb-4">
+    <div class="card border-info shadow-sm">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <span>Saved Goals</span>
+            <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#goalsModal">
+                Add Goal
+            </button>
+        </div>
+        <div class="card-body pt-3 py-0">
+            {# Add the new container here #}
+            <div class="goals-content-scroll">
+                {% if patient.goals %}
+                    {% for goal in patient.goals|reverse %}
+                    <div class="mb-2">
+                        <p class="mb-1"><strong>Goal:</strong> {{ goal.goal_text }}</p>
+
+                        {# Display Problem Description if it exists #}
+                        {% if goal.problem_description %}
+                            <p class="mb-1"><strong>Problem:</strong> {{ goal.problem_description }}</p>
+                        {% endif %}
+
+                        {# Display Suggested Intervention if it exists #}
+                        {% if goal.intervention_text %}
+                            <p class="mb-1"><strong>Intervention:</strong></p>
+                            <div class="intervention-display">
+                                {{ goal.intervention_text | format_intervention }}
+                            </div>
+                        {% endif %}
+
+                        <small class="text-muted">
+                            <b>{{ goal.assessment_result.assessment_type|upper }} (id: {{ goal.assessment_result.id }})</b>
+                            on {{ goal.assessment_result.date_taken.strftime('%Y-%m-%d') }} |
+                            Set by: {{ goal.slp.username }}
+                        </small>
+                        <hr>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No goals saved yet.</p>
+                {% endif %}
+            </div> {# End of goals-content-scroll #}
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <div class="modal fade" id="goalsModal" tabindex="-1" aria-labelledby="goalsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="goalsModalLabel"><i class="fas fa-bullseye me-2"></i>Set Goals for {{ patient.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('pages.save_goals', patient_id=patient.id) }}">
+                <div class="mb-3 p-3 pb-1">
+                    <label for="assessment_result_id" class="form-label">{{ patient.name }}'s Completed Assessment</label>
+                    <select name="assessment_result_id" id="assessment_result_id" class="form-select" required>
+                        <option value="">Select Assessment</option>
+                        {% for result in patient.sessions|reverse %}
+                        <option value="{{ result.id }}">
+                            {{ result.assessment_type|upper }} (ID: {{ result.id }}) - {{ result.date_taken.strftime('%Y-%m-%d') }} {% if result.assessment_type != 'casl' %} (Score: {{ result.score }}) {% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3 p-3 pt-1">
+                    <label for="goal_text" class="form-label">Description</label>
+                    <textarea name="goal_text" id="goal_text" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3 px-3">
+                    <label for="problem_description" class="form-label">Problem Description</label>
+                    <textarea name="problem_description" id="problem_description" class="form-control" rows="3" placeholder="Describe the specific speech/language issue..."></textarea>
+                </div>
+
+                <div class="mb-3 px-3">
+                    <label for="intervention_text" class="form-label">Suggested Intervention</label>
+                    <textarea name="intervention_text" id="intervention_text" class="form-control" rows="3" readonly placeholder="Click 'Generate Intervention' to auto-fill"></textarea>
+                </div>
+
+                <div class="mb-3 px-3 d-flex justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary me-2" onclick="generateIntervention()">Generate Intervention</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+        
+        <!-- Goals Modal -->
+        
+        
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  // Initialize all tooltips
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+</script>
+
+<script>
+    async function generateIntervention() {
+        const problemDescription = document.getElementById('problem_description').value;
+        const interventionTextarea = document.getElementById('intervention_text');
+
+        if (!problemDescription.trim()) {
+            alert('Please enter a problem description before generating an intervention.');
+            return;
+        }
+
+        interventionTextarea.value = 'Generating intervention... Please wait.';
+        interventionTextarea.readOnly = true;
+        const generateButton = document.querySelector('button[onclick="generateIntervention()"]');
+        generateButton.disabled = true;
+        generateButton.textContent = 'Generating...';
+
+        try {
+            const response = await fetch('/generate_intervention', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ problem_description: problemDescription })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Something went wrong on the server.');
+            }
+
+            const data = await response.json();
+            let generatedText = data.intervention;
+
+            // --- IMPORTANT CHANGE HERE: Post-processing for formatting ---
+            // This regular expression looks for a number followed by a period and a space,
+            // and inserts a newline BEFORE it, unless it's at the very beginning of the string.
+            // It specifically targets patterns like "1. " or "2. "
+            generatedText = generatedText.replace(/(\S)(?=\d+\. )/g, '$1\n');
+
+            // Optionally, ensure there's a newline after each numbered item and trim excess whitespace
+            // This is useful if points are sometimes like "1. Item 2. Next Item"
+            generatedText = generatedText.replace(/(\d+\. [^\n]+?)(\d+\. )/g, '$1\n$2');
+
+            // Remove any leading newlines that might appear from the regex
+            generatedText = generatedText.trimStart();
+
+            // --- End of Important Change ---
+
+            interventionTextarea.value = generatedText;
+
+        } catch (error) {
+            console.error('Error generating intervention:', error);
+            interventionTextarea.value = 'Error: Could not generate intervention. ' + error.message;
+            alert('Failed to generate intervention: ' + error.message);
+        } finally {
+            interventionTextarea.readOnly = false;
+            generateButton.disabled = false;
+            generateButton.textContent = 'Generate Intervention';
+        }
+    }
+</script>
+
+{% endblock scripts %}

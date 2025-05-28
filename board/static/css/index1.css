@@ -1,0 +1,192 @@
+/* General Styles */
+body {
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background-color: #f7fcff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Title Section */
+.console-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1E4D5C;
+  margin-bottom: 1.5rem; /* Adjusted bottom margin */
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #4AC2DD;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin: 0; /* Removed margin to fit content properly */
+}
+
+.btn-primary:hover {
+  background-color: #36b1cd;
+}
+
+.btn-outline-primary {
+  border: 1px solid #4AC2DD;
+  color: #4AC2DD;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 50rem;
+  transition: all 0.3s ease;
+  margin: 0; /* Removed margin */
+}
+
+.btn-outline-primary:hover {
+  background-color: #4AC2DD;
+  color: white;
+}
+
+.btn-outline-danger {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 50rem;
+  transition: all 0.3s ease;
+  margin: 0; /* Removed margin */
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Card Styles */
+.card {
+  transition: transform 0.2s ease-in-out;
+  border-radius: 16px;
+  margin-bottom: 1.25rem; /* Adjusted bottom margin */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 20px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0; /* Removed margin */
+}
+
+.card-body h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1E4D5C;
+  margin-bottom: 0.75rem; /* Slightly reduced margin */
+}
+
+.card-body p {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem; /* Adjusted top margin */
+}
+
+/* Overview Section */
+.overview-section {
+  background-color: #e8f7fc;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 2.5rem; /* Adjusted top margin */
+}
+
+.overview-title {
+  color: #1E4D5C;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.25rem; /* Adjusted bottom margin */
+}
+
+.overview-text {
+  color: #364550;
+  font-size: 1rem;
+}
+
+/* Add Patient Button */
+.add-btn {
+  background-color: #4AC2DD;
+  color: white;
+  border-radius: 12px;
+  padding: 10px 25px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin: 0; /* Removed margin */
+}
+
+.add-btn:hover {
+  background-color: #36b1cd;
+}
+
+/* Hover Effects */
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Spacing and Layout */
+.container-fluid {
+  padding-top: 3rem; /* Adjusted top padding */
+  padding-bottom: 3rem; /* Adjusted bottom padding */
+}
+
+.row.g-4 {
+  gap: 1.5rem; /* Adjusted gap for better fit */
+}
+
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem; /* Adjusted bottom margin */
+}
+
+/* Home Scroll Section */
+.home-scroll {
+  padding-bottom: 5rem;
+}
+
+/* Adjust margin for small screens */
+@media (max-width: 768px) {
+  .console-title {
+    font-size: 1.5rem; /* Smaller title font size on mobile */
+    margin-bottom: 1rem; /* Adjusted margin on mobile */
+  }
+
+  .card-body h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem; /* Adjusted margin on mobile */
+  }
+
+  .overview-section {
+    padding: 1.5rem;
+    margin-top: 1.5rem; /* Adjusted top margin for smaller screens */
+  }
+
+  .row.g-4 {
+    gap: 1rem;
+  }
+
+  .d-flex {
+    margin-bottom: 1.5rem; /* Adjusted margin on mobile */
+  }
+}

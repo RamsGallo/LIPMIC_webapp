@@ -1,20 +1,7 @@
-let timer = 10 * 60;
+let timer = 0 * 60;
 let timerInterval;
 let answered = false;
 let currentAnswer = "";
-
-function updateTimer() {
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer % 60;
-    document.getElementById("timer").innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    if (timer <= 0) {
-        clearInterval(timerInterval);
-        alert("Time's up!");
-        // window.location.href = `/console/end/${patient_id}`;
-        setInterval(openPage, 1000);
-    }
-    timer--;
-}
 
 function loadQuestion() {
     fetch(`/quiz/${assessmentType}`)
@@ -22,8 +9,7 @@ function loadQuestion() {
         .then(data => {
             if (data.finished) {
                 alert(`${assessmentType} Test Finished! Score: ${data.score}, Patient: ${patient_id}`);
-                
-                // Wait a short time then redirect once
+            
                 setTimeout(() => {
                     window.location.href = `/console/end/${patient_id}`;
                 }, 1000);
@@ -47,9 +33,28 @@ function loadQuestion() {
 }
 
 
+let selectedVoice = null;
+
+// Load voices and pick a female voice once
+function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    selectedVoice = voices.find(voice =>
+        voice.lang === 'en-US' && /female|Samantha|Zira|Karen/i.test(voice.name)
+    );
+}
+
+window.speechSynthesis.onvoiceschanged = loadVoices;
+
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = 'en-US';
+    msg.pitch = 1.9;
+    msg.rate = 1.1;
+
+    if (selectedVoice) {
+        msg.voice = selectedVoice;
+    }
+
     window.speechSynthesis.speak(msg);
 }
 
@@ -98,4 +103,11 @@ document.addEventListener("DOMContentLoaded", () => {
     loadQuestion();
     timerInterval = setInterval(updateTimer, 1000);
 });
+
+function updateTimer() {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+    document.getElementById("timer").innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    timer++;
+}
 

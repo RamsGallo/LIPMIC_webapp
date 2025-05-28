@@ -1,0 +1,18 @@
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.accordion-button {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #e9f1fb;
+    color: #0d6efd;
+}

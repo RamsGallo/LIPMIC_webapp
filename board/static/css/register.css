@@ -1,0 +1,100 @@
+/* Custom styles for blue theme */
+
+/* Body background color */
+body {
+  background-color: #e9f4ff;
+}
+
+/* Card style */
+.card {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  background-color: #ffffff;
+
+}
+
+/* Button primary color */
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+  color: #ffffff;
+}
+
+/* Form control styling */
+.form-control {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+  border-color: #007bff;       /* Optional: can keep or change */
+  box-shadow: none !important; /* Removed the blue outline */
+  outline: none;               /* Ensure no outline shows */
+}
+
+/* Flash messages custom styling */
+.alert-dismissible .btn-close {
+  padding: 0.5rem 1rem;
+  background-color: #f0f8ff;
+  color: #007bff;
+}
+
+.alert-dismissible .btn-close:hover {
+  background-color: #cce5ff;
+}
+
+/* Style for "Login here" link */
+.text-muted {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.text-muted a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.text-muted a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* General link styles */
+a {
+  color: #007bff;
+}
+
+a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Specific styles for inputs (like username and password fields) */
+input.form-control {
+  font-size: 1rem;
+}
+
+input.form-control::placeholder {
+  color: #6c757d;
+}
+
+/* Text style adjustments */
+h2, h3 {
+  color: #007bff;
+}
+
+p {
+  color: #495057;
+}
+
+/* Additional styling for buttons and form elements inside cards */
+.card .btn {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+}

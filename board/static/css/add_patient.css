@@ -1,0 +1,65 @@
+/* Basic styling for patient intake form */
+body {
+    font-family: Arial, sans-serif;
+}
+
+h4, h5 {
+    color: #2c3e50;
+}
+
+h4 {
+    font-weight: bold;
+}
+
+table th {
+    background-color: #f0f8ff;
+}
+
+table td, table th {
+    text-align: center;
+    padding: 8px;
+}
+
+input.form-control {
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+section h5 {
+    margin-top: 20px;
+    color: #34495e;
+}
+
+table {
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.form-control {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+    }
+.form-label {
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+    }
+.mb-3, .mb-2 {
+        margin-bottom: 0.75rem !important;
+    }
+
+td:first-child, th:first-child {
+    text-align: left;
+}
+
+.nav-tabs .nav-link {
+    color: gray;
+}

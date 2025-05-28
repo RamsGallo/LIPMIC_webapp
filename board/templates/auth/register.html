@@ -1,28 +1,58 @@
 {% extends "base.html" %}
+
 {% block title %}SLP Registration{% endblock %}
 
 {% block content %}
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
-  <div class="card shadow-lg rounded-4 p-4" style="max-width: 400px; width: 100%;">
-    <h2 class="text-center mb-4">SLP Registration</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-5">
+  <div class="card shadow-lg rounded-4 p-5" style="max-width: 420px; width: 100%; border-radius: 12px;">
+    
+    <!-- Registration Title -->
+ <h2 class="text-center mb-4 fw-bold text-primary">SLP Registration</h2>
 
-    <form method="POST">
+
+    <!-- Registration Form -->
+    <form method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
-        <input name="username" type="text" class="form-control" id="username" placeholder="Choose a username" required>
+        <input name="username" type="text" id="username" class="form-control" placeholder="Choose a username" required autocomplete="username" autofocus>
+        <div class="invalid-feedback">Please enter your username.</div>
       </div>
 
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input name="password" type="password" class="form-control" id="password" placeholder="Create a password" required>
+        <input name="password" type="password" id="password" class="form-control" placeholder="Create a password" required autocomplete="current-password">
+        <div class="invalid-feedback">Please enter your password.</div>
       </div>
 
-      <button type="submit" class="btn btn-success w-100 mb-3">Register</button>
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-success w-100">
+          Register
+        </button>
+      </div>
     </form>
 
+    <!-- Login Link -->
     <p class="text-center text-muted mb-0">
-      Already have an account? <a href="{{ url_for('pages.login') }}">Login here</a>
+      Already have an account? <a href="{{ url_for('pages.login') }}" class="text-decoration-none text-primary fw-semibold">Login here</a>
     </p>
   </div>
 </div>
+
+<!-- Bootstrap Validation & Custom Script -->
+<script>
+  (function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+</script>
 {% endblock %}

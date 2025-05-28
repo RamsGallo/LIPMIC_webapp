@@ -1,0 +1,51 @@
+{% extends 'base-console.html' %}
+{% block title %}{{ assessment_title }} Test{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/casl.css') }}">
+
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Live Camera -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body text-center">
+                    <h4 class="text-primary fw-semibold mb-3">Live Camera</h4>
+                    <img id="video-feed" src="{{ url_for('pages.video_feed') }}"
+                         class="img-fluid rounded border border-info" alt="Live Camera Feed">
+                </div>
+            </div>
+            <div class="mt-4">
+                <span id="timer" class="badge bg-info fs-5 me-3 px-3 py-2 shadow-sm">0:00</span>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 p-4" style="background-color: #f9fdff;">
+                <h2 id="quiz-prompt" class="text-center text-dark fw-bold mb-4">Loading...</h2>
+
+            <div class="linear-layout text-center">
+            <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                <img id="left-img" class="quiz-img" alt="Left" />
+                <img id="up-img" class="quiz-img" alt="Up" />
+                <img id="down-img" class="quiz-img" alt="Down" />
+                <img id="right-img" class="quiz-img" alt="Right" />
+            </div>
+            </div>
+            </div>
+                <div class="text-center mt-4">
+                <span id="score" class="badge bg-primary fs-5 px-3 py-2 shadow-sm">Score: 0</span>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.patient_id = "{{ patient_id }}";
+    window.assessmentType = "{{ assessment_type }}";
+</script>
+<script src="{{ url_for('static', filename='js/assessment.js') }}"></script>
+{% endblock %}

@@ -11,102 +11,192 @@
 <!---Render content of page-->
 {% block content %}
 <div class="home-scroll">
-    <div class="assess container-md pt-2">
-        <h5 class="lead">
-            <mark>Important!</mark> 
-            <small class="text-muted">The duration of an assessment digital testing varies according to age, history of previous assessments, the severity of the speech/language deficit, as well as the collaboration and attention of the person.</small>
-        </h5>
-    <div class="accordion accordion-flush" id="accordion-steps">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingOne">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              Parent/Client Interview
-            </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-steps">
-            <div class="accordion-body">During the initial parent or client interview, client/parent, physician, and teacher concerns will be discussed. Additionally, will examine medical history, developmental milestones, language acquisition (bilingual clients), educational history and family history.</div>
-          </div>
+    <div class="assess container-md">
+        <!-- Important Message -->
+        <div class="alert alert-info">
+            <strong>Important!</strong>
+            <small class="text-muted">
+                The duration of an assessment digital testing varies according to age, history of previous assessments, 
+                the severity of the speech/language deficit, as well as the collaboration and attention of the person.
+            </small>
         </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-              Informal Assessment
-            </button>
-          </h2>
-          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-steps">
-            <div class="accordion-body">During the informal assessment portion, use a variety of toys, books or videos to elicit a spontaneous speech and language sample. Then transcribe and analyze the spontaneous sample to determine if there are any speech and/or language anomalies. For instance, analyze a child’s language sample to determine if their language consists of all the age-appropriate morphemes. Also take a narrative language sample to informally analyze higher level language skills (e.g. sequencing, reasoning, perspective taking) according to age.</div>
-          </div>
+
+        <!-- Accordion Steps -->
+        <div class="accordion accordion-flush" id="accordion-steps">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Parent/Client Interview
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-steps">
+                    <div class="accordion-body">During the initial parent or client interview, client/parent, physician, and teacher concerns will be discussed. Additionally, we will examine medical history, developmental milestones, language acquisition (bilingual clients), educational history, and family history.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        Informal Assessment
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-steps">
+                    <div class="accordion-body">During the informal assessment portion, use a variety of toys, books, or videos to elicit a spontaneous speech and language sample. Then transcribe and analyze the sample to determine if there are any speech and/or language anomalies.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                        Digital Assessment
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordion-steps">
+                    <div class="accordion-body">A digital assessment can be conducted for speech and language using digital tools.</div>
+                </div>
+            </div>
         </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="flush-headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-              Digital Assessment
-            </button>
-          </h2>
-          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordion-steps">
-            <div class="accordion-body">A digital assessment can be conducted for speech and language using digital tools.</div>
-          </div>
-        </div>
-    </div>
     </div>
 
     <hr>
 
     <div class="assessments container-md mb-5">
-      <h1 class="display-6 text-left mt-3">Digital Tools</h1>
-      <div class="row row-cols-1 g-4 mb-5">
-        
-        <!-- Horizontal Card -->
-        <div class="col">
-          <div class="card h-100 horizontal-card">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="{{ url_for('static', filename='img/doctor.png') }}" class="img-fluid rounded-start h-100 object-cover" alt="Tool Image">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h4>Peabody Picture Vocabulary Test (PPTV)</h4>
-                  <hr>
-                  <dl class="row">
-                    <dt class="col-sm-3">Description</dt>
-                    <dd class="col-sm-9">Peabody Picture Vocabulary Test (PPTV) is a standardized assessment tool used to evaluate receptive vocabulary skills. The children are simply presented with pictures along with a verbal label presented by the SLP.</dd>
-                  
-                    <dt class="col-sm-3">Target Area</dt>
-                    <dd class="col-sm-9">
-                      <p>Receptive Vocabulary Skills</p>
-                    </dd>
-                  
-                    <dt class="col-sm-3">Duration</dt>
-                    <dd class="col-sm-9">Approx. 15-20 minutes</dd>
-                  
-                    <dt class="col-sm-3 text-truncate">Procedure</dt>
-                    <dd class="col-sm-9">The children is presented with 4 pictures. The task is to measure their understanding of vocabulary. With Lipmic, the childen can point out the pictures using their articulation of labels.</dd>
-                  </dl>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-9">
-                    <label for="patientSelect" class="form-label">Select Patient</label>
-                    <select id="patientSelect" class="form-select">
-                      <option value="" disabled selected>Select a patient</option>
-                      {% for patient in patients %}
-                        <option value="{{ patient.id }}">{{ patient.name }}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                    <div class="col-sm-3 pt-2">
-                      <button class="btn btn-primary start-assessment-btn d-none" data-assessment="peabody">Start Assessment</button>
-                    </div> 
-                  </div>
-                  </div>
+        <h1 class="display-6 text-left mt-3">Digital Tools</h1>
+        <div class="row row-cols-1 g-4 mb-5">
+            <!-- Horizontal Card -->
+            <div class="col">
+                <div class="card h-100 horizontal-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/peabody.png') }}" class="img-fluid rounded-start h-100 object-cover" alt="Tool Image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4>Peabody Picture Vocabulary Test (PPTV)</h4>
+                                <hr>
+                                <dl class="row">
+                                    <dt class="col-sm-3">Description</dt>
+                                    <dd class="col-sm-9">Peabody Picture Vocabulary Test (PPTV) is a standardized assessment tool used to evaluate receptive vocabulary skills. The patient is simply presented with pictures along with a verbal label presented by the SLP.</dd>
+
+                                    <dt class="col-sm-3">Target Area</dt>
+                                    <dd class="col-sm-9">
+                                        <p>Receptive Vocabulary Skills</p>
+                                    </dd>
+
+                                    <dt class="col-sm-3">Duration</dt>
+                                    <dd class="col-sm-9">Approx. 15-20 minutes</dd>
+
+                                    <dt class="col-sm-3 text-truncate">Procedure</dt>
+                                    <dd class="col-sm-9">The patient is presented with 4 pictures. The task is to measure their understanding of vocabulary. With Lipmic, the patient can point out the pictures using their articulation of labels.</dd>
+                                </dl>
+                                <hr>
+                                <div class="row mb-4">
+                                    <div class="col-sm-9">
+                                        <label for="patientSelect" class="form-label">Select Patient</label>
+                                        <select class="form-select patient-select">
+                                            <option value="" disabled selected>Select a patient</option>
+                                            {% for patient in patients %}
+                                                <option value="{{ patient.id }}">{{ patient.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button class="btn btn-primary start-assessment-btn d-none" data-assessment="peabody">Begin Assessment</button>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+
+            <div class="col">
+                <div class="card h-100 horizontal-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='img/peabody.png') }}" class="img-fluid rounded-start h-100 object-cover" alt="Tool Image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4>Comprehensive Assessment of Spoken Language (CASL)</h4>
+                                <hr>
+                                <dl class="row">
+                                    <dt class="col-sm-3">Description</dt>
+                                    <dd class="col-sm-9">CASL assessment or the Comprehensive Assessment of Spoken Language is a standardized language assessment and a valuable tool for evaluating several areas of a patient's expressive language skills.</dd>
+
+                                    <dt class="col-sm-3">Target Area</dt>
+                                    <dd class="col-sm-9">
+                                        <p>Lexical/Semantics, Syntactic Skills</p>
+                                    </dd>
+
+                                    <dt class="col-sm-3">Duration</dt>
+                                    <dd class="col-sm-9">Approx. 15-20 minutes</dd>
+
+                                    <dt class="col-sm-3 text-truncate">Procedure</dt>
+                                    <dd class="col-sm-9">The patient is presented with various questions. The task is to measure their understanding of vocabulary. With Lipmic, it captures the patient's articulation of their answers.</dd>
+                                </dl>
+                                <hr>
+                                <div class="row mb-4">
+                                    <div class="col-sm-9">
+                                        <label for="patientSelect" class="form-label">Select Patient</label>
+                                        <select class="form-select patient-select">
+                                            <option value="" disabled selected>Select a patient</option>
+                                            {% for patient in patients %}
+                                                <option value="{{ patient.id }}">{{ patient.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button class="btn btn-primary start-assessment-btn d-none" data-assessment="casl">Begin Assessment</button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="instructionModal" tabindex="-1" aria-labelledby="instructionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="instructionModalLabel">Assessment Instructions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopTTS()"></button>
+      </div>
+      <div class="modal-body" id="instructionText"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="stopTTS()">Cancel</button>
+        <button type="button" class="btn btn-primary" id="continueAssessmentBtn">Continue</button>
       </div>
     </div>
+  </div>
+</div>
+
 {% endblock content %}
 
 {% block scripts %}
 
-{% endblock scripts %} 
+<script>
+    (function () {
+        'use strict'
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+          new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    })()
+</script>
+
+<script>
+  const toggleSidebarBtn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidebar-console');
+
+  toggleSidebarBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+  });
+</script>
+
+<script>const patientId = "{{ patient_id }}";</script>
+
+{% endblock scripts %}

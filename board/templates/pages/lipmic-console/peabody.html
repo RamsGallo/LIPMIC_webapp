@@ -2,30 +2,68 @@
 {% block title %}{{ assessment_title }} Test{% endblock %}
 
 {% block content %}
-<div style="display: flex; gap: 20px;">
-    <div>
-        <h3>Live Camera</h3>
-        <img id="video-feed" src="{{ url_for('pages.video_feed') }}" width="320" height="240">
-    </div>
-    <div style="flex: 1;">
-        <h2 id="quiz-prompt">Loading...</h2>
-        <div class="diamond-layout">
-            <img id="up-img" class="quiz-img" />
-            <img id="left-img" class="quiz-img" />
-            <img id="right-img" class="quiz-img" />
-            <img id="down-img" class="quiz-img" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/peabody.css') }}">
+
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Live Camera -->
+        <div class="col-md-4">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body text-center">
+                    <h4 class="text-primary fw-semibold mb-3">Live Camera</h4>
+                    <img id="video-feed" src="{{ url_for('pages.video_feed') }}"
+                         class="img-fluid rounded border border-info" alt="Live Camera Feed">
+                </div>
+            </div>
+            <div class="mt-4">
+                <span id="timer" class="badge bg-info fs-5 me-3 px-3 py-2 shadow-sm">0:00</span>
+            </div>
         </div>
-        <div id="timer">10:00</div>
-        <div id="score">Score: 0</div>
+
+        <!-- Quiz Interface -->
+        <div class="col-md-8">
+            <div class="card shadow rounded-4 p-4" style="background-color: #f9fdff;">
+                <h2 id="quiz-prompt" class="text-center text-dark fw-bold mb-4">Loading...</h2>
+
+                <div class="position-relative diamond-container mx-auto" style="width: 300px; height: 300px;">
+                <!-- Up -->
+                <div class="diamond-img" style="top: 0; left: 50%; transform: translateX(-50%);">
+                    <img id="up-img" class="quiz-img" alt="Up" />
+                    <p class="direction-label">Up</p>
+                </div>
+
+                <!-- Left -->
+                <div class="diamond-img" style="top: 50%; left: 0; transform: translateY(-50%);">
+                    <img id="left-img" class="quiz-img" alt="Left" />
+                    <p class="direction-label">Left</p>
+                </div>
+
+                <!-- Right -->
+                <div class="diamond-img" style="top: 50%; right: 0; transform: translateY(-50%);">
+                    <img id="right-img" class="quiz-img" alt="Right" />
+                    <p class="direction-label">Right</p>
+                </div>
+
+                <!-- Down -->
+                <div class="diamond-img" style="bottom: 0; left: 50%; transform: translateX(-50%);">
+                    <img id="down-img" class="quiz-img" alt="Down" />
+                    <p class="direction-label">Down</p>
+                </div>
+                </div>
+
+                <div class="text-center mt-4">
+                <span id="score" class="badge bg-primary fs-5 px-3 py-2 shadow-sm">Score: 0</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script>window.patient_id = "{{ patient_id }}";</script>
-
 <script>
-    // window.patientId = "{{ patient_id }}";
+    window.patient_id = "{{ patient_id }}";
     window.assessmentType = "{{ assessment_type }}";
 </script>
 <script src="{{ url_for('static', filename='js/assessment.js') }}"></script>

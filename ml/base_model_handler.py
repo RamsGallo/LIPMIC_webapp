@@ -6,13 +6,15 @@ from collections import deque
 from abc import ABC, abstractmethod
 
 class BaseLipModelHandler(ABC):
-    def __init__(self, model_path, label_dict, total_frames=22, lip_size=(112, 80), past_buffer_size=4):
+    def __init__(self, model_path,label_dict,total_frames=22,lip_size=(112, 80),past_buffer_size=4,valid_threshold=1,not_talking_thres=10):
         import tensorflow as tf
         self.model = tf.keras.models.load_model(model_path)
         self.label_dict = label_dict
         self.TOTAL_FRAMES = total_frames
         self.LIP_WIDTH, self.LIP_HEIGHT = lip_size
         self.PAST_BUFFER_SIZE = past_buffer_size
+        self.VALID_WORD_THRESHOLD = valid_threshold
+        self.NOT_TALKING_THRESHOLD = not_talking_thres
 
         self.curr_word_frames = []
         self.past_word_frames = deque(maxlen=past_buffer_size)
@@ -38,6 +40,10 @@ class BaseLipModelHandler(ABC):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = self.detector(gray)
 
+        if len(faces) == 0:
+            print("No face found")
+            return frame
+
         for face in faces:
             landmarks = self.predictor(image=gray, box=face)
             lip_frame = self.extract_lip(frame, landmarks)
@@ -51,15 +57,29 @@ class BaseLipModelHandler(ABC):
                 self.curr_word_frames.append(lip_frame)
                 self.not_talking_counter = 0
             else:
+                cv2.putText(frame, "Not talking", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 self.not_talking_counter += 1
-                if self.not_talking_counter >= 10 and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE == self.TOTAL_FRAMES:
+
+                if self.not_talking_counter >= self.NOT_TALKING_THRESHOLD and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE == self.TOTAL_FRAMES:
+                    cv2.putText(frame, "Talking", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     self.predict_word()
-                elif len(self.curr_word_frames) > 1:
+
+                elif self.not_talking_counter < self.NOT_TALKING_THRESHOLD and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE < self.TOTAL_FRAMES and len(self.curr_word_frames) > self.VALID_WORD_THRESHOLD:
+                    #print("Reset not talking counter")
                     self.curr_word_frames.append(lip_frame)
-                else:
+                    self.not_talking_counter = 0
+
+                elif len(self.curr_word_frames) < self.VALID_WORD_THRESHOLD or (self.not_talking_counter >= self.NOT_TALKING_THRESHOLD and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE > self.TOTAL_FRAMES):
+                    #print("Reset Frames")
                     self.curr_word_frames = []
+                
+                else:
+                    #print("pass")
+                    pass
 
                 self.past_word_frames.append(lip_frame)
+                if len(self.past_word_frames) > self.PAST_BUFFER_SIZE:
+                   self.past_word_frames.pop(0)
         return frame
 
     def extract_lip(self, frame, landmarks):
@@ -84,5 +104,6 @@ class BaseLipModelHandler(ABC):
         data = np.array([self.curr_word_frames[:self.TOTAL_FRAMES]])
         prediction = self.model.predict(data)
         self.postprocess_prediction(prediction)
+        self.last_predicted_frames = self.curr_word_frames[:self.TOTAL_FRAMES]
         self.curr_word_frames = []
         self.prediction_consumed = False
