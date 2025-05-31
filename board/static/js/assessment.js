@@ -8,7 +8,7 @@ function loadQuestion() {
         .then(res => res.json())
         .then(data => {
             if (data.finished) {
-                alert(`${assessmentType} Test Finished! Score: ${data.score}, Patient: ${patient_id}`);
+                alert(`${assessmentType} Test Finished!`);
             
                 setTimeout(() => {
                     window.location.href = `/console/end/${patient_id}`;
@@ -48,8 +48,8 @@ window.speechSynthesis.onvoiceschanged = loadVoices;
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = 'en-US';
-    msg.pitch = 1.9;
-    msg.rate = 1.1;
+    msg.pitch = 1.7;
+    msg.rate = 1.0;
 
     if (selectedVoice) {
         msg.voice = selectedVoice;

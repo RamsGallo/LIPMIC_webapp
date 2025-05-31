@@ -98,7 +98,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 d-flex justify-content-center">
                                         <button class="btn btn-primary start-assessment-btn d-none" data-assessment="peabody">Begin Assessment</button>
                                     </div> 
                                 </div>
@@ -144,9 +144,9 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 d-flex justify-content-center">
                                         <button class="btn btn-primary start-assessment-btn d-none" data-assessment="casl">Begin Assessment</button>
-                                    </div>  
+                                    </div> 
                                 </div>
                             </div>
                         </div>
@@ -186,6 +186,18 @@
           new bootstrap.Tooltip(tooltipTriggerEl)
         })
     })()
+</script>
+
+<script>
+    
+function loadVoices() {
+    const voices = window.speechSynthesis.getVoices();
+    selectedVoice = voices.find(voice =>
+        voice.lang === 'en-US' && /female|Samantha|Zira|Karen/i.test(voice.name)
+    );
+}
+
+window.speechSynthesis.onvoiceschanged = loadVoices;
 </script>
 
 <script>

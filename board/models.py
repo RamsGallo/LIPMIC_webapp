@@ -105,7 +105,8 @@ class Patient(db.Model):
     omd_9 = db.Column(db.String(100), nullable=True)
 
     slp_id = db.Column(db.Integer, db.ForeignKey('slp.id'), nullable=False)
-    sessions = db.relationship('AssessmentResult', backref='patient', lazy=True, cascade="all, delete-orphan")
+    goals = db.relationship('Goal', back_populates='patient', lazy=True, cascade="all, delete-orphan")
+    sessions = db.relationship('AssessmentResult', back_populates='patient', lazy=True, cascade="all, delete-orphan")
 
 class SLP(UserMixin, db.Model):
     __tablename__ = 'slp'
@@ -130,11 +131,14 @@ class AssessmentResult(db.Model):
     __tablename__ = 'assessment_results'
     id = db.Column(db.Integer, primary_key=True)
     assessment_type = db.Column(db.String(50), nullable=False)  # e.g., 'peabody', 'naming'
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id', ondelete='CASCADE'), nullable=False)
     date_taken = db.Column(db.DateTime, default=datetime.utcnow)
     answers = db.Column(db.JSON, nullable=False)  # { "prompt": ..., "predicted": ..., "correct": ... }
     score = db.Column(db.Integer, nullable=False)
     duration = db.Column(db.Integer, nullable=True)
+
+    patient = db.relationship('Patient', back_populates='sessions')
+    goals = db.relationship('Goal', back_populates='assessment_result', lazy=True, cascade="all, delete-orphan")
 
     def __init__(self, assessment_type, patient_id, answers, score, duration=None):
         self.assessment_type = assessment_type
@@ -156,16 +160,24 @@ class LipFrame(db.Model):
 
 class Goal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id', ondelete='CASCADE'), nullable=False)
     slp_id = db.Column(db.Integer, db.ForeignKey('slp.id'), nullable=False)
     goal_text = db.Column(db.Text, nullable=False)
 
-    problem_description = db.Column(db.Text, nullable=True)  # NEW FIELD
-    intervention_text = db.Column(db.Text, nullable=True)    # NEW FIELD
-    
-    assessment_result_id = db.Column(db.Integer, db.ForeignKey('assessment_results.id'), nullable=False)
+    problem_description = db.Column(db.Text, nullable=True)
+    intervention_text = db.Column(db.Text, nullable=True)
+
+    assessment_result_id = db.Column(db.Integer, db.ForeignKey('assessment_results.id', ondelete='CASCADE'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # --- NEW FIELDS FOR GOAL TRACKING ---
+    # Status can be 'active', 'achieved', 'on_hold', 'discontinued'
+    status = db.Column(db.String(50), default='active', nullable=False)
+    # When the goal was achieved
+    achieved_at = db.Column(db.DateTime, nullable=True)
+    # --- END NEW FIELDS ---
+
     # Relationships
-    patient = db.relationship('Patient', backref='goals')
+    patient = db.relationship('Patient', back_populates='goals')
     slp = db.relationship('SLP', backref='goals')
-    assessment_result = db.relationship('AssessmentResult', backref='goals')
+    assessment_result = db.relationship('AssessmentResult', back_populates='goals')

@@ -38,21 +38,15 @@
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
                 <a class="nav-link fw-bold nav-project active text-color" aria-current="page"
-                  href="/project-lipmic"><span class="lipmic-color">Project LIPMIC</span></a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link fw-bold dropdown-toggle text-color" href="#" id="navbarDropdown2" role="button"
-                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="lipmic-color">More</span>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                  <a class="dropdown-item" href="/aboutus">About Us</a>
-                  <a class="dropdown-item" href="/design">Design Roadmap</a>
-                </div>
-              </li>
-              <li class="nav-item">
-                <a class="btn btn-primary" href="/console/" role="button">Go to Console</a>
-              </li>
+                  href="{{ url_for('pages.about_page') }}"><span class="lipmic-color">About Us</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-bold nav-project active text-color" aria-current="page"
+                  href="{{ url_for('pages.design_page') }}"><span class="lipmic-color">Design Roadmap</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary" href="{{ url_for('pages.console_page') }}" role="button">Go to Console</a>
+            </li>
             </ul>
           </div>
         </div>

@@ -117,7 +117,7 @@ def create_app():
                 if processed_line:
                     output_html_parts.append(f"<p>{processed_line}</p>")
 
-        flush_list() # Flush any remaining open list at the end of text
+        flush_list()
 
         # Final assembly of all parts
         return Markup("".join(output_html_parts))

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, Response, jsonify, abort, send_from_directory, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, Response, jsonify, abort, send_from_directory, current_app, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from board.models import db, SLP, Patient, AssessmentResult, LipFrame, Goal
 from datetime import datetime, date
@@ -9,8 +9,11 @@ from pathlib import Path
 import google.generativeai as genai
 from werkzeug.utils import secure_filename
 from board.utils import group_frames_by_question
+from xhtml2pdf import pisa
+import io
 import cv2
 import os
+
 
 model_handlers = {
     "peabody": PeabodyHandler(),
@@ -83,34 +86,193 @@ def test_intervention_format():
     """
     return response_html
 
+@bp.route('/console/goal_report_pdf/<int:goal_id>')
+@login_required
+def goal_report_pdf(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+
+    # Security check: Ensure the goal belongs to the current SLP's patient
+    if goal.patient.slp_id != current_user.id:
+        abort(403)
+
+    patient = goal.patient
+    slp = current_user
+    assessment_result = goal.assessment_result
+
+    lip_frames = []
+    if assessment_result:
+        lip_frames = LipFrame.query.filter_by(assessment_result_id=assessment_result.id).order_by(LipFrame.question_index, LipFrame.frame_index).all()
+
+    # Define current_time
+    current_time = datetime.utcnow()
+
+    # Render the HTML content for the PDF
+    rendered_html = render_template('pages/lipmic-console/pdf_goal_report.html',
+                                    goal=goal,
+                                    patient=patient,
+                                    slp=slp,
+                                    assessment_result=assessment_result,
+                                    lip_frames=lip_frames,
+                                    current_time=current_time)
+
+    # Create a file-like buffer to receive PDF data
+    result_file = io.BytesIO()
+
+    # Convert HTML to PDF
+    pisa_status = pisa.CreatePDF(
+            rendered_html,      # the HTML to convert
+            dest=result_file)   # file handle to receive result
+
+    # If the PDF creation failed, return an error
+    if pisa_status.err:
+        current_app.logger.error(f"xhtml2pdf error creating PDF for goal {goal_id}: {pisa_status.err}")
+        return jsonify({'error': 'Could not create PDF'}), 500
+
+    # Get the PDF data from the buffer
+    pdf_data = result_file.getvalue()
+    result_file.close()
+
+    # Create a Flask response
+    response = make_response(pdf_data)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=Goal_Report_{patient.name.replace(" ", "_")}_{goal.id}.pdf'
+
+    return response
+
 @bp.route('/generate_intervention', methods=['POST'])
+@login_required
 def generate_intervention_api():
     data = request.get_json()
     problem_description = data.get('problem_description')
+    patient_id = data.get('patient_id')
+    assessment_type = data.get('assessment_type')
+
+    if assessment_type == "casl":
+        assessment_type = "Comprehensive Assessment of Spoken Language"
+    elif assessment_type == "peabody":
+        assessment_type = "Peabody Picture Vocabulary Test"
+    else:
+        assessment_type=""
+
 
     if not problem_description:
         return jsonify({'error': 'Problem description is required'}), 400
-    api_key = current_app.API_KEY
 
+    api_key = current_app.API_KEY
     if not api_key:
         return jsonify({'error': 'AI API key not configured on the server.'}), 500
+    
+    if not patient_id:
+        # Changed from 404 to 400 as the patient_id should be present in the request body
+        return jsonify({'error': 'Patient ID is required.'}), 400
+    
+    patient = Patient.query.filter_by(id=patient_id, slp_id=current_user.id).first()
+    if not patient:
+        return jsonify({'error': 'Patient not found or does not belong to your account.'}), 404
+    
+    patient_context = f"""
+        Age: {patient.age}
+        Sex: {patient.sex}
+        Diagnosis: {patient.diagnosis if patient.diagnosis else 'Not specified'}
+        Grade Level: {patient.grade_level if patient.grade_level else 'Not specified'}
+        Precautions: {patient.precautions if patient.precautions else 'None'}
+        Current Medication: {patient.current_medication if patient.current_medication else 'None'}
+
+        Medical History:
+        - Complications during pregnancy: {patient.complication_preg if patient.complication_preg else 'None'}
+        - Birth complications: {patient.complication_deli if patient.complication_deli else 'None'}
+        - Birth weight: {patient.birth_weight if patient.birth_weight else 'Not specified'}
+        - Other birth problems: {patient.birth_problem if patient.birth_problem else 'None'}
+        - Immunization status: {patient.immunization if patient.immunization else 'Not specified'}
+        - General medical history (from parents, if relevant): 
+            Father: {patient.father_med_history if patient.father_med_history else 'None'}, 
+            Mother: {patient.mother_med_history if patient.mother_med_history else 'None'}
+
+        Developmental History (relevant for speech-language, these are the ages patient's age where he/she developed the following skills):
+        - Gross Motor Skills: 
+            Maintains sitting: {patient.gms_0 if patient.gms_0 else 'N/A'}, 
+            Bangs objects/toys: {patient.gms_1 if patient.gms_1 else 'N/A'},
+            Creeping: {patient.gms_2 if patient.gms_2 else 'N/A'},
+            Cruises: {patient.gms_3 if patient.gms_3 else 'N/A'},
+            Seats self to chair: {patient.gms_4 if patient.gms_4 else 'N/A'},
+            Walks alone: {patient.gms_5 if patient.gms_5 else 'N/A'},
+            Walks up and down the stairs: {patient.gms_6 if patient.gms_6 else 'N/A'},
+            Jumps with both feet: {patient.gms_7 if patient.gms_7 else 'N/A'},
+            Pedals tricycle: {patient.gms_8 if patient.gms_8 else 'N/A'},
+            Running: {patient.gms_9 if patient.gms_9 else 'N/A'},
+            Hops on one foot: {patient.gms_10 if patient.gms_10 else 'N/A'}.
+        - Fine Motor Skills: 
+            Midline hand play: {patient.fms_0 if patient.fms_0 else 'N/A'}, 
+            Transfer toy from hand to hand: {patient.fms_1 if patient.fms_1 else 'N/A'},
+            Plays peek-a-boo: {patient.fms_2 if patient.fms_2 else 'N/A'},
+            Waves good bye: {patient.fms_3 if patient.fms_3 else 'N/A'},
+            Draws line: {patient.fms_4 if patient.fms_4 else 'N/A'},
+            Holds crayon and scribbles: {patient.fms_5 if patient.fms_5 else 'N/A'},
+            Draws simple figures: {patient.fms_6 if patient.fms_6 else 'N/A'},
+            Snips with scissors: {patient.fms_7 if patient.fms_7 else 'N/A'},
+            Colors in large forms: {patient.fms_8 if patient.fms_8 else 'N/A'}, 
+            Copy letters: {patient.fms_9 if patient.fms_9 else 'N/A'}.
+        - Activities of Daily Living (ADL): 
+            Holds feeding bottle: {patient.adl_0 if patient.adl_0 else 'N/A'},
+            Finger-feeds: {patient.adl_1 if patient.adl_1 else 'N/A'},
+            Uses spoon with spillage: {patient.adl_2 if patient.adl_2 else 'N/A'},
+            Removes one garment: {patient.adl_3 if patient.adl_3 else 'N/A'},
+            Drinks from a cup neatly: {patient.adl_4 if patient.adl_4 else 'N/A'},
+            Toilet trained: {patient.adl_5 if patient.adl_5 else 'N/A'},
+            Finds front of clothing: {patient.adl_6 if patient.adl_6 else 'N/A'}.
+        - Cognitive Skills: 
+            Turns to voices and sounds consistently: {patient.cog_0 if patient.cog_0 else 'N/A'},
+            Understands simple commands: {patient.cog_1 if patient.cog_1 else 'N/A'},
+            Follows simple direction: {patient.cog_2 if patient.cog_2 else 'N/A'},
+            Points to named body part: {patient.cog_3 if patient.cog_3 else 'N/A'},
+            Refers to self by name: {patient.cog_4 if patient.cog_4 else 'N/A'},
+            Understands contrasts or opposites: {patient.cog_5 if patient.cog_5 else 'N/A'},
+            Understand who, what, and where questions: {patient.cog_6 if patient.cog_6 else 'N/A'}
+        - Oral Motor Development: 
+            Opens and closes mouth in response to food stimulus: {patient.omd_0 if patient.omd_0 else 'N/A'},
+            Coordinates sucking, swallowing, and breathing: {patient.omd_1 if patient.omd_1 else 'N/A'},
+            Suck and swallow reflex inhibited, can make several successive sucks before swallowing: {patient.omd_2 if patient.omd_2 else 'N/A'},
+            Swallows strained or pureed foods, small amounts: {patient.omd_3 if patient.omd_3 else 'N/A'},
+            Uses tongue to move food in mouth, up-down tongue and jaw: {patient.omd_4 if patient.omd_4 else 'N/A'},
+            Mouths and munches solid food: {patient.omd_5 if patient.omd_5 else 'N/A'},
+            Bites food voluntarily, with soft or solid cookie: {patient.omd_6 if patient.omd_6 else 'N/A'},
+            Drools less except when teething or congested: {patient.omd_7 if patient.omd_7 else 'N/A'},
+            Chews food with coordinated movements, of tongue, jaw, lips; tongue lateralization; upper lip active: {patient.omd_8 if patient.omd_8 else 'N/A'},
+            Chews completely with rotary jaw movements: {patient.omd_9 if patient.omd_9 else 'N/A'}
+        
+        Consider these details to make the intervention highly individualized.
+        """
 
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel('models/gemini-2.5-flash-preview-05-20')
 
         # Craft the prompt for the AI
-        prompt = f"""
-        As a speech-language pathologist AI assistant, generate a concise and actionable intervention strategy for the following patient problem:
+        initial_prompt = f"""
+            As a highly experienced speech-language pathologist AI assistant, generate a concise and actionable intervention strategy for the following patient problem, taking into account their specific profile.
 
-        Problem: "{problem_description}"
+            **Patient Profile:**
+            {patient_context}
 
-        The intervention should be practical and provide a clear approach.
-        **Format the intervention as a numbered list of specific actions.**
-        Each numbered point should be a distinct, actionable step.
+            **Problem:** "{problem_description}"
         """
-        response = model.generate_content(prompt)
 
+        # Conditionally add assessment type to the prompt
+        if assessment_type:
+            initial_prompt += f"\n\n**Additional Context:** This problem was identified or is related to a **{assessment_type.upper()}** assessment."
+        
+            print(assessment_type)
+            print(initial_prompt)
+
+        final_prompt = initial_prompt + """
+
+            The intervention should be practical, evidence-based, and highly individualized based on the patient's information provided.
+            Format the intervention as a numbered list of specific actions.
+            For any sub-points within a main numbered action, use bullet points (e.g., `* `).
+            Ensure each point is on its own clear line.
+            """
+            
+        response = model.generate_content(final_prompt)
         intervention_text = response.text
         return jsonify({'intervention': intervention_text})
 
@@ -386,11 +548,9 @@ def end_assessment(patient_id):
                     db.session.add(lip_frame)
             
             db.session.commit()
-            flash("Assessment completed successfully!")
             
         except Exception as e:
             db.session.rollback()
-            flash("Error saving assessment results.")
             print(f"Database error: {e}")
             return redirect(url_for('pages.assessments_page'))
 
@@ -589,6 +749,62 @@ def save_goals(patient_id):
         print(f"Error saving goal for patient {patient_id}: {e}") # Log the error for debugging
 
     return redirect(url_for('pages.patient_dashboard', patient_id=patient_id))
+
+@bp.route('/console/goals/<int:goal_id>/set_status', methods=['POST'])
+@login_required
+def set_goal_status(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+
+    # Security check: Ensure the goal belongs to the current SLP's patient
+    if goal.patient.slp_id != current_user.id:
+        abort(403) # Forbidden
+
+    data = request.get_json()
+    new_status = data.get('status')
+
+    if new_status not in ['active', 'achieved', 'on_hold', 'discontinued']:
+        return jsonify({'error': 'Invalid status provided'}), 400
+
+    goal.status = new_status
+    if new_status == 'achieved' and not goal.achieved_at:
+        goal.achieved_at = datetime.utcnow()
+    elif new_status != 'achieved' and goal.achieved_at:
+        goal.achieved_at = None # Clear achievement date if status changes from achieved
+
+    try:
+        db.session.commit()
+        # Return the actual status and potentially the achieved_at date if set
+        return jsonify({
+            'message': 'Goal status updated successfully',
+            'status': goal.status,
+            'achieved_at': goal.achieved_at.strftime('%Y-%m-%d') if goal.achieved_at else None
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error updating goal status for goal {goal_id}: {e}")
+        return jsonify({'error': f'Failed to update goal status: {e}'}), 500
+
+@bp.route('/console/goals/<int:goal_id>/delete', methods=['POST'])
+@login_required
+def delete_goal(goal_id):
+    goal = Goal.query.get(goal_id)
+
+    # Check if goal exists and belongs to the current SLP
+    if not goal:
+        return jsonify({'error': 'Goal not found.'}), 404
+    
+    # Ensure the logged-in SLP owns this goal
+    if goal.slp_id != current_user.id:
+        abort(403) # Forbidden
+
+    try:
+        db.session.delete(goal)
+        db.session.commit()
+        return jsonify({'message': 'Goal deleted successfully!'}), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting goal {goal_id}: {e}")
+        return jsonify({'error': 'An error occurred while deleting the goal.'}), 500
 
 @bp.route('/console/delete_patient/<int:patient_id>', methods=['POST'])
 @login_required
