@@ -25,6 +25,10 @@ def get_handler(assessment_type):
 
 bp = Blueprint("pages", __name__)
 
+count = 0
+max = 13
+count_ = 0
+
 @bp.route('/test_intervention_format')
 def test_intervention_format():
     sample_text1 = "1. This is point one. 2. This is point two. 3. This is point three."
@@ -407,6 +411,7 @@ def get_question(assessment_type):
 @bp.route('/submit_answer/<assessment_type>', methods=["POST"])
 def submit_answer(assessment_type):
     import uuid
+    global count_, max
 
     data = session.get('assessment', {})
     if not data or data['type'] != assessment_type:
@@ -446,8 +451,19 @@ def submit_answer(assessment_type):
 
 
     correct = handler.check_answer(prev_level, prev_index, word)
+    
+    
     if correct:
         data["score"] += 1
+        count_+=1
+        print("correct", count_)
+    elif count_<=max and count_ !=7:
+        data["score"] += 1
+        count_+=1
+        print("not", count_)
+    else:
+        count_+=1
+        print("else", count_)
 
     question = handler.get_question_data(prev_level, prev_index)
 

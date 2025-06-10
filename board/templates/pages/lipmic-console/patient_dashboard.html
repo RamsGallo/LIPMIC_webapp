@@ -285,7 +285,7 @@
                                     <strong>Question #</strong>{{ answer.index + 1 }}. {{ answer.prompt }}<br>
                                     {% endif %}
                                     <strong>Model Prediction:</strong> {{ answer.predicted | capitalize}}<br>
-                                    <strong>Correct:</strong> {{ answer.correct | capitalize }}<br>
+                                    <!-- <strong>Correct:</strong> {{ answer.correct | capitalize }}<br> -->
                                     <div class="mt-1">
                                         {% for img in answer.images %}
                                         <img src="{{ img.src }}" alt="{{ img.direction }}" width="100" class="me-2 mb-1" />
