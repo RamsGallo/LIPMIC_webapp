@@ -1,8 +1,8 @@
-"""Initial schema
+"""Initial database setup with all relationships and cascade rules
 
-Revision ID: 29cc3f0d8965
+Revision ID: 5b2a073c7f0d
 Revises: 
-Create Date: 2025-05-27 14:23:23.575627
+Create Date: 2025-05-30 11:26:06.848592
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '29cc3f0d8965'
+revision = '5b2a073c7f0d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -116,7 +116,7 @@ def upgrade():
     sa.Column('answers', sa.JSON(), nullable=False),
     sa.Column('score', sa.Integer(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['patient_id'], ['patient.id'], ),
+    sa.ForeignKeyConstraint(['patient_id'], ['patient.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('goal',
@@ -124,8 +124,14 @@ def upgrade():
     sa.Column('patient_id', sa.Integer(), nullable=False),
     sa.Column('slp_id', sa.Integer(), nullable=False),
     sa.Column('goal_text', sa.Text(), nullable=False),
+    sa.Column('problem_description', sa.Text(), nullable=True),
+    sa.Column('intervention_text', sa.Text(), nullable=True),
+    sa.Column('assessment_result_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['patient_id'], ['patient.id'], ),
+    sa.Column('status', sa.String(length=50), nullable=False),
+    sa.Column('achieved_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['assessment_result_id'], ['assessment_results.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['patient_id'], ['patient.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['slp_id'], ['slp.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -133,6 +139,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('assessment_result_id', sa.Integer(), nullable=False),
     sa.Column('question_index', sa.Integer(), nullable=False),
+    sa.Column('level', sa.String(length=50), nullable=True),
     sa.Column('frame_index', sa.Integer(), nullable=False),
     sa.Column('file_path', sa.String(length=256), nullable=False),
     sa.ForeignKeyConstraint(['assessment_result_id'], ['assessment_results.id'], ),
