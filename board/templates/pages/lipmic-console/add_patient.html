@@ -9,7 +9,8 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/add_patient.css') }}">
 
-<form method="POST" action="{{ url_for('pages.add_patient') }}">
+{# Add enctype="multipart/form-data" to the form tag #}
+<form method="POST" action="{{ url_for('pages.add_patient') }}" enctype="multipart/form-data">
 
 <div class="accordion" id="formAccordion">
   <div class="accordion-item">
@@ -21,78 +22,84 @@
     <div id="collapseClient" class="accordion-collapse collapse show" aria-labelledby="headingClient" data-bs-parent="#formAccordion">
       <div class="accordion-body">
         <h4>Client Information</h4>
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="name" class="form-label">Patient Name:</label>
-            <input type="text" name="name" class="form-control" required>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Patient Name:</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="age" class="form-label">Age:</label>
+                <input type="text" name="age" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="sex" class="form-label">Sex:</label>
+                <input type="text" name="sex" class="form-control">
+            </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <label for="age" class="form-label">Age:</label>
-            <input type="text" name="age" class="form-control">
+        
+        <div class="mb-3">
+            <label for="patient_image" class="form-label">Patient Image:</label>
+            <input type="file" name="patient_image" id="patient_image" class="form-control" accept="image/*">
+            <small class="form-text text-muted">Optional: Upload a profile picture for the patient.</small>
         </div>
-        <div class="col-md-3 mb-3">
-            <label for="sex" class="form-label">Sex:</label>
-            <input type="text" name="sex" class="form-control">
-        </div>
-    </div>
 
-    <div class="mb-3">
-        <label for="address" class="form-label">Address:</label>
-        <input type="text" name="address" class="form-control">
-    </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address:</label>
+            <input type="text" name="address" class="form-control">
+        </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="dob" class="form-label">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" class="form-control" max="{{ current_date }}">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="dob" class="form-label">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" class="form-control" max="{{ current_date }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="doe" class="form-label">Date of Evaluation:</label>
+                <input type="date" id="doe" name="doe" class="form-control" max="{{ current_date }}">
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <label for="doe" class="form-label">Date of Evaluation:</label>
-            <input type="date" id="doe" name="doe" class="form-control" max="{{ current_date }}">
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="religion" class="form-label">Religion:</label>
-            <input type="text" name="religion" class="form-control">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="religion" class="form-label">Religion:</label>
+                <input type="text" name="religion" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="diagnosis" class="form-label">Diagnosis:</label>
+                <input type="text" name="diagnosis" class="form-control">
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <label for="diagnosis" class="form-label">Diagnosis:</label>
-            <input type="text" name="diagnosis" class="form-control">
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="precautions" class="form-label">Precautions:</label>
-            <input type="text" name="precautions" class="form-control">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="precautions" class="form-label">Precautions:</label>
+                <input type="text" name="precautions" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="current_medication" class="form-label">Current Medication:</label>
+                <input type="text" name="current_medication" class="form-control">
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <label for="current_medication" class="form-label">Current Medication:</label>
-            <input type="text" name="current_medication" class="form-control">
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="emergency_person" class="form-label">Emergency Contact Person:</label>
-            <input type="text" name="emergency_person" class="form-control">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="emergency_person" class="form-label">Emergency Contact Person:</label>
+                <input type="text" name="emergency_person" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="contact_no" class="form-label">Contact Number:</label>
+                <input type="text" name="contact_no" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="alt_contact_no" class="form-label">Alternative Contact Number:</label>
+                <input type="text" name="alt_contact_no" class="form-control">
+            </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <label for="contact_no" class="form-label">Contact Number:</label>
-            <input type="text" name="contact_no" class="form-control">
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="alt_contact_no" class="form-label">Alternative Contact Number:</label>
-            <input type="text" name="alt_contact_no" class="form-control">
-        </div>
-    </div>
 
-    <div class="mb-3">
-        <label for="grade_level" class="form-label">Grade Level:</label>
-        <input type="text" name="grade_level" class="form-control">
-    </div>
+        <div class="mb-3">
+            <label for="grade_level" class="form-label">Grade Level:</label>
+            <input type="text" name="grade_level" class="form-control">
+        </div>
       </div>
     </div>
   </div>
@@ -160,9 +167,9 @@
       </button>
     </h2>
     <div id="collapseMedical" class="accordion-collapse collapse show" aria-labelledby="headingMedical" data-bs-parent="#formAccordion">
-    <div class="accordion-body">  
+    <div class="accordion-body">    
     <div class="p-3">
-            
+                
         <div class="row mb-3">
             <div class="col-md-6">
             <label for="complication_preg" class="form-label">Complication during pregnancy:</label>
@@ -222,12 +229,10 @@
         </div> 
         </div> 
     </div>
-  </div>
+</div>
 
-<!-- DEV'T data table-->
 <h4 class="pt-4">Developmental History</h4>
 
-<!-- Nav Tabs -->
 <ul class="nav nav-tabs" id="devTabs" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="gms-tab" data-bs-toggle="tab" data-bs-target="#gms" type="button" role="tab">Gross Motor Skills (GMS)</button>
@@ -246,9 +251,7 @@
   </li>
 </ul>
 
-<!-- Tab Content -->
 <div class="tab-content mt-3" id="devTabContent">
-  <!-- GMS -->
   <div class="tab-pane fade show active" id="gms" role="tabpanel" aria-labelledby="gms-tab">
     <h5>Gross Motor Skills (GMS)</h5>
     <table class="table table-bordered">
@@ -260,7 +263,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- GMS data -->
                 <tr>
                     <td>Maintains sitting</td>
                     <td><input type="text" name="gms_0" class="form-control"></td>
@@ -320,7 +322,6 @@
         </table>
   </div>
 
-  <!-- FMS -->
   <div class="tab-pane fade" id="fms" role="tabpanel" aria-labelledby="fms-tab">
     <h5>Fine Motor Skills (FMS)</h5>
     <table class="table table-bordered">
@@ -332,7 +333,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- FMS data -->
                 <tr>
                     <td>Midline hand play</td>
                     <td><input type="text" name="fms_0" class="form-control"></td>
@@ -387,7 +387,6 @@
         </table>
   </div>
 
-  <!-- ADL -->
   <div class="tab-pane fade" id="adl" role="tabpanel" aria-labelledby="adl-tab">
     <h5>Activities of Daily Living (ADL)</h5>
     <table class="table table-bordered">
@@ -399,7 +398,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- ADL data -->
                 <tr>
                     <td>Holds feeding bottle</td>
                     <td><input type="text" name="adl_0" class="form-control"></td>
@@ -439,7 +437,6 @@
         </table>
   </div>
 
-  <!-- Cognitive -->
   <div class="tab-pane fade" id="cog" role="tabpanel" aria-labelledby="cog-tab">
     <h5>Cognitive</h5>
     <table class="table table-bordered">
@@ -490,7 +487,6 @@
             </table>
   </div>
 
-  <!-- Oral Motor -->
   <div class="tab-pane fade" id="omd" role="tabpanel" aria-labelledby="omd-tab">
     <h5>Oral Motor Development</h5>
     <table class="table table-bordered">
@@ -502,7 +498,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- ADL data -->
                 <tr>
                     <td>Opens and closes mouth in response to food stimulus</td>
                     <td><input type="text" name="omd_0" class="form-control"></td>
@@ -557,7 +552,6 @@
         </table>
   </div>
 </div>
-    <!-- submit data -->
     <button type="submit" class="btn btn-primary">Add Patient</button>
 </form>
 

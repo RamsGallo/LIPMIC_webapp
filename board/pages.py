@@ -13,6 +13,7 @@ from xhtml2pdf import pisa
 import io
 import cv2
 import os
+import uuid
 
 
 model_handlers = {
@@ -28,6 +29,12 @@ bp = Blueprint("pages", __name__)
 count = 0
 max = 13
 count_ = 0
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route('/test_intervention_format')
 def test_intervention_format():
@@ -258,7 +265,7 @@ def generate_intervention_api():
             **Patient Profile:**
             {patient_context}
 
-            **Problem:** "{problem_description}"
+            **Problem:** "{problem_description}" 
         """
 
         # Conditionally add assessment type to the prompt
@@ -272,8 +279,9 @@ def generate_intervention_api():
 
             The intervention should be practical, evidence-based, and highly individualized based on the patient's information provided.
             Format the intervention as a numbered list of specific actions.
-            For any sub-points within a main numbered action, use bullet points (e.g., `* `).
+            For any sub-points within a main numbered action, use bullets (e.g., `* `).
             Ensure each point is on its own clear line.
+            Ensure that each intervention has a reliable source/reference.
             """
             
         response = model.generate_content(final_prompt)
@@ -629,7 +637,7 @@ def login():
 @login_required
 def add_patient():
     if request.method == 'POST':
-        # CLIENT data 
+        # CLIENT data
         name = request.form['name']
         age = request.form['age']
         sex = request.form['sex']
@@ -722,13 +730,75 @@ def add_patient():
         omd_7 = request.form['omd_7']
         omd_8 = request.form['omd_8']
         omd_9 = request.form['omd_9']
+        
+        # --- Image Upload Handling ---
+        patient_image_filename = None
 
-        new_patient = Patient(name=name, age=age, sex=sex, 
-                              address=address, dob=dob, religion=religion, diagnosis=diagnosis, doe=doe, precautions=precautions, current_medication=current_medication, emergency_person=emergency_person, contact_no=contact_no, alt_contact_no=alt_contact_no, grade_level=grade_level, father_name=father_name, father_contact_no=father_contact_no, father_med_history=father_med_history, mother_name=mother_name, mother_contact_no=mother_contact_no, mother_med_history=mother_med_history, sibling=sibling, sibling_med_history=sibling_med_history, complication_preg=complication_preg, med_taken=med_taken, duration_med_taken=duration_med_taken, typeOfDelivery=typeOfDelivery, complication_deli=complication_deli, birth_weight=birth_weight, birth_problem=birth_problem, medication=medication, immunization=immunization, effects=effects, gms_0=gms_0,gms_1=gms_1,gms_2=gms_2,gms_3=gms_3,gms_4=gms_4,gms_5=gms_5,gms_6=gms_6,gms_7=gms_7,gms_8=gms_8,gms_9=gms_9,gms_10=gms_10, fms_0=fms_0,fms_1=fms_1,fms_2=fms_2,fms_3=fms_3,fms_4=fms_4,fms_5=fms_5,fms_6=fms_6,fms_7=fms_7,fms_8=fms_8,fms_9=fms_9, adl_0=adl_0,adl_1=adl_1,adl_2=adl_2,adl_3=adl_3,adl_4=adl_4,adl_5=adl_5,adl_6=adl_6, cog_0=cog_0,cog_1=cog_1,cog_2=cog_2,cog_3=cog_3,cog_4=cog_4,cog_5=cog_5,cog_6=cog_6, omd_0=omd_0,omd_1=omd_1,omd_2=omd_2,omd_3=omd_3,omd_4=omd_4,omd_5=omd_5,omd_6=omd_6,omd_7=omd_7,omd_8=omd_8,omd_9=omd_9, slp_id=current_user.id)
-        db.session.add(new_patient)
-        db.session.commit()
-        flash('Patient added successfully.', 'info')
-        return redirect(url_for('pages.console_page'))
+        if 'patient_image' in request.files:
+            file = request.files['patient_image']
+            
+            if file.filename != '': # Check if a file was selected
+                if file and allowed_file(file.filename):
+                    # Generate a unique filename
+                    original_filename = secure_filename(file.filename)
+                    file_extension = original_filename.rsplit('.', 1)[1].lower()
+                    unique_filename = f"{uuid.uuid4().hex}.{file_extension}"
+                    
+                    # Define the full path to save the file
+                    filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_filename)
+                    
+                    try:
+                        file.save(filepath)
+                        patient_image_filename = unique_filename
+                    except Exception as e:
+                        flash(f'Error saving image: {e}', 'danger')
+                        # Log the error for debugging purposes
+                        current_app.logger.error(f"File save error for patient image: {e}")
+                        # Redirect back to the form if there's an issue with saving the file
+                        return redirect(request.url)
+                else:
+                    flash('Allowed image types are png, jpg, jpeg, gif', 'warning')
+                    return redirect(request.url)
+
+        new_patient = Patient(
+            name=name, age=age, sex=sex,
+            address=address, dob=dob, religion=religion, diagnosis=diagnosis, doe=doe,
+            precautions=precautions, current_medication=current_medication,
+            emergency_person=emergency_person, contact_no=contact_no,
+            alt_contact_no=alt_contact_no, grade_level=grade_level,
+            patient_image=patient_image_filename, # Store the unique filename here!
+            father_name=father_name, father_contact_no=father_contact_no,
+            father_med_history=father_med_history, mother_name=mother_name,
+            mother_contact_no=mother_contact_no, mother_med_history=mother_med_history,
+            sibling=sibling, sibling_med_history=sibling_med_history,
+            complication_preg=complication_preg, med_taken=med_taken,
+            duration_med_taken=duration_med_taken, typeOfDelivery=typeOfDelivery,
+            complication_deli=complication_deli, birth_weight=birth_weight,
+            birth_problem=birth_problem, medication=medication,
+            immunization=immunization, effects=effects,
+            gms_0=gms_0, gms_1=gms_1, gms_2=gms_2, gms_3=gms_3, gms_4=gms_4,
+            gms_5=gms_5, gms_6=gms_6, gms_7=gms_7, gms_8=gms_8, gms_9=gms_9, gms_10=gms_10,
+            fms_0=fms_0, fms_1=fms_1, fms_2=fms_2, fms_3=fms_3, fms_4=fms_4,
+            fms_5=fms_5, fms_6=fms_6, fms_7=fms_7, fms_8=fms_8, fms_9=fms_9,
+            adl_0=adl_0, adl_1=adl_1, adl_2=adl_2, adl_3=adl_3, adl_4=adl_4,
+            adl_5=adl_5, adl_6=adl_6,
+            cog_0=cog_0, cog_1=cog_1, cog_2=cog_2, cog_3=cog_3, cog_4=cog_4,
+            cog_5=cog_5, cog_6=cog_6,
+            omd_0=omd_0, omd_1=omd_1, omd_2=omd_2, omd_3=omd_3, omd_4=omd_4,
+            omd_5=omd_5, omd_6=omd_6, omd_7=omd_7, omd_8=omd_8, omd_9=omd_9,
+            slp_id=current_user.id
+        )
+        try:
+            db.session.add(new_patient)
+            db.session.commit()
+            flash('Patient added successfully.', 'success')
+            return redirect(url_for('pages.console_page'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error adding patient: {e}', 'danger')
+            current_app.logger.error(f"Database error adding patient: {e}") # Log the error
+            return redirect(request.url)
+
     return render_template('pages/lipmic-console/add_patient.html', current_date=date.today().isoformat())
 
 @bp.route('/console/save_goals/<int:patient_id>', methods=['POST'])

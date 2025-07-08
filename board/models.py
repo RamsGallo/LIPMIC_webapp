@@ -24,6 +24,7 @@ class Patient(db.Model):
     contact_no = db.Column(db.String(100), nullable=True)
     alt_contact_no = db.Column(db.String(100), nullable=True)
     grade_level = db.Column(db.String(100), nullable=True)
+    patient_image = db.Column(db.String(255), nullable=True)
 
     # Family information
     father_name = db.Column(db.String(100), nullable=True)

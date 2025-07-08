@@ -17,9 +17,15 @@ def create_app():
     app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
     app.API_KEY = os.getenv('GOOGLE_API_KEY')
+
+    UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'app.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     db.init_app(app)
     migrate = Migrate(app, db)
