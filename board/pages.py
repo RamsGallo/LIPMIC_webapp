@@ -281,7 +281,7 @@ def generate_intervention_api():
             Format the intervention as a numbered list of specific actions.
             For any sub-points within a main numbered action, use bullets (e.g., `* `).
             Ensure each point is on its own clear line.
-            Ensure that each intervention has a reliable source/reference.
+            Ensure that each intervention has a reliable source/reference..
             """
             
         response = model.generate_content(final_prompt)
