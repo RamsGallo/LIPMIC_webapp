@@ -1,0 +1,168 @@
+{% extends 'base-console.html' %}
+
+{% block title %}
+    Edit Question
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-0 ms-0">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Edit Question</h5>
+    </div>
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+
+        <!-- Assessment type -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Assessment Type</label>
+          <select id="assessment_type" name="assessment_type" class="form-select" disabled required onchange="toggleCorrectInput()">
+            <option value="peabody" {{ 'selected' if assessment_type == 'peabody' else '' }}>
+              Peabody Picture Vocabulary Test (PPTV)
+            </option>
+            <option value="casl" {{ 'selected' if assessment_type == 'casl' else '' }}>
+              Comprehensive Assessment of Spoken Language (CASL)
+            </option>
+          </select>
+        </div>
+
+        <!-- Difficulty -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Difficulty</label>
+          <select name="difficulty" class="form-select" disabled required>
+            <option value="easy" {{ 'selected' if difficulty == 'easy' else '' }}>Easy</option>
+            <option value="medium" {{ 'selected' if difficulty == 'medium' else '' }}>Medium</option>
+            <option value="hard" {{ 'selected' if difficulty == 'hard' else '' }}>Hard</option>
+          </select>
+        </div>
+
+        <!-- Prompt -->
+        <div class="mb-3">
+          <label for="prompt" class="form-label fw-semibold">Prompt</label>
+          <input type="text" id="prompt" name="prompt" class="form-control" value="{{ q['prompt'] }}" required>
+        </div>
+
+        <!-- Image Uploads -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Update Images</label>
+          <div class="row g-3">
+            {% if assessment_type == "peabody" %}
+              <div class="col-md-6">
+                <label class="form-label">Image Up</label>
+                <input type="file" name="image_up" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_up')">
+                <img id="preview_up" src="{{ q['images']['up'] if q['images'].get('up') }}" class="img-thumbnail mt-2 {% if not q['images'].get('up') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Image Down</label>
+                <input type="file" name="image_down" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_down')">
+                <img id="preview_down" src="{{ q['images']['down'] if q['images'].get('down') }}" class="img-thumbnail mt-2 {% if not q['images'].get('down') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Image Left</label>
+                <input type="file" name="image_left" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_left')">
+                <img id="preview_left" src="{{ q['images']['left'] if q['images'].get('left') }}" class="img-thumbnail mt-2 {% if not q['images'].get('left') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Image Right</label>
+                <input type="file" name="image_right" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_right')">
+                <img id="preview_right" src="{{ q['images']['right'] if q['images'].get('right') }}" class="img-thumbnail mt-2 {% if not q['images'].get('right') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+            {% elif assessment_type == "casl" %}
+              <div class="col-md-6">
+                <label class="form-label">Image Left</label>
+                <input type="file" name="image_left" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_left')">
+                <img id="preview_left" src="{{ q['images']['left'] if q['images'].get('left') }}" class="img-thumbnail mt-2 {% if not q['images'].get('left') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Image Right</label>
+                <input type="file" name="image_right" class="form-control" accept="image/*" onchange="previewImage(this, 'preview_right')">
+                <img id="preview_right" src="{{ q['images']['right'] if q['images'].get('right') }}" class="img-thumbnail mt-2 {% if not q['images'].get('right') %}d-none{% endif %}" style="max-height:120px;">
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mb-3">
+        <label class="form-label fw-semibold">Current Images</label>
+        <div class="d-flex flex-wrap gap-3">
+            {% if assessment_type == "peabody" %}
+            <div class="text-center">
+                <small class="text-muted d-block">Up</small>
+                <img src="{{ q['images'].get('up') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            <div class="text-center">
+                <small class="text-muted d-block">Down</small>
+                <img src="{{ q['images'].get('down') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            <div class="text-center">
+                <small class="text-muted d-block">Left</small>
+                <img src="{{ q['images'].get('left') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            <div class="text-center">
+                <small class="text-muted d-block">Right</small>
+                <img src="{{ q['images'].get('right') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            {% elif assessment_type == "casl" %}
+            <div class="text-center">
+                <small class="text-muted d-block">Left</small>
+                <img src="{{ q['images'].get('left') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            <div class="text-center">
+                <small class="text-muted d-block">Right</small>
+                <img src="{{ q['images'].get('right') }}" class="img-thumbnail" style="max-height: 100px;">
+            </div>
+            {% endif %}
+        </div>
+        </div>
+
+        <div id="correct-input-container" class="mb-3"></div>
+
+        <!-- Submit -->
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">Update Question</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleCorrectInput() {
+    const type = document.getElementById("assessment_type").value;
+    const container = document.getElementById("correct-input-container");
+
+    if (type === "peabody") {
+        container.innerHTML = `
+          <label class="form-label fw-semibold">Expected Answer</label>
+          <select name="correct" class="form-select" required>
+            <option value="up" {{ 'selected' if q['correct'] == 'up' else '' }}>Up</option>
+            <option value="down" {{ 'selected' if q['correct'] == 'down' else '' }}>Down</option>
+            <option value="left" {{ 'selected' if q['correct'] == 'left' else '' }}>Left</option>
+            <option value="right" {{ 'selected' if q['correct'] == 'right' else '' }}>Right</option>
+          </select>
+        `;
+    } else if (type === "casl") {
+        container.innerHTML = `
+          <label class="form-label fw-semibold">Expected Answer</label>
+          <input type="text" name="correct" class="form-control" value="{{ q['correct'] }}" required>
+        `;
+    }
+}
+
+function previewImage(input, previewId) {
+  const file = input.files[0];
+  const preview = document.getElementById(previewId);
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.classList.remove("d-none");
+    }
+    reader.readAsDataURL(file);
+  }
+}
+
+window.onload = toggleCorrectInput;
+</script>
+
+{% endblock content %}

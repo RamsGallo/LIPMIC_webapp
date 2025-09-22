@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_user, logout_user, login_required, current_user
 from board.models import db, SLP, Patient, AssessmentResult, LipFrame, Goal
 from datetime import datetime, date
-from board.quiz_data import quiz_sets
+#from board.quiz_data import quiz_sets
 from ml.peabody_handler import PeabodyHandler
 from ml.casl_handler import CASLHandler
 from pathlib import Path
@@ -10,6 +10,7 @@ import google.generativeai as genai
 from werkzeug.utils import secure_filename
 from board.utils import group_frames_by_question
 from xhtml2pdf import pisa
+from board.storage import load_questions, add_question, update_question, delete_question
 import io
 import cv2
 import os
@@ -20,6 +21,8 @@ model_handlers = {
     "peabody": PeabodyHandler(),
     "casl": CASLHandler(),
 }
+
+LEVELS = ["easy", "medium", "hard"]
 
 def get_handler(assessment_type):
     return model_handlers.get(assessment_type)
@@ -331,6 +334,88 @@ def assessments_page():
 def index_page():
     return render_template("pages/index.html")
 
+@bp.route("/console/questions")
+@login_required
+def list_json_questions():
+    questions = load_questions()
+    return render_template("pages/lipmic-console/list_question.html", questions=questions)
+
+UPLOAD_FOLDER = Path("board/static/img")
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
+
+@bp.route("/console/questions/add", methods=["GET", "POST"])
+@login_required
+def add_json_question():
+    if request.method == "POST":
+        assessment_type = request.form["assessment_type"]
+        difficulty = request.form["difficulty"]
+        prompt = request.form["prompt"]
+
+        # Handle uploaded images
+        images = {}
+        for direction in ["up", "down", "left", "right"]:
+            file = request.files.get(f"image_{direction}")
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                save_path = UPLOAD_FOLDER / filename
+                file.save(save_path)
+                images[direction] = f"/static/img/{filename}"
+            else:
+                images[direction] = None
+
+        correct = request.form["correct"]
+
+        add_question(
+            assessment_type=assessment_type,
+            difficulty=difficulty,
+            prompt=prompt,
+            images=images,
+            correct=correct
+        )
+        return redirect(url_for("pages.list_json_questions"))
+
+    return render_template("pages/lipmic-console/add_question.html")
+
+
+@bp.route("/console/questions/<assessment_type>/<difficulty>/<q_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_json_question(assessment_type, difficulty, q_id):
+    questions = load_questions()
+    q = next((q for q in questions.get(assessment_type, {}).get(difficulty, []) if q["id"] == q_id), None)
+    if not q:
+        flash("Question not found", "danger")
+        return redirect(url_for("pages.list_json_questions"))
+
+    if request.method == "POST":
+        prompt = request.form["prompt"]
+
+        images = {}
+        for direction in ["up", "down", "left", "right"]:
+            file = request.files.get(f"image_{direction}")
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                save_path = os.path.join("board/static/img", filename)
+                file.save(save_path)
+                images[direction] = f"/static/img/{filename}"
+            else:
+                # Keep existing image
+                images[direction] = q["images"].get(direction)
+        correct = request.form["correct"]
+
+        update_question(assessment_type, difficulty, q_id, prompt, images, correct)
+        flash("Question updated in JSON!", "success")
+        return redirect(url_for("pages.list_json_questions"))
+
+    return render_template("pages/lipmic-console/edit_question.html", q=q, assessment_type=assessment_type, difficulty=difficulty)
+
+
+@bp.route("/console/questions/<assessment_type>/<difficulty>/<q_id>/delete", methods=["POST"])
+@login_required
+def delete_json_question(assessment_type, difficulty, q_id):
+    delete_question(assessment_type, difficulty, q_id)
+    flash("Question deleted from JSON!", "info")
+    return redirect(url_for("pages.list_json_questions"))
+
 @bp.route("/get_prediction")
 def get_prediction():
     assessment_type = session.get("assessment_type")
@@ -351,131 +436,133 @@ def assessment_page(assessment_type):
         flash("Please select a patient before starting the assessment.")
         return redirect(url_for("pages.assessments_page"))
 
-    if assessment_type not in quiz_sets:
+    all_questions = load_questions()
+
+    # Only allow assessment types that exist in JSON
+    if assessment_type not in all_questions:
         abort(404)
 
     session["assessment"] = {
         "type": assessment_type,
         "level": "easy",
-        "question_index": 0,
+        "question_index": 0,   # next index to serve in current level
         "score": 0,
         "answers": [],
         "start_time": datetime.utcnow().timestamp(),
-        "finished": False
+        "finished": False,
+        "current_question": None   # will store {level, index} when a question is served
     }
     session["assessment_type"] = assessment_type
     title = str(assessment_type).capitalize()
-    return render_template(f"pages/lipmic-console/{assessment_type}.html", patient_id=patient_id, assessment_type=assessment_type, assessment_title=title)
+    return render_template(
+        f"pages/lipmic-console/{assessment_type}.html",
+        patient_id=patient_id,
+        assessment_type=assessment_type,
+        assessment_title=title
+    )
 
 
 @bp.route('/quiz/<assessment_type>')
 def get_question(assessment_type):
     data = session.get('assessment', {})
-    if not data or data['type'] != assessment_type:
+    if not data or data.get('type') != assessment_type:
         return jsonify({"error": "Invalid session"}), 400
 
-    handler = get_handler(assessment_type)
-    if not handler:
+    all_questions = load_questions()
+    if assessment_type not in all_questions:
         return jsonify({"error": "Unknown assessment type"}), 400
 
-    level = data["level"]
-    index = data["question_index"]
+    level = data.get("level", "easy")
+    index = data.get("question_index", 0)
 
-    try:
-        question, should_advance = handler.get_question(level, index)
-    except IndexError:
-        return jsonify({"error": "No more questions"}), 400
+    # Ensure we find a level that has questions or finish
+    while True:
+        questions_for_level = all_questions.get(assessment_type, {}).get(level, []) or []
+        if index < len(questions_for_level):
+            # we have a question to serve
+            question = questions_for_level[index]
+            break
 
-    if should_advance:
-        if level == "easy":
-            data["level"] = "medium"
-        elif level == "medium":
-            data["level"] = "hard"
-        else:
-            data["finished"] = True
-            session["assessment"] = data
-            return jsonify({"finished": True, "score": data["score"]})
+        # try to find next level that has at least one question
+        cur_level_pos = LEVELS.index(level)
+        found_next = False
+        for nxt in LEVELS[cur_level_pos + 1:]:
+            nxt_questions = all_questions.get(assessment_type, {}).get(nxt, []) or []
+            if len(nxt_questions) > 0:
+                level = nxt
+                index = 0
+                data["level"] = level
+                data["question_index"] = 0
+                found_next = True
+                questions_for_level = nxt_questions
+                question = questions_for_level[0]
+                break
 
-        # FIX: Properly reset question_index when advancing levels
-        data["question_index"] = 0
-        level = data["level"]
-        index = 0
-        
-        try:
-            question, _ = handler.get_question(level, index)
-        except IndexError:
-            return jsonify({"error": "No more questions"}), 400
+        if found_next:
+            break
 
-    data["question_index"] += 1
+        # No next level with questions -> finish
+        data["finished"] = True
+        session["assessment"] = data
+        return jsonify({"finished": True, "score": data.get("score", 0)})
+
+    # Mark current question so submit_answer can reliably use it
+    data["current_question"] = {"level": level, "index": index}
+    # advance pointer to next index for this level (next call to get_question)
+    data["question_index"] = index + 1
     session["assessment"] = data
 
     return jsonify({
-        "prompt": question["prompt"],
-        "images": question["images"],
+        "prompt": question.get("prompt"),
+        "images": question.get("images", {}),
         "finished": False,
-        "score": data["score"]
+        "score": data.get("score", 0)
     })
 
 @bp.route('/submit_answer/<assessment_type>', methods=["POST"])
 def submit_answer(assessment_type):
+    """
+    Accept an answer for the most recently served question (stored in session['assessment']['current_question']).
+    Uses questions.json to check correctness. Saves frames the same way you did before.
+    """
     import uuid
-    global count_, max
 
     data = session.get('assessment', {})
-    if not data or data['type'] != assessment_type:
+    if not data or data.get('type') != assessment_type:
         return jsonify({"error": "Invalid session"}), 400
-    
+
     if not request.json:
         return jsonify({"error": "No JSON data provided"}), 400
 
     word = request.json.get("word")
-    if not word:
+    if word is None:
         return jsonify({"error": "No word provided"}), 400
 
-    handler = get_handler(assessment_type)
-    if not handler:
-        return jsonify({"error": "Unknown assessment type"}), 400
+    current = data.get("current_question")
+    if not current:
+        return jsonify({"error": "No current question in session"}), 400
 
-    level = data["level"]
+    level = current.get("level")
+    q_index = current.get("index")
 
-    # Determine current level/index correctly before saving
-    curr_level = data["level"]
-    curr_index = data["question_index"]
+    all_questions = load_questions()
+    questions_for_level = all_questions.get(assessment_type, {}).get(level, []) or []
 
-    # Adjust if question_index == 0 and we just changed level
-    if curr_index == 0:
-        if curr_level == "medium":
-            prev_level = "easy"
-            prev_index = len(quiz_sets[assessment_type]["easy"]) - 1
-        elif curr_level == "hard":
-            prev_level = "medium"
-            prev_index = len(quiz_sets[assessment_type]["medium"]) - 1
-        else:
-            prev_level = "easy"
-            prev_index = 0  # fallback
-    else:
-        prev_level = curr_level
-        prev_index = curr_index - 1
+    if q_index >= len(questions_for_level):
+        return jsonify({"error": "Question index out of range"}), 400
 
+    question = questions_for_level[q_index]
 
-    correct = handler.check_answer(prev_level, prev_index, word)
-    
-    
+    # Normalize and compare (case-insensitive)
+    submitted = str(word).strip().lower()
+    correct_value = str(question.get("correct", "")).strip().lower()
+    correct = (submitted == correct_value)
+
     if correct:
-        data["score"] += 1
-        count_+=1
-        print("correct", count_)
-    elif count_<=max and count_ !=7:
-        data["score"] += 1
-        count_+=1
-        print("not", count_)
-    else:
-        count_+=1
-        print("else", count_)
+        data["score"] = data.get("score", 0) + 1
 
-    question = handler.get_question_data(prev_level, prev_index)
-
-    # Save predicted frames to disk
+    # Save predicted frames to disk (use same logic you had)
+    handler = get_handler(assessment_type)
     result_id = data.get("temp_result_id")
     if not result_id:
         result_id = str(uuid.uuid4())
@@ -485,31 +572,37 @@ def submit_answer(assessment_type):
     dir_path.mkdir(parents=True, exist_ok=True)
 
     frame_paths = []
-    for j, frame in enumerate(getattr(handler, "last_predicted_frames", [])[:22]):
-        filename = f"{prev_level}_q{prev_index}_frame{j}.jpg"
+    for j, frame in enumerate(getattr(handler, "last_predicted_frames", [])[:22] if handler else []):
+        filename = f"{level}_q{q_index}_frame{j}.jpg"
         file_path = dir_path / secure_filename(filename)
-        cv2.imwrite(str(file_path), frame)
-        relative_path = f"review_frames/{result_id}/{filename}"
-        frame_paths.append(relative_path)
-        
+        try:
+            cv2.imwrite(str(file_path), frame)
+            relative_path = f"review_frames/{result_id}/{filename}"
+            frame_paths.append(relative_path)
+        except Exception as e:
+            current_app.logger.error(f"Error saving frame {file_path}: {e}")
+
     # Track saved paths per question
     if "frame_paths" not in data:
         data["frame_paths"] = {}
-    data["frame_paths"][f"{prev_level}_q{prev_index}"] = frame_paths
+    data["frame_paths"][f"{level}_q{q_index}"] = frame_paths
 
-
+    # Append answer record
     data["answers"].append({
-        "prompt": question["prompt"],
-        "images": [{"direction": dir, "src": path} for dir, path in question["images"].items()],
+        "prompt": question.get("prompt"),
+        "images": [{"direction": dir, "src": path} for dir, path in (question.get("images") or {}).items()],
         "predicted": word,
-        "correct": question["correct"],
-        "level": prev_level,
-        "index": prev_index,
-        "frame_saved": True
+        "correct": question.get("correct"),
+        "level": level,
+        "index": q_index,
+        "frame_saved": bool(frame_paths)
     })
 
+    # Clear current_question to avoid double-submit
+    data["current_question"] = None
+
     session["assessment"] = data
-    return jsonify({"correct": correct, "score": data["score"]})
+    return jsonify({"correct": correct, "score": data.get("score", 0)})
 
 
 @bp.route('/console/end/<int:patient_id>')
@@ -766,7 +859,7 @@ def add_patient():
             precautions=precautions, current_medication=current_medication,
             emergency_person=emergency_person, contact_no=contact_no,
             alt_contact_no=alt_contact_no, grade_level=grade_level,
-            patient_image=patient_image_filename, # Store the unique filename here!
+            patient_image=patient_image_filename,
             father_name=father_name, father_contact_no=father_contact_no,
             father_med_history=father_med_history, mother_name=mother_name,
             mother_contact_no=mother_contact_no, mother_med_history=mother_med_history,

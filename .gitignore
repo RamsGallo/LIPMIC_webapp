@@ -12,3 +12,6 @@ __pycache__/
 /board/static/review_frames/
 /board/static/js/ckeditor
 *.db
+*.png
+*.jpg
+*.jpeg

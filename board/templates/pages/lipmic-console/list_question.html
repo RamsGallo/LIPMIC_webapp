@@ -1,0 +1,110 @@
+{% extends 'base-console.html' %}
+
+{% block title %}
+    Manage Questions
+{% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4 pt-0">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Question</h2>
+    <a href="{{ url_for('pages.add_json_question') }}" class="btn btn-outline-primary">
+      <svg width="20" height="20" class="bi bi-plus-lg" fill="currentColor"><use xlink:href="#add"/></svg>
+      Add Question
+    </a>
+  </div>
+
+  {% for assessment, levels in questions.items() %}
+    <div class="card shadow-sm mb-4">
+      <!-- Card Header with toggle -->
+      <div class="card-header bg-light d-flex justify-content-between align-items-center"
+           data-bs-toggle="collapse" data-bs-target="#collapse-{{ loop.index }}" style="cursor: pointer;">
+        <h5 class="mb-0 text-capitalize">
+            {% if assessment == "peabody" %}
+                Peabody Picture Vocabulary Test (PPTV)
+            {% elif assessment == "casl" %}
+                Comprehensive Assessment of Spoken Language (CASL)
+            {% endif %}
+        </h5>
+        <div class="d-flex align-items-center">
+          <span class="badge bg-secondary me-3">
+            Total: {{ levels.easy|length + levels.medium|length + levels.hard|length }}
+          </span>
+          <svg class="toggle-icon" width="20" height="20" fill="currentColor">
+            <use xlink:href="#chevron-down"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Collapsible Body -->
+      <div id="collapse-{{ loop.index }}" class="collapse show">
+        <div class="card-body pt-0">
+          {% for diff, qs in levels.items() %}
+          <div class="d-flex align-items-center mt-3">
+              <h6 class="fw-semibold text-muted text-uppercase mb-0 me-2">{{ diff }}</h6>
+              <span class="badge bg-info">{{ qs|length }}</span>
+          </div>
+            {% if qs %}
+              <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Prompt</th>
+                      <th>Expected</th>
+                      <th style="width: 120px; text-align: center;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for q in qs %}
+                      <tr>
+                        <td>{{ q.prompt }}</td>
+                        <td><span class="badge bg-success">{{ q.correct }}</span></td>
+                        <td class="text-center">
+                          <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                              <a href="{{ url_for('pages.edit_json_question', assessment_type=assessment, difficulty=diff, q_id=q.id) }}" 
+                                  class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="tooltip" title="Edit">
+                                  <svg class="m-0" width="20" height="20"><use xlink:href="#edit"/></svg>
+                              </a>
+                              <form method="POST" action="{{ url_for('pages.delete_json_question', assessment_type=assessment, difficulty=diff, q_id=q.id) }}" 
+                                      style="display:inline" 
+                                      onsubmit="return confirm('Are you sure you want to delete this question?');">
+                                  <button type="submit" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
+                                  <svg class="m-0" width="20" height="20" fill="red"><use xlink:href="#delete"/></svg>
+                                  </button>
+                              </form>
+                              </div>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p class="text-muted fst-italic small">No questions added for this difficulty.</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Add chevron icon -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="chevron-down" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+  </symbol>
+</svg>
+
+<style>
+.card-header.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease;
+}
+.toggle-icon {
+  transition: transform 0.3s ease;
+}
+</style>
+{% endblock content %}

@@ -1,0 +1,348 @@
+{
+  "peabody": {
+    "easy": [
+      {
+        "prompt": "Which one is a cat?",
+        "images": {
+          "up": "/static/img/cat.jpg",
+          "down": "/static/img/bird.jpg",
+          "left": "/static/img/chicken.jpg",
+          "right": "/static/img/pig.jpg"
+        },
+        "correct": "up",
+        "id": "1d083afe-aa43-45f3-a06d-3b09dc1c29d3"
+      },
+      {
+        "prompt": "Where is the dog?",
+        "images": {
+          "up": "/static/img/rat.jpg",
+          "down": "/static/img/dog.jpg",
+          "left": "/static/img/bird.jpg",
+          "right": "/static/img/chicken.jpg"
+        },
+        "correct": "down",
+        "id": "a820ae7e-3c52-4720-a6f9-f407101f47a3"
+      },
+      {
+        "prompt": "Which one is a fish?",
+        "images": {
+          "up": "/static/img/fish.jpg",
+          "down": "/static/img/birdie.jpg",
+          "left": "/static/img/chicken.jpg",
+          "right": "/static/img/pig.jpg"
+        },
+        "correct": "up",
+        "id": "323d9b96-0048-4740-95c9-65c73eb38c6b"
+      },
+      {
+        "prompt": "Which one is a red fruit?",
+        "images": {
+          "up": "/static/img/hat.jpg",
+          "down": "/static/img/banana.jpg",
+          "left": "/static/img/apple.jpg",
+          "right": "/static/img/chair.jpg"
+        },
+        "correct": "left",
+        "id": "04484d49-dcbf-4c7e-a1c1-c09ea2a6e50d"
+      },
+      {
+        "prompt": "Which one can be seen flying?",
+        "images": {
+          "up": "/static/img/airplane.jpg",
+          "down": "/static/img/house.jpg",
+          "left": "/static/img/tree.jpg",
+          "right": "/static/img/bed.jpg"
+        },
+        "correct": "up",
+        "id": "7953ddbd-7084-4d24-a2e1-3fa8becdf511"
+      }
+    ],
+    "medium": [
+      {
+        "prompt": "Which one is running?",
+        "images": {
+          "up": "/static/img/sit.jpg",
+          "down": "/static/img/walk.jpg",
+          "left": "/static/img/run.jpg",
+          "right": "/static/img/swim.jpg"
+        },
+        "correct": "left",
+        "id": "d0f400f0-ca50-43e9-9fdf-5ace479d3f3f"
+      },
+      {
+        "prompt": "Which one is used for eating?",
+        "images": {
+          "up": "/static/img/spoon.jpg",
+          "down": "/static/img/flower.jpg",
+          "left": "/static/img/bicycle.jpg",
+          "right": "/static/img/boat.jpg"
+        },
+        "correct": "up",
+        "id": "beff1864-da3f-4a1c-a7da-d9f304f47328"
+      },
+      {
+        "prompt": "Which one is swimming?",
+        "images": {
+          "up": "/static/img/jump.jpg",
+          "down": "/static/img/run.jpg",
+          "left": "/static/img/sit.jpg",
+          "right": "/static/img/swim.jpg"
+        },
+        "correct": "right",
+        "id": "05c053c6-f4e3-4b50-856d-feaa89667b80"
+      },
+      {
+        "prompt": "Which one is crossing his arm?",
+        "images": {
+          "up": "/static/img/boy_cars.jpg",
+          "down": "/static/img/boy_crossing.jpg",
+          "left": "/static/img/boy_walking.jpg",
+          "right": "/static/img/swim.jpg"
+        },
+        "correct": "down",
+        "id": "ce43f36c-e7fa-4393-9a68-345237ee3066"
+      },
+      {
+        "prompt": "Which one is the smallest?",
+        "images": {
+          "up": "/static/img/dog_smal.jpg",
+          "down": "/static/img/cat_big.jpg",
+          "left": "/static/img/dog_big.jpg",
+          "right": "/static/img/dog.jpg"
+        },
+        "correct": "up",
+        "id": "0582b9cb-7e4f-4711-b237-737c0437c7b2"
+      },
+      {
+        "id": "45cbd94a-b587-41d9-941b-d6ad26d004dd",
+        "prompt": "testing 74",
+        "images": {
+          "up": "/static/img/class_count.png",
+          "down": "/static/img/model.PNG",
+          "left": "/static/img/class_list.PNG",
+          "right": "/static/img/confusion_matrix.png"
+        },
+        "correct": "right"
+      }
+    ],
+    "hard": [
+      {
+        "prompt": "Which one has a square inside?",
+        "images": {
+          "up": "/static/img/tri_circ_inside.jpg",
+          "down": "/static/img/circle_inside.jpg",
+          "left": "/static/img/star_inside.jpg",
+          "right": "/static/img/square_inside.jpg"
+        },
+        "correct": "right",
+        "id": "4fcae893-7e42-4843-a525-3f7e1375a8e1"
+      },
+      {
+        "prompt": "Which one is climbing",
+        "images": {
+          "up": "/static/img/roll.jpg",
+          "down": "/static/img/climb.jpg",
+          "left": "/static/img/bike.jpg",
+          "right": "/static/img/jumprope.jpg"
+        },
+        "correct": "down",
+        "id": "93ddae04-67b1-4df7-9a68-c53d7a911a91"
+      },
+      {
+        "prompt": "Who's holding an apple?",
+        "images": {
+          "up": "/static/img/hold_carrot.jpg",
+          "down": "/static/img/hold_flower.jpg",
+          "left": "/static/img/hold_trash.jpg",
+          "right": "/static/img/hold_apple.jpg"
+        },
+        "correct": "right",
+        "id": "65a132cf-c781-4838-a7db-235ff2c0a415"
+      },
+      {
+        "prompt": "Who's holding a food?",
+        "images": {
+          "up": "/static/img/girl_eating.jpg",
+          "down": "/static/img/girl_umbrella.jpg",
+          "left": "/static/img/girl_sleeping.jpg",
+          "right": "/static/img/girl_reading.jpg"
+        },
+        "correct": "up",
+        "id": "f2dd465e-1910-42bf-a45e-9033df867f72"
+      },
+      {
+        "prompt": "Which one is an open door?",
+        "images": {
+          "up": "/static/img/door_closed.jpg",
+          "down": "/static/img/window_closed.jpg",
+          "left": "/static/img/door_open.jpg",
+          "right": "/static/img/window_open.jpg"
+        },
+        "correct": "left",
+        "id": "a7c8c94c-218d-4aef-af07-6a9f0c0b104a"
+      },
+      {
+        "id": "9da0580c-f12f-4c5c-94eb-f4a0ee4657be",
+        "prompt": "Testing question 3",
+        "images": {
+          "up": "/static/img/image2.PNG",
+          "down": "/static/img/image1.PNG",
+          "left": "/static/img/img3.PNG",
+          "right": "/static/img/img4.PNG"
+        },
+        "correct": "left"
+      }
+    ]
+  },
+  "casl": {
+    "easy": [
+      {
+        "prompt": "Cats and Dogs are our?",
+        "images": {
+          "up": "/static/img/cat.jpg",
+          "down": "/static/img/cat_big.jpg",
+          "left": "/static/img/dog.jpg",
+          "right": "/static/img/cat.jpg"
+        },
+        "correct": "pets",
+        "id": "1d6ab754-d617-485f-b1a0-b27e58d6e736"
+      },
+      {
+        "prompt": "Have you seen one like this before? These are?",
+        "images": {
+          "up": "/static/img/bird.jpg",
+          "down": "/static/img/dog.jpg",
+          "left": "/static/img/birdie.jpg",
+          "right": "/static/img/chicken.jpg"
+        },
+        "correct": "birds",
+        "id": "bf77ba51-915c-4196-8360-1ca45dbbd0a5"
+      },
+      {
+        "prompt": "Is the cat on the chair or under the chair?",
+        "images": {
+          "up": "/static/img/cat_under.jpg",
+          "down": "/static/img/cat_big.jpg",
+          "left": "/static/img/cat_under2.jpg",
+          "right": "/static/img/cat_under.jpg"
+        },
+        "correct": "Under",
+        "id": "294a0e1e-f7c7-4449-8cc1-b6219ce9bbc2"
+      },
+      {
+        "prompt": "Tell me about these pictures.",
+        "images": {
+          "up": "/static/img/hold_apple.jpg",
+          "down": "/static/img/dog.jpg",
+          "left": "/static/img/hold_carrot.jpg",
+          "right": "/static/img/hold_apple.jpg"
+        },
+        "correct": "Related to farming",
+        "id": "f5d33dda-53ea-4927-acaa-b96992125d95"
+      },
+      {
+        "prompt": "What does the boy do?",
+        "images": {
+          "up": "/static/img/walk.jpg",
+          "down": "/static/img/cat_big.jpg",
+          "left": "/static/img/boy_walking.jpg",
+          "right": "/static/img/walk.jpg"
+        },
+        "correct": "walking",
+        "id": "b2d58a47-1a5a-4096-9124-99790fb25479"
+      },
+      {
+        "prompt": "Which one is an animal: a car, a dog?",
+        "images": {
+          "up": "/static/img/dog.jpg",
+          "down": "/static/img/dog.jpg",
+          "left": "/static/img/car.jpg",
+          "right": "/static/img/dog.jpg"
+        },
+        "correct": "a dog",
+        "id": "83390973-5105-4fb7-82d8-df1d2f0f6c2c"
+      },
+      {
+        "id": "861ad1ec-a43b-48ce-992c-e53a15c12e23",
+        "prompt": "testing 4",
+        "images": {
+          "up": "/static/img/424819955_369306609179251_517276.png",
+          "down": "/static/img/646df687-da98-423a-8c26-dcae0f00b8eb.jpg",
+          "left": "/static/img/5XjgVx43PDiXtW1AEHAAk.png",
+          "right": "/static/img/15bda260-cb5e-11ea-9e0e-a2b2269.png"
+        },
+        "correct": "left"
+      },
+      {
+        "id": "64243d2f-aca0-4d59-88dd-8c4e583fe6d0",
+        "prompt": "testing 7",
+        "images": {
+          "up": null,
+          "down": null,
+          "left": "/static/img/336631762_1417189922427459_2870157960560121569_n.jpg",
+          "right": "/static/img/large.png"
+        },
+        "correct": "testing 12"
+      },
+      {
+        "id": "e0470703-0508-4baf-b81f-fab8870b0dc7",
+        "prompt": "Help",
+        "images": {
+          "up": null,
+          "down": null,
+          "left": "/static/img/aboutus.PNG",
+          "right": "/static/img/index.PNG"
+        },
+        "correct": "Pictures"
+      }
+    ],
+    "medium": [
+      {
+        "prompt": "Apples and Bananas are called?",
+        "images": {
+          "up": "/static/img/apple.jpg",
+          "down": "/static/img/rams.jpeg",
+          "left": "/static/img/banana.jpg",
+          "right": "/static/img/apple.jpg"
+        },
+        "correct": "fruits",
+        "id": "803cdf95-270f-479d-9ccc-83fe67075312"
+      },
+      {
+        "id": "f9272d28-8ea6-45d1-965a-dd90491ddac4",
+        "prompt": "Testing 24",
+        "images": {
+          "up": "uploads/90090266_140154637531649_2031733.png",
+          "down": "uploads/5XjgVx43PDiXtW1AEHAAk.png",
+          "left": "/static/img/image2.PNG",
+          "right": "/static/img/latest.png"
+        },
+        "correct": "helloo"
+      },
+      {
+        "id": "14fdb4a1-3e67-4040-b005-84aa5812cf0d",
+        "prompt": "Testing UI",
+        "images": {
+          "up": null,
+          "down": null,
+          "left": "/static/img/image2.PNG",
+          "right": "/static/img/img3.PNG"
+        },
+        "correct": "Testing 23"
+      }
+    ],
+    "hard": [
+      {
+        "prompt": "The girl and the boy are both?",
+        "images": {
+          "up": "/static/img/sit.jpg",
+          "down": "/static/img/rams.jpeg",
+          "left": "/static/img/girl_reading.jpg",
+          "right": "/static/img/sit.jpg"
+        },
+        "correct": "sitting",
+        "id": "6b362ca4-6b5a-4070-8916-7d1e815dcac3"
+      }
+    ]
+  }
+}

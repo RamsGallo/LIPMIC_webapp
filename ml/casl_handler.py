@@ -46,23 +46,6 @@ class CASLHandler(BaseLipModelHandler):
 
         self.predicted_word_label = word
         print("CASL prediction:", word)
-
-    def get_question(self, level, index):
-        questions = quiz_sets["casl"][level]
-        if index >= len(questions):
-            return None, True  # advance level
-        return questions[index], False
-
-    def check_answer(self, level, index, answer):
-        try:
-            correct = quiz_sets["casl"][level][index]["correct"]
-            return correct == answer
-        except (KeyError, IndexError) as e:
-            print(f"[check_answer] Invalid level/index: {level}/{index} - {e}")
-            return False
-
-    def get_question_data(self, level, index):
-        return quiz_sets["casl"][level][index]
     
     def generate_frames(self):
         cap = cv2.VideoCapture(0)

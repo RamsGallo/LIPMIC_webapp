@@ -171,12 +171,9 @@ class Goal(db.Model):
     assessment_result_id = db.Column(db.Integer, db.ForeignKey('assessment_results.id', ondelete='CASCADE'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # --- NEW FIELDS FOR GOAL TRACKING ---
     # Status can be 'active', 'achieved', 'on_hold', 'discontinued'
     status = db.Column(db.String(50), default='active', nullable=False)
-    # When the goal was achieved
     achieved_at = db.Column(db.DateTime, nullable=True)
-    # --- END NEW FIELDS ---
 
     # Relationships
     patient = db.relationship('Patient', back_populates='goals')
