@@ -61,7 +61,7 @@ class BaseLipModelHandler(ABC):
                 self.not_talking_counter += 1
 
                 if self.not_talking_counter >= self.NOT_TALKING_THRESHOLD and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE == self.TOTAL_FRAMES:
-                    cv2.putText(frame, "Talking", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    cv2.putText(frame, "Done", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                     self.predict_word()
 
                 elif self.not_talking_counter < self.NOT_TALKING_THRESHOLD and len(self.curr_word_frames) + self.PAST_BUFFER_SIZE < self.TOTAL_FRAMES and len(self.curr_word_frames) > self.VALID_WORD_THRESHOLD:

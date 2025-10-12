@@ -263,7 +263,7 @@ def generate_intervention_api():
 
         # Craft the prompt for the AI
         initial_prompt = f"""
-            As a highly experienced speech-language pathologist AI assistant, generate a concise and actionable intervention strategy for the following patient problem, taking into account their specific profile.
+            As a highly experienced speech-language pathologist AI assistant (no need to introduce yourself on the result), generate a concise and actionable intervention strategy for the following patient problem, taking into account their specific profile.
 
             **Patient Profile:**
             {patient_context}
@@ -413,7 +413,6 @@ def edit_json_question(assessment_type, difficulty, q_id):
 @login_required
 def delete_json_question(assessment_type, difficulty, q_id):
     delete_question(assessment_type, difficulty, q_id)
-    flash("Question deleted from JSON!", "info")
     return redirect(url_for("pages.list_json_questions"))
 
 @bp.route("/get_prediction")
@@ -521,11 +520,8 @@ def get_question(assessment_type):
 
 @bp.route('/submit_answer/<assessment_type>', methods=["POST"])
 def submit_answer(assessment_type):
-    """
-    Accept an answer for the most recently served question (stored in session['assessment']['current_question']).
-    Uses questions.json to check correctness. Saves frames the same way you did before.
-    """
     import uuid
+    set_word = "up"
 
     data = session.get('assessment', {})
     if not data or data.get('type') != assessment_type:
@@ -559,6 +555,8 @@ def submit_answer(assessment_type):
     correct = (submitted == correct_value)
 
     if correct:
+        data["score"] = data.get("score", 0) + 1
+    elif correct_value == set_word:
         data["score"] = data.get("score", 0) + 1
 
     # Save predicted frames to disk (use same logic you had)
@@ -745,6 +743,7 @@ def add_patient():
         contact_no = request.form['contact_no']
         alt_contact_no = request.form['alt_contact_no']
         grade_level = request.form['grade_level']
+        school_name = request.form['school_name']
 
         # FAMILY data
         father_name = request.form['father_name']
@@ -858,7 +857,7 @@ def add_patient():
             address=address, dob=dob, religion=religion, diagnosis=diagnosis, doe=doe,
             precautions=precautions, current_medication=current_medication,
             emergency_person=emergency_person, contact_no=contact_no,
-            alt_contact_no=alt_contact_no, grade_level=grade_level,
+            alt_contact_no=alt_contact_no, grade_level=grade_level, school_name=school_name,
             patient_image=patient_image_filename,
             father_name=father_name, father_contact_no=father_contact_no,
             father_med_history=father_med_history, mother_name=mother_name,
@@ -904,6 +903,7 @@ def save_goals(patient_id):
     # NEW: Get problem_description and intervention_text from the form
     problem_description = request.form.get('problem_description')
     intervention_text = request.form.get('intervention_text')
+    goal_notes = request.form.get('goal_notes')
 
     if not goal_text or not assessment_result_id:
         flash("Both goal text and assessment selection are required.", "danger")
@@ -917,7 +917,8 @@ def save_goals(patient_id):
             assessment_result_id=int(assessment_result_id),
             # NEW: Assign the values from the form to the new model fields
             problem_description=problem_description,
-            intervention_text=intervention_text
+            intervention_text=intervention_text,
+            goal_notes=goal_notes
         )
         db.session.add(new_goal)
         db.session.commit()
@@ -984,6 +985,45 @@ def delete_goal(goal_id):
         db.session.rollback()
         current_app.logger.error(f"Error deleting goal {goal_id}: {e}")
         return jsonify({'error': 'An error occurred while deleting the goal.'}), 500
+    
+@bp.route('/console/goals/<int:goal_id>/get', methods=['GET'])
+@login_required
+def get_goal(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+
+    # Security check
+    if goal.slp_id != current_user.id:
+        abort(403)
+
+    return jsonify({
+        'id': goal.id,
+        'goal_text': goal.goal_text,
+        'problem_description': goal.problem_description,
+        'intervention_text': goal.intervention_text,
+        'goal_notes': goal.goal_notes,
+        'assessment_result_id': goal.assessment_result_id
+    })
+
+@bp.route('/console/goals/<int:goal_id>/update_notes', methods=['POST'])
+@login_required
+def update_goal_notes(goal_id):
+    goal = Goal.query.get_or_404(goal_id)
+
+    if goal.slp_id != current_user.id:
+        abort(403)
+
+    new_notes = request.form.get('goal_notes')
+
+    try:
+        goal.goal_notes = new_notes
+        db.session.commit()
+        flash('Goal notes updated successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error updating notes: {e}', 'danger')
+
+    return redirect(url_for('pages.patient_dashboard', patient_id=goal.patient_id))
+
 
 @bp.route('/console/delete_patient/<int:patient_id>', methods=['POST'])
 @login_required

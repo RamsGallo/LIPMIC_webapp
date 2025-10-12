@@ -163,8 +163,8 @@ function speakText(text) {
     stopTTS(); // stop any previous speech first
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.1; // Slightly faster
-    utterance.pitch = 1.6; // Higher pitch for energy
+    utterance.rate = 0.87; // Slightly faster
+    utterance.pitch = 1.6;
 
     // Select a female-sounding English voice
     const voices = speechSynthesis.getVoices();

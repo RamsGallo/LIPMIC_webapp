@@ -24,16 +24,16 @@
         <h4>Client Information</h4>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="name" class="form-label">Patient Name:</label>
+                <label for="name" class="form-label">Patient Name: <span style="color: red;">*</span></label>
                 <input type="text" name="name" class="form-control" required>
             </div>
             <div class="col-md-3 mb-3">
-                <label for="age" class="form-label">Age:</label>
-                <input type="text" name="age" class="form-control">
+                <label for="age" class="form-label">Age:  <span style="color: red;">*</span></label>
+                <input type="text" name="age" class="form-control" required>
             </div>
             <div class="col-md-3 mb-3">
-                <label for="sex" class="form-label">Sex:</label>
-                <input type="text" name="sex" class="form-control">
+                <label for="sex" class="form-label">Sex:  <span style="color: red;">*</span></label>
+                <input type="text" name="sex" class="form-control" required>
             </div>
         </div>
         
@@ -44,14 +44,14 @@
         </div>
 
         <div class="mb-3">
-            <label for="address" class="form-label">Address:</label>
-            <input type="text" name="address" class="form-control">
+            <label for="address" class="form-label">Address:  <span style="color: red;">*</span></label>
+            <input type="text" name="address" class="form-control" required>
         </div>
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="dob" class="form-label">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" class="form-control" max="{{ current_date }}">
+                <label for="dob" class="form-label">Date of Birth:  <span style="color: red;">*</span></label>
+                <input type="date" id="dob" name="dob" class="form-control" max="{{ current_date }}" required>
             </div>
             <div class="col-md-6 mb-3">
                 <label for="doe" class="form-label">Date of Evaluation:</label>
@@ -65,7 +65,7 @@
                 <input type="text" name="religion" class="form-control">
             </div>
             <div class="col-md-6 mb-3">
-                <label for="diagnosis" class="form-label">Diagnosis:</label>
+                <label for="diagnosis" class="form-label">Diagnosis:  <span style="color: red;">*</span></label>
                 <input type="text" name="diagnosis" class="form-control">
             </div>
         </div>
@@ -83,12 +83,12 @@
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="emergency_person" class="form-label">Emergency Contact Person:</label>
-                <input type="text" name="emergency_person" class="form-control">
+                <label for="emergency_person" class="form-label">Emergency Contact Person:  <span style="color: red;">*</span></label>
+                <input type="text" name="emergency_person" class="form-control" required>
             </div>
             <div class="col-md-3 mb-3">
-                <label for="contact_no" class="form-label">Contact Number:</label>
-                <input type="text" name="contact_no" class="form-control">
+                <label for="contact_no" class="form-label">Contact Number:  <span style="color: red;">*</span></label>
+                <input type="text" name="contact_no" class="form-control" required>
             </div>
             <div class="col-md-3 mb-3">
                 <label for="alt_contact_no" class="form-label">Alternative Contact Number:</label>
@@ -96,9 +96,17 @@
             </div>
         </div>
 
-        <div class="mb-3">
-            <label for="grade_level" class="form-label">Grade Level:</label>
-            <input type="text" name="grade_level" class="form-control">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label for="grade_level" class="form-label">Grade Level:  <span style="color: red;">*</span></label>
+                <input type="text" name="grade_level" class="form-control" required>
+            </div>
+
+            <div class="col-md-9 mb-3">
+                <label for="school_name" class="form-label">School:</label>
+                <input type="text" name="school_name" class="form-control">
+            </div>
+
         </div>
       </div>
     </div>

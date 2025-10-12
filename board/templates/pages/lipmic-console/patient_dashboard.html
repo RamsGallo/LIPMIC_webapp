@@ -78,13 +78,15 @@
                 "Patient Name": patient.name,
                 "Age": patient.age,
                 "Sex": patient.sex,
-                "Date of Birth": patient.dob
+                "Date of Birth": patient.dob,
+                "Grade Level": patient.grade_level
             },
             {
                 "Address": patient.address,
                 "Religion": patient.religion,
                 "Diagnosis": patient.diagnosis,
-                "Date of Evaluation": patient.doe
+                "Date of Evaluation": patient.doe,
+                "School": patient.school_name
             }
         ]) }}
 
@@ -95,7 +97,6 @@
             },
             {
                 "Alternative Contact Number": patient.alt_contact_no,
-                "Grade Level": patient.grade_level
             }
         ]) }}
 
@@ -351,7 +352,7 @@
                 <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                     <span>Saved Goals</span>
                     <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#goalsModal">
-                        Add Intervention
+                        Add Goal
                     </button>
                 </div>
                 <div class="card-body pt-3 py-0">
@@ -364,14 +365,16 @@
                                         <a href="{{ url_for('pages.goal_report_pdf', goal_id=goal.id) }}" class="btn btn-sm btn-outline-primary me-2" target="_blank" title="Download PDF Report for this Goal"> {# Added me-2 for spacing #}
                                             PDF
                                         </a>
-                                        {# NEW: Delete Button #}
-                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteGoal({{ goal.id }})" title="Delete this Goal">
+                                        <!-- <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteGoal({{ goal.id }})" title="Delete this Goal">
                                             Delete
+                                        </button> -->
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="editGoalNotes({{ goal.id }})" title="Edit Notes for this Goal">
+                                            Edit notes
                                         </button>
                                     </div>
                                 </div>
 
-                                <p class="mb-1"><strong>Description:</strong> {{ goal.goal_text }}</p>
+                                <p class="mb-1"><strong>Title:</strong> {{ goal.goal_text }}</p>
 
                                 {% if goal.problem_description %}
                                     <p class="mb-1"><strong>Problem:</strong> {{ goal.problem_description }}</p>
@@ -383,6 +386,10 @@
                                     <div class="intervention-display mb-2">
                                         {{ goal.intervention_text | format_intervention }}
                                     </div>
+                                {% endif %}
+
+                                {% if goal.goal_notes %}
+                                    <p class="mb-1"><strong>Notes:</strong> {{ goal.goal_notes }}</p>
                                 {% endif %}
 
                                 <small class="text-muted d-block mb-1">
@@ -456,8 +463,8 @@
                         </div>
 
                         <div class="mb-3 p-3 pt-1">
-                            <label for="goal_text" class="form-label">Description</label>
-                            <textarea name="goal_text" id="goal_text" class="form-control" rows="3" required></textarea>
+                            <label for="goal_text" class="form-label">Title</label>
+                            <textarea name="goal_text" id="goal_text" class="form-control" rows="1" required></textarea>
                         </div>
 
                         <div class="mb-3 px-3">
@@ -468,6 +475,11 @@
                         <div class="mb-3 px-3">
                             <label for="intervention_text" class="form-label">Suggested Intervention</label>
                             <textarea name="intervention_text" id="intervention_text" class="form-control" rows="3" readonly placeholder="Click 'Generate Intervention' to auto-fill"></textarea>
+                        </div>
+
+                        <div class="mb-3 px-3">
+                            <label for="goal_notes" class="form-label">Notes</label>
+                            <textarea name="goal_notes" id="goal_notes" class="form-control" rows="3" placeholder="Write a note"></textarea>
                         </div>
 
                         {# NEW SECTION FOR ASSESSMENT TYPE TOGGLE AND DISPLAY #}
@@ -704,5 +716,79 @@
         }
     }
 </script>
+
+<script>
+async function editGoalNotes(goalId) {
+    try {
+        // Fetch goal details
+        const response = await fetch(`/console/goals/${goalId}/get`);
+        if (!response.ok) throw new Error('Failed to load goal details.');
+
+        const goal = await response.json();
+
+        // Open modal
+        const modal = new bootstrap.Modal(document.getElementById('goalsModal'));
+        modal.show();
+
+        // Fill fields with goal data
+        document.getElementById('assessment_result_id').value = goal.assessment_result_id;
+        document.getElementById('goal_text').value = goal.goal_text;
+        document.getElementById('problem_description').value = goal.problem_description || '';
+        document.getElementById('intervention_text').value = goal.intervention_text || '';
+        document.getElementById('goal_notes').value = goal.goal_notes || '';
+
+        // Disable (gray out) fields that should not be edited
+        document.getElementById('assessment_result_id').disabled = true;
+        document.getElementById('goal_text').readOnly = true;
+        document.getElementById('problem_description').readOnly = true;
+        document.getElementById('intervention_text').readOnly = true;
+
+        // Disable Generate Intervention button
+        const generateButton = document.querySelector('button[onclick="generateIntervention()"]');
+        generateButton.disabled = true;
+        generateButton.classList.add('disabled');
+        generateButton.title = "Disabled in edit mode";
+
+        // Change form action to update endpoint
+        const form = document.getElementById('goalsForm');
+        form.action = `/console/goals/${goalId}/update_notes`;
+
+        // Update modal title and submit button
+        document.getElementById('goalsModalLabel').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Goal Notes';
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.textContent = 'Update Notes';
+
+    } catch (error) {
+        console.error('Error loading goal details:', error);
+        alert('Could not load goal details for editing.');
+    }
+}
+
+document.querySelector('[data-bs-target="#goalsModal"]').addEventListener('click', () => {
+    const form = document.getElementById('goalsForm');
+    form.action = `/console/save_goals/${form.dataset.patientId}`;
+    document.getElementById('goalsModalLabel').innerHTML = '<i class="fas fa-bullseye me-2"></i>Set Goals';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.textContent = 'Save';
+
+    // Re-enable all fields
+    ['assessment_result_id', 'goal_text', 'problem_description', 'intervention_text'].forEach(id => {
+        const el = document.getElementById(id);
+        el.disabled = false;
+        el.readOnly = false;
+    });
+
+    // Re-enable Generate Intervention button
+    const generateButton = document.querySelector('button[onclick="generateIntervention()"]');
+    generateButton.disabled = false;
+    generateButton.classList.remove('disabled');
+    generateButton.title = '';
+
+    // Clear form inputs
+    form.reset();
+});
+
+</script>
+
 
 {% endblock scripts %}

@@ -42,90 +42,120 @@ def create_app():
 
     @app.template_filter('format_intervention')
     def format_intervention_filter(text):
+        """
+        Format intervention text with proper HTML structure for PDF rendering.
+        Handles numbered sections, bullet points, actions, and sources.
+        """
         if not text:
             return Markup("")
-
-        # 1. Normalize newlines and replace any existing <br> tags with newlines
-        text = text.replace('\r\n', '\n').replace('\r', '\n').replace('<br>', '\n').replace('<br/>', '\n').replace('<br />', '\n')
-
-        # Split into lines and process each line
-        lines = text.split('\n')
         
-        output_html_parts = []
-        current_list = [] # Stores items for the current list being built
-        current_list_type = None # 'ol' or 'ul'
-        current_list_indent = -1 # To track indentation for nested lists
-
-        def flush_list():
-            nonlocal current_list, current_list_type, current_list_indent
-            if current_list:
-                # Join current list items into a list tag
-                list_tag_content = "".join(current_list)
-                output_html_parts.append(f"<{current_list_type}>{list_tag_content}</{current_list_type}>")
-                current_list = []
-                current_list_type = None
-                current_list_indent = -1 # Reset indent after flushing
-
-        for line in lines:
-            stripped_line = line.strip()
-            if not stripped_line: # Empty line
-                flush_list() # If a list was open, close it (paragraph break)
-                if output_html_parts and output_html_parts[-1] != "<p>&nbsp;</p>":
-                    # Add a break if there's content before this blank line
-                    output_html_parts.append("<p>&nbsp;</p>") # Or just <br> or <p></p>
+        # Normalize line breaks and whitespace
+        text = re.sub(r'\r\n', '\n', text)
+        text = re.sub(r'\n\s*\n\s*\n+', '\n\n', text)
+        text = text.strip()
+        
+        # Convert markdown formatting to HTML
+        text = re.sub(r'\*\*([^*]+?)\*\*', r'<strong>\1</strong>', text)
+        text = re.sub(r'(?<!\*)\*(?!\*)([^*]+?)\*(?!\*)', r'<em>\1</em>', text)
+        text = re.sub(r'^\s*\*\s+', '• ', text, flags=re.MULTILINE)
+        
+        formatted_parts = []
+        
+        # Split by numbered sections
+        section_pattern = r'(?=^\d+\.\s+)'
+        sections = re.split(section_pattern, text, flags=re.MULTILINE)
+        
+        for section in sections:
+            if not section.strip():
                 continue
-
-            # Detect list item (numbered or bulleted)
-            numbered_match = re.match(r'^\s*(\d+)\.\s*(.*)', line)
-            bullet_match = re.match(r'^\s*([\*-])\s*(.*)', line) # Matches * or -
-
-            indent = len(line) - len(line.lstrip()) # Get indentation level
-
-            if numbered_match:
-                # If changing list type or indent, flush previous list
-                if current_list_type != 'ol' or (current_list_type == 'ol' and indent > current_list_indent and current_list_indent != -1):
-                     flush_list()
+            
+            # Check if this is a numbered section
+            section_match = re.match(r'^(\d+)\.\s+(.+?):\s*\n(.*)$', section, re.DOTALL)
+            
+            if section_match:
+                num, title, content = section_match.groups()
                 
-                if not current_list_type: # Start a new ordered list
-                    current_list_type = 'ol'
-                    current_list_indent = indent
+                # Remove HTML tags from title
+                title_clean = re.sub(r'<[^>]+>', '', title).strip()
                 
-                content = numbered_match.group(2).strip()
-                # Markdown bolding
-                content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', content)
-                # Markdown italics (e.g., *text*)
-                content = re.sub(r'\*(.*?)\*', r'<em>\1</em>', content)
-
-                current_list.append(f"<li>{content}</li>")
-            elif bullet_match:
-                # If changing list type or indent, flush previous list
-                if current_list_type != 'ul' or (current_list_type == 'ul' and indent > current_list_indent and current_list_indent != -1):
-                    flush_list()
+                # Start section container
+                formatted_parts.append(f'<div class="intervention-section">')
+                formatted_parts.append(f'<div class="intervention-number">{num}. {title_clean}:</div>')
+                formatted_parts.append('<div class="intervention-actions">')
                 
-                if not current_list_type: # Start a new unordered list
-                    current_list_type = 'ul'
-                    current_list_indent = indent
-
-                content = bullet_match.group(2).strip()
-                # Markdown bolding
-                content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', content)
-                # Markdown italics (e.g., *text*)
-                content = re.sub(r'\*(.*?)\*', r'<em>\1</em>', content)
+                # Split content by lines and process
+                lines = content.strip().split('\n')
+                i = 0
                 
-                current_list.append(f"<li>{content}</li>")
-            else: # Not a list item, so it's a paragraph
-                flush_list() # Close any open list
-
-                # Markdown bolding and italics for paragraphs
-                processed_line = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', line.strip())
-                processed_line = re.sub(r'\*(.*?)\*', r'<em>\1</em>', processed_line)
+                while i < len(lines):
+                    line = lines[i].strip()
+                    
+                    if not line:
+                        i += 1
+                        continue
+                    
+                    # Check for Action: or Source:
+                    action_match = re.match(r'^(•\s*)?Action:\s*(.*)$', line)
+                    source_match = re.match(r'^(•\s*)?(Source|Reference):\s*(.*)$', line)
+                    
+                    if action_match:
+                        # Collect the full action text
+                        action_text = action_match.group(2).strip()
+                        i += 1
+                        
+                        # Continue collecting lines
+                        while i < len(lines):
+                            next_line = lines[i].strip()
+                            if not next_line or re.match(r'^(•\s*)?(Action|Source|Reference):', next_line):
+                                break
+                            action_text += ' ' + next_line
+                            i += 1
+                        
+                        # Add spacing before bullet (except for first item)
+                        if formatted_parts and formatted_parts[-1] != '<div class="intervention-actions">':
+                            formatted_parts.append('<div class="action-spacing"></div>')
+                        
+                        formatted_parts.append(
+                            f'<div class="intervention-action-item">• <strong>Action:</strong> {action_text}</div>'
+                        )
+                    
+                    elif source_match:
+                        # Collect the full source text
+                        source_type = source_match.group(2)
+                        source_text = source_match.group(3).strip()
+                        i += 1
+                        
+                        # Continue collecting lines
+                        while i < len(lines):
+                            next_line = lines[i].strip()
+                            if not next_line or re.match(r'^(•\s*)?(Action|Source|Reference):', next_line):
+                                break
+                            source_text += ' ' + next_line
+                            i += 1
+                        
+                        formatted_parts.append(
+                            f'<div class="intervention-source">• <strong>{source_type}:</strong> {source_text}</div>'
+                        )
+                    
+                    else:
+                        # Regular text line
+                        if line:
+                            formatted_parts.append(f'<div class="intervention-text">{line}</div>')
+                        i += 1
                 
-                if processed_line:
-                    output_html_parts.append(f"<p>{processed_line}</p>")
+                formatted_parts.append('</div>')  # Close intervention-actions
+                formatted_parts.append('</div>')  # Close intervention-section
+            
+            else:
+                # Not a numbered section - introductory paragraph
+                paragraphs = section.strip().split('\n\n')
+                for para in paragraphs:
+                    para = para.strip()
+                    if para:
+                        para = re.sub(r'\n', ' ', para)
+                        formatted_parts.append(f'<p class="intervention-intro">{para}</p>')
+        
+        return Markup('\n'.join(formatted_parts))
 
-        flush_list()
-
-        # Final assembly of all parts
-        return Markup("".join(output_html_parts))
 
     return app

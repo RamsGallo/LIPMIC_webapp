@@ -25,6 +25,7 @@ class Patient(db.Model):
     alt_contact_no = db.Column(db.String(100), nullable=True)
     grade_level = db.Column(db.String(100), nullable=True)
     patient_image = db.Column(db.String(255), nullable=True)
+    school_name = db.Column(db.String(100), nullable=True)
 
     # Family information
     father_name = db.Column(db.String(100), nullable=True)
@@ -167,6 +168,7 @@ class Goal(db.Model):
 
     problem_description = db.Column(db.Text, nullable=True)
     intervention_text = db.Column(db.Text, nullable=True)
+    goal_notes = db.Column(db.Text, nullable=True)
 
     assessment_result_id = db.Column(db.Integer, db.ForeignKey('assessment_results.id', ondelete='CASCADE'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

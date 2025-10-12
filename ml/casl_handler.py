@@ -7,10 +7,9 @@ import numpy as np
 class CASLHandler(BaseLipModelHandler):
     def __init__(self):
         label_dict = {0: 'down', 1: 'left', 2: 'right', 3: 'up'}
-        super().__init__(model_path="Ref/directions_1.keras", label_dict=label_dict)
-        # Add these new parameters to control the prediction logic
-        self.suppression_window_size = 2  # How many recent words to consider for suppression
-        self.penalty_factor = 0.5         # How much to penalize a suppressed word's score
+        super().__init__(model_path="C:/Users/zergs/Desktop/LIPMIC_webapp/Ref/directions_2.keras", label_dict=label_dict)
+        self.suppression_window_size = 2
+        self.penalty_factor = 0.5
 
     def is_talking(self, landmarks):
         mouth_top = (landmarks.part(51).x, landmarks.part(51).y)
@@ -19,18 +18,10 @@ class CASLHandler(BaseLipModelHandler):
         return distance > 45
 
     def postprocess_prediction(self, prediction):
-        # Ensure prediction is a 1D array of scores (e.g., from model.predict)
-        # prediction[0] is typically what you get from model.predict for a single sample
         current_prediction_scores = np.copy(prediction[0])
-
-        # Get the index and word of the top prediction before any modification
         initial_idx = np.argmax(current_prediction_scores)
         initial_word = self.label_dict[initial_idx]
-
-        # Get the recent spoken words based on the suppression window
         recent_spoken_already = list(self.spoken_already)[-self.suppression_window_size:]
-
-        # If the top predicted word is in the recent suppression window
         if initial_word in recent_spoken_already:
             # Apply a penalty to its score
             current_prediction_scores[initial_idx] *= self.penalty_factor
@@ -42,10 +33,10 @@ class CASLHandler(BaseLipModelHandler):
         # Manage the spoken_already list (fixed size deque-like behavior)
         if len(self.spoken_already) >= self.suppression_window_size:
             self.spoken_already.pop(0) # Remove the oldest
-        self.spoken_already.append(word) # Add the newest predicted word
+        self.spoken_already.append(word)
 
         self.predicted_word_label = word
-        print("CASL prediction:", word)
+        # print("CASL prediction:", word)
     
     def generate_frames(self):
         cap = cv2.VideoCapture(0)
